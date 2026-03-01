@@ -1,0 +1,378 @@
+{
+  "project": {
+    "name": "SolvynHQ",
+    "description": "Premium B2B/B2C website & product development for Solvyn luxury sunscreen brand"
+  },
+  "sections": [
+    {
+      "id": "setup",
+      "name": "Setup & Global Elements",
+      "order": 1,
+      "tasks": [
+        {
+          "id": "setup-1",
+          "name": "WordPress & Elementor Setup",
+          "description": "WordPress installation, hosting configuration, admin access. Elementor Pro activation.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Config",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "setup-2",
+          "name": "Global Styles (Fonts, Colors, Spacing)",
+          "description": "Configure Elementor global settings: Playfair Display (headlines), Inter (body). Colors: Olive Green #6C7B5A, Soft Sand #EAE4D9, Muted Rust #B96E5C, Deep Charcoal #2A2A2A, Off-White #F7F5F0. Global spacing, container widths, default button styles.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Config"
+        },
+        {
+          "id": "setup-3",
+          "name": "Header / Navigation",
+          "description": "Responsive navigation: logo placement, desktop menu links (About, Shield, Partners, Discover, Contact), mobile hamburger menu, scroll-aware sticky behavior. Consistent across all pages.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Nav"
+        },
+        {
+          "id": "setup-4",
+          "name": "Footer",
+          "description": "DTC waitlist block (\"Be the first to experience Solvyn at home\" + email input), B2B reminder link, nav links, Instagram social link, legal text. Deep charcoal background, clean minimal design.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Footer"
+        },
+        {
+          "id": "setup-5",
+          "name": "Media Library & Asset Upload",
+          "description": "Upload product photography, lifestyle images, team headshots, partner logos, icons. Organize and optimize file sizes. Use Unsplash placeholders where final assets aren't ready.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Assets"
+        }
+      ]
+    },
+    {
+      "id": "product-design",
+      "name": "Product Design — Shield Pouch",
+      "order": 2,
+      "tasks": [
+        {
+          "id": "pd-concept",
+          "name": "Pouch Design Concept & Direction",
+          "description": "Overall visual direction for the Shield single-use pouch packaging. Layout, typography, brand elements, and premium look & feel.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-dieline",
+          "name": "Dieline Design",
+          "description": "Print-ready dieline layout for the Shield pouch. Structural template with bleed, safe zones, and fold lines.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-label",
+          "name": "Ingredients & Compliance Label",
+          "description": "FDA Drug Facts panel, ingredients list, usage directions, warnings, and regulatory compliance text. Formatted for pouch print specs.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-color-v1",
+          "name": "Color Version 1",
+          "description": "First color variant of the Shield pouch design — full artwork applied to dieline.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-color-v2",
+          "name": "Color Version 2",
+          "description": "Second color variant of the Shield pouch design — alternate colorway applied to dieline.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-rev1",
+          "name": "Design Revision Round 1",
+          "description": "First round of revisions based on feedback. Adjustments to layout, color, typography, or label content.",
+          "status": "done",
+          "priority": "medium",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-rev2",
+          "name": "Design Revision Round 2",
+          "description": "Second round of revisions. Final refinements before print-ready approval.",
+          "status": "done",
+          "priority": "medium",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-print",
+          "name": "Print Sample Sent to Production",
+          "description": "Final approved design files sent to printer for sample production. Awaiting physical sample.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Design",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-product",
+          "name": "Product Mockup — Pouch Standalone",
+          "description": "Clean product mockup of the Shield pouch itself. Studio-style render for use on website, pitch decks, and marketing materials.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-pool",
+          "name": "Scene Mockup — Poolside",
+          "description": "Shield pouch mockup placed in a luxury poolside setting. Resort/hotel pool environment with towels, lounge chairs, natural light.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-bathroom",
+          "name": "Scene Mockup — Hotel Bathroom",
+          "description": "Shield pouch mockup in a premium hotel bathroom. Displayed alongside amenities on marble countertop or vanity tray.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-spa",
+          "name": "Scene Mockup — Spa / Wellness",
+          "description": "Shield pouch mockup in a spa or wellness center setting. Clean, calming environment — treatment room, relaxation area, or towel station.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-beach",
+          "name": "Scene Mockup — Beach / Resort Outdoor",
+          "description": "Shield pouch mockup in an outdoor beach or resort environment. Cabana, beach bag, or outdoor lounge setting.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-mockup-event",
+          "name": "Scene Mockup — Event / Welcome Kit",
+          "description": "Shield pouch mockup in an event or hospitality welcome kit context. Gift bag, conference swag, or hotel welcome amenity tray.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Mockup",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "homepage-1-4",
+      "name": "Homepage — Sections 1–4",
+      "order": 3,
+      "tasks": [
+        {
+          "id": "hp-s1",
+          "name": "S1: Hero",
+          "description": "Full-width immersive hero. Headline: \"Protection That Meets You Where Life Happens\". Dual CTAs: B2B \"Request a Conversation\" + DTC \"Join the Waitlist\". Lifestyle background image. Subtle parallax or Ken Burns effect. Staggered load animation.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Homepage",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "hp-s2",
+          "name": "S2: Brand Mission / Our Philosophy",
+          "description": "Emotional anchor section — no CTA. Headline: \"Simplifying Sun Protection for Real Life\". Body copy about the gap Solvyn fills. Closing line: \"Healthy skin should be accessible — not a luxury.\" Clean typographic treatment, large serif headline. Sand/beige background, staggered text reveal on scroll.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Homepage",
+          "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "hp-s3",
+          "name": "S3: Product Intro — Shield",
+          "description": "Product teaser. Headline: \"Shield by Solvyn\". Subheadline: \"Mineral protection. No compromises.\" Key attributes as badges/grid: FDA SPF, 100% Mineral, Hypoallergenic, Reef-Safe, Sealed & Tamper-Proof. CTA: \"Learn More\" → /shield. Asymmetric layout: product image + text.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Homepage"
+        },
+        {
+          "id": "hp-s4",
+          "name": "S4: Why It Matters (Differentiation)",
+          "description": "4 value points: \"Protection only works if people use it\", \"Convenience removes friction\", \"Sensitive skin deserves better\", \"Reef-safe by design\". 2x2 grid or staggered cards, olive green accents, sand/beige background.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Homepage"
+        }
+      ]
+    },
+    {
+      "id": "homepage-5-7",
+      "name": "Homepage — Sections 5–7",
+      "order": 4,
+      "tasks": [
+        {
+          "id": "hp-s5",
+          "name": "S5: Why Mineral",
+          "description": "Educational section on mineral sunscreen benefits. Mineral vs. chemical comparison, safety advantages, environmental benefits.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Homepage"
+        },
+        {
+          "id": "hp-s6",
+          "name": "S6: Trust & Credibility",
+          "description": "Three sub-blocks: A) Medical Advisory — Dr. Eduardo Weiss, MD (Board-Certified Dermatologist, FAAD, 30+ years). B) Certifications — Dermatologist Approved, FDA Broad Spectrum, Hawai'i Act 104, Reef-Safe, Hypoallergenic. C) Partners — \"Our Growing Network\" with partner logos.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Homepage"
+        },
+        {
+          "id": "hp-s7",
+          "name": "S7: B2B Value Proposition",
+          "description": "Hospitality-focused section. Headline: \"A Smarter Sunscreen Solution for Hospitality & Events\". 5 benefits: hygiene, guest satisfaction, operational simplicity, sustainability, cost efficiency. CTA: \"Request a Conversation\". Split layout: resort lifestyle image + content.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Homepage"
+        }
+      ]
+    },
+    {
+      "id": "inner-pages",
+      "name": "Inner Pages",
+      "order": 5,
+      "tasks": [
+        {
+          "id": "page-shield",
+          "name": "Shield Product Page",
+          "description": "Full product page: hero with product images, 6 key attributes, 7 ingredients, clean commitments, how-to-use steps, contact CTA.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Page"
+        },
+        {
+          "id": "page-about",
+          "name": "About Us Page",
+          "description": "Company story, mission statement, team bios, contact CTA.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Page"
+        },
+        {
+          "id": "page-responsive",
+          "name": "Responsive Design & Mobile Optimization",
+          "description": "All pages across breakpoints (desktop, tablet, mobile). Single-column collapse, touch-friendly CTAs (44px min), maintain padding proportions.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Responsive"
+        },
+        {
+          "id": "page-seo",
+          "name": "SEO Setup & Metadata",
+          "description": "Page titles, meta descriptions, Open Graph tags, sitemap, robots.txt. SEO plugin configuration.",
+          "status": "todo",
+          "priority": "low",
+          "tag": "SEO"
+        }
+      ]
+    },
+    {
+      "id": "animations",
+      "name": "Animations & Optimization",
+      "order": 6,
+      "tasks": [
+        {
+          "id": "anim-scroll",
+          "name": "Scroll Animations & Hover Effects",
+          "description": "Subtle animations: scroll-triggered fade-in + slide-up, staggered child reveals, hero load sequence, subtle parallax, smooth hover transitions on CTAs and cards. No aggressive motion.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Animation"
+        },
+        {
+          "id": "opt-images",
+          "name": "Image Optimization & Placement",
+          "description": "Compress all images, proper formats (WebP), alt text, responsive sizing, lazy loading.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Assets"
+        },
+        {
+          "id": "opt-perf",
+          "name": "Performance Optimization",
+          "description": "Lighthouse / PageSpeed audit. Lazy loading, caching, CSS/JS minification, CDN.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Performance"
+        },
+        {
+          "id": "opt-domain",
+          "name": "Domain, SSL & Analytics",
+          "description": "Point domain to hosting, SSL certificate, Google Analytics / Tag Manager setup.",
+          "status": "todo",
+          "priority": "low",
+          "tag": "Config"
+        }
+      ]
+    },
+    {
+      "id": "review-launch",
+      "name": "Review & Launch",
+      "order": 7,
+      "tasks": [
+        {
+          "id": "review-browser",
+          "name": "Cross-Browser Testing",
+          "description": "Test on Chrome, Safari, Firefox, Edge. iOS Safari and Android Chrome. Fix rendering inconsistencies.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "QA"
+        },
+        {
+          "id": "review-client",
+          "name": "Client Review & Revisions",
+          "description": "Present site for review. Collect feedback, implement revision rounds.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Review"
+        },
+        {
+          "id": "review-qa",
+          "name": "Final QA Pass",
+          "description": "Full quality check: all links, forms, images, copy, responsive on all breakpoints.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "QA"
+        },
+        {
+          "id": "review-launch",
+          "name": "Go-Live & Production Verification",
+          "description": "Launch site. Verify SSL, redirects, forms, analytics, social meta tags.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Launch"
+        }
+      ]
+    }
+  ]
+}
