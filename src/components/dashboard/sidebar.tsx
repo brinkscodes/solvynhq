@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { StickyNote, FileText, MessageSquare } from "lucide-react";
+import { StickyNote, FileText, Search, MessageSquare, Crosshair } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FeedbackModal } from "./feedback-modal";
 
@@ -71,6 +71,22 @@ export function Sidebar() {
           title="Website Content"
         >
           <FileText className="h-4 w-4 text-[#2A2A2A]/40 transition-colors group-hover:text-[#6C7B5A]" />
+        </Link>
+
+        <Link
+          href="/product-context"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#EAE4D9] bg-white transition-colors hover:border-[#6C7B5A]/30 hover:bg-[#6C7B5A]/10"
+          title="Marketing Context"
+        >
+          <Crosshair className="h-4 w-4 text-[#2A2A2A]/40 transition-colors group-hover:text-[#6C7B5A]" />
+        </Link>
+
+        <Link
+          href="/seo"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#EAE4D9] bg-white transition-colors hover:border-[#6C7B5A]/30 hover:bg-[#6C7B5A]/10"
+          title="SEO Research"
+        >
+          <Search className="h-4 w-4 text-[#2A2A2A]/40 transition-colors group-hover:text-[#6C7B5A]" />
         </Link>
 
         <button

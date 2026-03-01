@@ -1,0 +1,149 @@
+{
+  "lastUpdated": "2026-03-01T00:00:00.000Z",
+  "productOverview": {
+    "oneLiner": "Solvyn is a luxury mineral sunscreen brand delivering FDA-approved, single-use SPF 50 protection for hotels, resorts, events, and everyday sun exposure.",
+    "whatItDoes": "Shield by Solvyn is a 100% mineral, broad-spectrum SPF formulated with non-nano zinc oxide and packaged in a sealed, single-use pouch. Designed for high-exposure hospitality environments — not bathroom shelves.",
+    "productCategory": "Sun protection / Sunscreen / Hospitality amenity",
+    "productType": "Physical product (consumer packaged goods) — B2B distribution + D2C waitlist"
+  },
+  "targetAudience": {
+    "targetCompanies": "Hotels, resorts, spas, wellness retreats, event venues, stadiums",
+    "decisionMakers": "Hospitality operations managers, guest experience directors, spa managers, event coordinators, procurement teams",
+    "primaryUseCase": "Providing guests with convenient, hygienic, premium sunscreen as a venue amenity",
+    "jobsToBeDone": [
+      "Elevate guest experience with a memorable \"save the day\" amenity",
+      "Eliminate hygiene concerns of shared sunscreen bottles",
+      "Reduce operational mess (no dripping pumps, less linen staining)",
+      "Meet sustainability/ESG goals with reef-safe, compliant products"
+    ],
+    "secondaryAudience": "Individual consumers who want premium mineral sunscreen for travel, outdoor activities, everyday use — currently a waitlist"
+  },
+  "personas": [
+    {
+      "persona": "Hotel/Resort GM",
+      "caresAbout": "Guest satisfaction scores, brand perception",
+      "challenge": "Sunscreen is overlooked as an amenity; shared bottles are unhygienic",
+      "valuePromise": "Premium guest-facing amenity that elevates experience"
+    },
+    {
+      "persona": "Spa/Wellness Director",
+      "caresAbout": "Product quality, clean ingredients, guest safety",
+      "challenge": "Finding products that align with wellness brand standards",
+      "valuePromise": "Dermatologist-formulated, clean-label sunscreen"
+    },
+    {
+      "persona": "Event Planner",
+      "caresAbout": "Logistics simplicity, guest comfort",
+      "challenge": "Outdoor events lack sun protection; bulky bottles are impractical",
+      "valuePromise": "Single-use pouches = zero mess, easy distribution"
+    },
+    {
+      "persona": "Procurement/Ops",
+      "caresAbout": "Cost, waste, compliance",
+      "challenge": "Chemical sunscreens stain linens; bulky packaging creates waste",
+      "valuePromise": "Reduces replacement costs, minimal waste, reef-safe compliance"
+    }
+  ],
+  "painPoints": {
+    "coreProblem": "Sun exposure happens everywhere — but sunscreen isn't always available, trusted, or convenient. Venues lack a premium, hygienic sunscreen solution for guests.",
+    "whyAlternativesFallShort": [
+      "Shared pump bottles are unhygienic (cross-contamination)",
+      "Bulk sunscreens are messy (dripping, spilling, staining linens)",
+      "Chemical sunscreens damage reefs and aren't regulation-compliant",
+      "Generic drugstore brands don't match luxury venue branding"
+    ],
+    "whatItCosts": "Linen replacement from sunscreen stains, poor guest reviews, housekeeping labor, missed guest satisfaction opportunities",
+    "emotionalTension": "Guests feel unprotected and frustrated; venues feel they're offering a subpar experience"
+  },
+  "competitiveLandscape": {
+    "direct": [],
+    "secondary": [
+      "Bulk sunscreen dispensers/pump stations at pools",
+      "Generic drugstore sunscreen brands offered at gift shops"
+    ],
+    "indirect": [
+      "Guests bringing their own sunscreen",
+      "Venues choosing not to offer sunscreen at all"
+    ],
+    "howEachFallsShort": "Bulk = unhygienic, messy, wasteful. Gift shop brands = not premium, chemical-based, not branded to venue. No sunscreen = missed opportunity, liability risk."
+  },
+  "differentiation": {
+    "keyDifferentiators": [
+      "Single-use sealed pouch format (hygienic, portable, no mess)",
+      "100% mineral formula (non-nano zinc oxide)",
+      "FDA broad-spectrum SPF, dermatologist formulated & approved",
+      "Reef-safe, Hawai'i Act 104 compliant",
+      "Luxury positioning (not drugstore)",
+      "Purpose-built for hospitality environments"
+    ],
+    "howDifferently": "Built from the ground up for venues, not repurposed from retail",
+    "whyBetter": "Hygiene, convenience, brand elevation, compliance, and cost savings in one product",
+    "whyChooseUs": "The only sunscreen that feels like a luxury amenity, not an afterthought"
+  },
+  "objections": {
+    "items": [
+      {
+        "objection": "We already have sunscreen available",
+        "response": "Is it sealed, single-use, mineral, and reef-safe? Does it elevate your guest experience or just check a box?"
+      },
+      {
+        "objection": "Single-use = more waste",
+        "response": "Single-use pouches actually reduce waste vs. half-used bottles left poolside. Plus our formula is reef-safe and packaging is eco-conscious."
+      },
+      {
+        "objection": "It's too expensive for an amenity",
+        "response": "Shield reduces linen replacement costs from chemical sunscreen stains and becomes a guest-satisfaction differentiator that drives reviews and loyalty."
+      }
+    ],
+    "antiPersona": "Budget motels/hostels looking for cheapest option; brands that don't care about ingredient quality; venues with no outdoor/sun exposure"
+  },
+  "switchingDynamics": {
+    "push": "Shared bottles feel unhygienic post-COVID; chemical sunscreens staining expensive linens; guest complaints about lack of sun protection",
+    "pull": "Premium look/feel that matches venue branding; sealed pouches = zero contamination; reef-safe compliance for coastal properties",
+    "habit": "\"We've always just put out a pump bottle\" — inertia of existing approach",
+    "anxiety": "\"Will guests actually use a pouch format?\" \"Is it worth the per-unit cost?\""
+  },
+  "customerLanguage": {
+    "problemDescriptions": [
+      "Guests are always asking for sunscreen",
+      "The pump bottles by the pool are gross",
+      "We need something that feels premium, not drugstore"
+    ],
+    "solutionDescriptions": [],
+    "wordsToUse": "Protection, mineral, clean, dermatologist-trusted, reef-safe, premium, elevated, effortless, convenient, sealed, hygienic",
+    "wordsToAvoid": "Cheap, sunblock, lotion, basic, product (say \"our sunscreen\" or \"Shield by Solvyn\"), chemical",
+    "glossary": [
+      { "term": "Shield", "meaning": "Solvyn's hero product — mineral SPF 50 sunscreen" },
+      { "term": "Non-nano zinc oxide", "meaning": "Mineral UV filter that doesn't penetrate skin" },
+      { "term": "Hawai'i Act 104", "meaning": "Law banning reef-damaging sunscreen chemicals" },
+      { "term": "Broad-spectrum", "meaning": "Protects against both UVA and UVB rays" }
+    ]
+  },
+  "brandVoice": {
+    "tone": "Calm luxury — confident, warm, premium without being pretentious",
+    "style": "Direct but elegant. Editorial feel. Let the words breathe. No urgency, no hard sell.",
+    "personality": "Intentional, trustworthy, sophisticated, grounded, modern",
+    "whatWereNot": "Drugstore, clinical/cold, flashy, urgent, generic"
+  },
+  "proofPoints": {
+    "metrics": "",
+    "customers": "Amrit Resort (Founding Partner), Hollywood Dermatology and Cosmetic Surgery Specialists, American Society for Mohs Surgery",
+    "testimonials": "",
+    "medicalCredibility": "Dr. Eduardo Weiss, MD — Board-Certified Dermatologist, Fellow FAAD, 30+ years clinical experience, professor at FIU and University of Miami Miller School of Medicine",
+    "certifications": [
+      "FDA Broad Spectrum",
+      "Dermatologist Approved",
+      "Hawai'i Act 104 Compliant",
+      "Reef-Safe",
+      "Hypoallergenic",
+      "Cruelty-Free",
+      "Made in USA"
+    ],
+    "valueThemes": [
+      { "theme": "Clinical trust", "proof": "Dr. Weiss advisory, dermatologist formulated" },
+      { "theme": "Clean formula", "proof": "100% mineral, no parabens/oxybenzone/octinoxate/fragrance" },
+      { "theme": "Hospitality-first", "proof": "Single-use pouch designed for venues, not retail shelves" },
+      { "theme": "Environmental", "proof": "Reef-safe, Hawai'i Act 104 compliant" }
+    ]
+  }
+}

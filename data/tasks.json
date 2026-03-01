@@ -377,14 +377,78 @@
       "id": "seo-performance",
       "name": "SEO & Performance",
       "order": 8,
-      "phase": 2,
+      "phase": 1,
       "tasks": [
         {
-          "id": "seo-full",
-          "name": "Full SEO Sweep",
-          "description": "Page titles, meta descriptions, Open Graph tags, sitemap, robots.txt, structured data, alt text audit, internal linking, keyword optimization across all pages.",
+          "id": "seo-keyword-research",
+          "name": "Keyword Research & Strategy",
+          "description": "Research target keywords for luxury sunscreen, mineral SPF, B2B hospitality sunscreen, reef-safe sunscreen, etc. Identify primary and secondary keywords per page. Map keywords to pages. Use Google Keyword Planner, Ubersuggest, or similar tools.",
           "status": "todo",
           "priority": "high",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-competitor-analysis",
+          "name": "Competitor SEO Analysis",
+          "description": "Analyze top competitors (other luxury/mineral sunscreen brands, hospitality amenity companies). Review their keyword targets, content strategies, page structures, and backlink profiles. Identify gaps and opportunities.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-copy-meta",
+          "name": "SEO Copywriting — Titles & Meta Descriptions",
+          "description": "Write optimized title tags (under 60 chars) and meta descriptions (under 160 chars) for every page: Homepage, Shield, About, Contact, Partners, Discover, T&C, Privacy. Incorporate target keywords naturally.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-copy-headings",
+          "name": "SEO Copywriting — Headings & On-Page Copy",
+          "description": "Audit and optimize H1/H2/H3 heading hierarchy across all pages. Ensure each page has one clear H1 with primary keyword. Refine body copy to include target keywords naturally without keyword stuffing.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-og-social",
+          "name": "Open Graph & Social Meta Tags",
+          "description": "Write OG titles, OG descriptions, and select OG images for every page. Add Twitter Card meta tags. Ensure proper preview when shared on social media and messaging apps.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-technical",
+          "name": "Technical SEO Setup",
+          "description": "Generate and submit XML sitemap. Configure robots.txt. Set canonical URLs for all pages. Add structured data / schema markup (Organization, Product, BreadcrumbList). Verify with Google Rich Results Test.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-alt-text",
+          "name": "Alt Text Audit & Optimization",
+          "description": "Write descriptive, keyword-aware alt text for every image across the site. Product photos, lifestyle images, team headshots, partner logos. Ensure accessibility compliance.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-internal-linking",
+          "name": "Internal Linking Strategy",
+          "description": "Plan and implement strategic internal links between pages. Link Shield references to /shield, partner mentions to /partners, about mentions to /about, etc. Ensure crawlability and link equity distribution.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "SEO"
+        },
+        {
+          "id": "seo-gsc-indexing",
+          "name": "Google Search Console & Indexing",
+          "description": "Set up Google Search Console. Verify domain ownership. Submit sitemap. Request indexing for all pages. Monitor for crawl errors or indexing issues.",
+          "status": "todo",
+          "priority": "medium",
           "tag": "SEO"
         },
         {
