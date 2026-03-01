@@ -18,7 +18,10 @@ export type TaskTag =
   | "Mockup"
   | "Legal"
   | "Form"
-  | "Automation";
+  | "Automation"
+  | "Waiting"
+  | "Content"
+  | "Social";
 
 export interface Task {
   id: string;
