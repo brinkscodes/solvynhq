@@ -21,10 +21,15 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
 
   return (
     <div className="mb-10">
-      <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[#2A2A2A]">
-        {data.project.name}
-      </h1>
-      <p className="mt-1 text-sm text-[#2A2A2A]/50">{data.project.description}</p>
+      <div className="flex items-center gap-4">
+        <img src="/solvyn-logo.png" alt="Solvyn" className="h-10 w-auto" />
+        <div>
+          <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[#2A2A2A]">
+            {data.project.name}
+          </h1>
+          <p className="mt-0.5 text-sm text-[#2A2A2A]/50">{data.project.description}</p>
+        </div>
+      </div>
 
       {/* Progress bar */}
       <div className="mt-6 flex items-center gap-4">

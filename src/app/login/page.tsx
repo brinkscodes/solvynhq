@@ -28,11 +28,13 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#F7F5F0] font-[family-name:var(--font-inter)]">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-semibold text-[#2A2A2A]">
-            SolvynHQ
-          </h1>
-          <p className="mt-2 text-sm text-[#2A2A2A]/60">
-            Enter password to continue
+          <img
+            src="/solvyn-logo.png"
+            alt="Solvyn"
+            className="mx-auto mb-4 h-16 w-auto"
+          />
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#2A2A2A]/40">
+            Project Dashboard
           </p>
         </div>
 
