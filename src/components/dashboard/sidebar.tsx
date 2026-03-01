@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { StickyNote, FileText } from "lucide-react";
+import { StickyNote, FileText, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FeedbackModal } from "./feedback-modal";
 
 export function Sidebar() {
   const [notepadOpen, setNotepadOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -70,6 +72,24 @@ export function Sidebar() {
         >
           <FileText className="h-4 w-4 text-[#2A2A2A]/40 transition-colors group-hover:text-[#6C7B5A]" />
         </Link>
+
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          className={cn(
+            "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors",
+            feedbackOpen
+              ? "border-[#6C7B5A]/30 bg-[#6C7B5A]/10"
+              : "border-[#EAE4D9] bg-white hover:bg-[#F7F5F0]"
+          )}
+          title="Send Feedback"
+        >
+          <MessageSquare
+            className={cn(
+              "h-4 w-4",
+              feedbackOpen ? "text-[#6C7B5A]" : "text-[#2A2A2A]/40"
+            )}
+          />
+        </button>
       </div>
 
       {/* Notepad panel */}
@@ -110,6 +130,11 @@ export function Sidebar() {
           </div>
         )}
       </div>
+
+      <FeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </div>
   );
 }
