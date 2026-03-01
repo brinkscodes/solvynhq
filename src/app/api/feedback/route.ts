@@ -65,9 +65,14 @@ export async function POST(req: NextRequest) {
     console.error("Failed to send feedback email:", error);
   }
 
-  const log = readFeedback();
-  log.entries.push(entry);
-  writeFeedback(log);
+  // File logging is best-effort (Vercel has a read-only filesystem)
+  try {
+    const log = readFeedback();
+    log.entries.push(entry);
+    writeFeedback(log);
+  } catch {
+    // Ignore file write errors in serverless environments
+  }
 
   if (!entry.emailSent) {
     return NextResponse.json(
