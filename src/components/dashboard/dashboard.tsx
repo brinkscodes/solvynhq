@@ -100,13 +100,51 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
       <CurrentFocus data={data} onMarkDone={updateTaskStatus} />
 
       {view === "active" ? (
-        data.sections.map((section) => (
-          <SectionGroup
-            key={section.id}
-            section={section}
-            onStatusChange={updateTaskStatus}
-          />
-        ))
+        <>
+          {[1, 2, 3].map((phase) => {
+            const phaseSections = data.sections.filter((s) => s.phase === phase);
+            const phaseTasks = phaseSections.flatMap((s) => s.tasks);
+            const phaseActive = phaseTasks.filter((t) => t.status !== "done");
+            if (phaseActive.length === 0 && phaseTasks.length > 0) return null;
+            if (phaseTasks.length === 0) return null;
+
+            const phaseDone = phaseTasks.filter((t) => t.status === "done").length;
+            const phaseTotal = phaseTasks.length;
+            const phasePercent = phaseTotal > 0 ? Math.round((phaseDone / phaseTotal) * 100) : 0;
+            const phaseLabels: Record<number, string> = {
+              1: "Phase 1 — Launch Ready",
+              2: "Phase 2 — Full Build",
+              3: "Phase 3 — Refinement",
+            };
+            const phaseLabel = phaseLabels[phase] ?? `Phase ${phase}`;
+
+            return (
+              <div key={phase} className="mb-4">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className={cn(
+                    "flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide uppercase",
+                    phase === 1 && "bg-[#6C7B5A] text-white",
+                    phase === 2 && "bg-[#2A2A2A]/10 text-[#2A2A2A]/50",
+                    phase === 3 && "bg-[#B96E5C]/10 text-[#B96E5C]"
+                  )}>
+                    {phaseLabel}
+                  </div>
+                  <span className="text-xs text-[#2A2A2A]/40">
+                    {phaseDone}/{phaseTotal} — {phasePercent}%
+                  </span>
+                  <div className="h-px flex-1 bg-[#EAE4D9]" />
+                </div>
+                {phaseSections.map((section) => (
+                  <SectionGroup
+                    key={section.id}
+                    section={section}
+                    onStatusChange={updateTaskStatus}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </>
       ) : (
         <div>
           {/* Sort controls */}

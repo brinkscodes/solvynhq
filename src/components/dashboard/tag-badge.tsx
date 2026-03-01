@@ -20,6 +20,9 @@ const tagConfig: Record<TaskTag, { className: string }> = {
   Launch:      { className: "bg-[#6C7B5A]/10 text-[#6C7B5A] border-[#6C7B5A]/20" },
   Design:      { className: "bg-[#8B6DAF]/10 text-[#8B6DAF] border-[#8B6DAF]/20" },
   Mockup:      { className: "bg-[#B96E5C]/10 text-[#B96E5C] border-[#B96E5C]/20" },
+  Legal:       { className: "bg-[#2A2A2A]/8 text-[#2A2A2A]/60 border-[#2A2A2A]/15" },
+  Form:        { className: "bg-[#4A6FA5]/10 text-[#4A6FA5] border-[#4A6FA5]/20" },
+  Automation:  { className: "bg-[#D4A843]/10 text-[#D4A843] border-[#D4A843]/20" },
 };
 
 export function TagBadge({ tag }: { tag: TaskTag }) {

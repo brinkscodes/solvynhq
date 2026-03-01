@@ -15,7 +15,10 @@ export type TaskTag =
   | "Review"
   | "Launch"
   | "Design"
-  | "Mockup";
+  | "Mockup"
+  | "Legal"
+  | "Form"
+  | "Automation";
 
 export interface Task {
   id: string;
@@ -31,6 +34,7 @@ export interface Section {
   id: string;
   name: string;
   order: number;
+  phase: 1 | 2 | 3;
   tasks: Task[];
 }
 

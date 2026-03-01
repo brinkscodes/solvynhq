@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Dashboard } from "@/components/dashboard/dashboard";
-import { Notepad } from "@/components/dashboard/notepad";
+import { Sidebar } from "@/components/dashboard/sidebar";
 import type { ProjectData } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[#F7F5F0] font-[family-name:var(--font-inter)]">
       <div className="mx-auto flex max-w-6xl gap-6 px-6 py-12">
-        <Notepad />
+        <Sidebar />
         <div className="min-w-0 flex-1">
           <Dashboard data={data} />
         </div>
