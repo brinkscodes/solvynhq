@@ -31,7 +31,7 @@ export default function LoginPage() {
           <img
             src="/solvyn-logo.png"
             alt="Solvyn"
-            className="mx-auto mb-4 h-16 w-auto"
+            className="mx-auto mb-4 w-48"
           />
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#2A2A2A]/40">
             Project Dashboard

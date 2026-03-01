@@ -22,7 +22,7 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
   return (
     <div className="mb-10">
       <div className="flex items-center gap-4">
-        <img src="/solvyn-logo.png" alt="Solvyn" className="h-10 w-auto" />
+        <img src="/solvyn-logo.png" alt="Solvyn" className="w-28" />
         <div>
           <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[#2A2A2A]">
             {data.project.name}
