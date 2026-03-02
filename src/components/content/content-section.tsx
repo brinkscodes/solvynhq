@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ContentSection as ContentSectionType, ContentBlock } from "@/lib/content-types";
 
@@ -122,7 +122,15 @@ function BlockDisplay({ block }: { block: ContentBlock }) {
   }
 }
 
-export function ContentSection({ section }: { section: ContentSectionType }) {
+interface ContentSectionProps {
+  section: ContentSectionType;
+  comment: string;
+  onCommentChange: (sectionId: string, value: string) => void;
+}
+
+export function ContentSection({ section, comment, onCommentChange }: ContentSectionProps) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <div className="mb-8">
       <div className="mb-3 px-4">
@@ -131,7 +139,7 @@ export function ContentSection({ section }: { section: ContentSectionType }) {
         </h2>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-[#EAE4D9] bg-white">
+      <div className="group/section overflow-hidden rounded-lg border border-[#EAE4D9] bg-white">
         {section.blocks.map((block) => (
           <div
             key={block.id}
@@ -155,6 +163,58 @@ export function ContentSection({ section }: { section: ContentSectionType }) {
             )}
           </div>
         ))}
+
+        {/* Section comment */}
+        <div
+          className={cn(
+            "border-t border-[#EAE4D9]/60 px-5 py-3 transition-colors",
+            comment && !expanded && "bg-[#6C7B5A]/[0.04]",
+            !comment && !expanded && "opacity-0 group-hover/section:opacity-100"
+          )}
+        >
+          {expanded ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-3.5 w-3.5 text-[#6C7B5A]" />
+                <span className="text-[11px] font-medium text-[#2A2A2A]/40">
+                  Section Note
+                </span>
+              </div>
+              <textarea
+                autoFocus
+                value={comment}
+                onChange={(e) => onCommentChange(section.id, e.target.value)}
+                onBlur={() => {
+                  if (!comment.trim()) setExpanded(false);
+                }}
+                placeholder="Add a note about this section..."
+                rows={3}
+                className="w-full resize-none rounded-md border border-[#EAE4D9] bg-[#F8F7F4] px-3 py-2 text-[13px] leading-relaxed text-[#2A2A2A] placeholder-[#2A2A2A]/20 outline-none focus:border-[#6C7B5A]/40"
+                spellCheck={false}
+              />
+            </div>
+          ) : (
+            <button
+              onClick={() => setExpanded(true)}
+              className="flex w-full items-center gap-2 text-left"
+            >
+              <MessageSquare
+                className={cn(
+                  "h-3.5 w-3.5 shrink-0",
+                  comment ? "text-[#6C7B5A]" : "text-[#2A2A2A]/20"
+                )}
+              />
+              <span
+                className={cn(
+                  "truncate text-[13px]",
+                  comment ? "text-[#2A2A2A]/60" : "text-[#2A2A2A]/25"
+                )}
+              >
+                {comment || "Add a note..."}
+              </span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

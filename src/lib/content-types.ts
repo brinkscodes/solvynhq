@@ -19,3 +19,5 @@ export interface ContentPage {
   description: string;
   sections: ContentSection[];
 }
+
+export type SectionComments = Record<string, string>;

@@ -1,15 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ContentSection } from "./content-section";
-import type { ContentPage } from "@/lib/content-types";
+import type { ContentPage, SectionComments } from "@/lib/content-types";
 
 export function ContentViewer({ pages }: { pages: ContentPage[] }) {
   const [activePageId, setActivePageId] = useState(pages[0]?.id ?? "");
   const activePage = pages.find((p) => p.id === activePageId);
+
+  const [comments, setComments] = useState<SectionComments>({});
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    fetch("/api/comments")
+      .then((r) => r.json())
+      .then((data) => setComments(data));
+  }, []);
+
+  const handleCommentChange = useCallback(
+    (sectionId: string, value: string) => {
+      setComments((prev) => ({ ...prev, [sectionId]: value }));
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = setTimeout(async () => {
+        await fetch("/api/comments", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sectionId, comment: value }),
+        });
+      }, 600);
+    },
+    []
+  );
 
   return (
     <>
@@ -60,7 +84,12 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
 
       {/* Content sections */}
       {activePage?.sections.map((section) => (
-        <ContentSection key={section.id} section={section} />
+        <ContentSection
+          key={section.id}
+          section={section}
+          comment={comments[section.id] ?? ""}
+          onCommentChange={handleCommentChange}
+        />
       ))}
     </>
   );
