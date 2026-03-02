@@ -1,55 +1,94 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import type { ProjectData, TaskStatus } from "@/lib/types";
-
-const TASKS_FILE = path.join(process.cwd(), "data", "tasks.json");
-
-function readTasks(): ProjectData {
-  const raw = fs.readFileSync(TASKS_FILE, "utf-8");
-  return JSON.parse(raw);
-}
-
-function writeTasks(data: ProjectData) {
-  fs.writeFileSync(TASKS_FILE, JSON.stringify(data, null, 2));
-}
+import { createClient } from "@/lib/supabase/server";
+import { getProjectId } from "@/lib/supabase/get-project";
+import type { ProjectData, Task, Section } from "@/lib/types";
 
 export async function GET() {
-  const data = readTasks();
-  return NextResponse.json(data);
+  try {
+    const supabase = await createClient();
+    const projectId = await getProjectId();
+
+    // Parallel queries
+    const [projectRes, sectionsRes, tasksRes] = await Promise.all([
+      supabase.from("projects").select("name, description").eq("id", projectId).single(),
+      supabase.from("sections").select("*").eq("project_id", projectId).order("order"),
+      supabase.from("tasks").select("*").eq("project_id", projectId),
+    ]);
+
+    if (projectRes.error) throw projectRes.error;
+    if (sectionsRes.error) throw sectionsRes.error;
+    if (tasksRes.error) throw tasksRes.error;
+
+    // Group tasks by section_id
+    const tasksBySection: Record<string, Task[]> = {};
+    for (const row of tasksRes.data) {
+      const task: Task = {
+        id: row.id,
+        name: row.name,
+        description: row.description || "",
+        status: row.status,
+        priority: row.priority,
+        tag: row.tag,
+        ...(row.completed_at ? { completedAt: row.completed_at } : {}),
+      };
+      if (!tasksBySection[row.section_id]) tasksBySection[row.section_id] = [];
+      tasksBySection[row.section_id].push(task);
+    }
+
+    // Assemble ProjectData shape
+    const sections: Section[] = sectionsRes.data.map((s) => ({
+      id: s.id,
+      name: s.name,
+      order: s.order,
+      phase: s.phase as 1 | 2 | 3,
+      tasks: tasksBySection[s.id] || [],
+    }));
+
+    const data: ProjectData = {
+      project: {
+        name: projectRes.data.name,
+        description: projectRes.data.description || "",
+      },
+      sections,
+    };
+
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error("GET /api/tasks error:", err);
+    return NextResponse.json({ error: "Failed to load tasks" }, { status: 500 });
+  }
 }
 
 export async function PATCH(req: NextRequest) {
-  const body = await req.json();
-  const { taskId, status } = body as { taskId: string; status: TaskStatus };
+  try {
+    const body = await req.json();
+    const { taskId, status } = body as { taskId: string; status: string };
 
-  if (!taskId || !status) {
-    return NextResponse.json({ error: "taskId and status required" }, { status: 400 });
-  }
-
-  const data = readTasks();
-  let found = false;
-
-  for (const section of data.sections) {
-    for (const task of section.tasks) {
-      if (task.id === taskId) {
-        task.status = status;
-        if (status === "done") {
-          task.completedAt = new Date().toISOString();
-        } else {
-          delete task.completedAt;
-        }
-        found = true;
-        break;
-      }
+    if (!taskId || !status) {
+      return NextResponse.json({ error: "taskId and status required" }, { status: 400 });
     }
-    if (found) break;
-  }
 
-  if (!found) {
-    return NextResponse.json({ error: "Task not found" }, { status: 404 });
-  }
+    const supabase = await createClient();
+    const projectId = await getProjectId();
 
-  writeTasks(data);
-  return NextResponse.json({ success: true });
+    const updates: Record<string, unknown> = { status };
+    if (status === "done") {
+      updates.completed_at = new Date().toISOString();
+    } else {
+      updates.completed_at = null;
+    }
+
+    const { error } = await supabase
+      .from("tasks")
+      .update(updates)
+      .eq("id", taskId)
+      .eq("project_id", projectId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("PATCH /api/tasks error:", err);
+    return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
+  }
 }

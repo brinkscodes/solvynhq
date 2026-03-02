@@ -55,7 +55,7 @@
     },
     {
       "id": "product-design",
-      "name": "Product Design — Shield Pouch",
+      "name": "Product Design \u2014 Shield Pouch",
       "order": 2,
       "phase": 1,
       "tasks": [
@@ -133,7 +133,7 @@
         },
         {
           "id": "pd-mockup-product",
-          "name": "Product Mockup — Pouch Standalone",
+          "name": "Product Mockup \u2014 Pouch Standalone",
           "description": "Clean product mockup of the Shield pouch.",
           "status": "done",
           "priority": "high",
@@ -142,7 +142,7 @@
         },
         {
           "id": "pd-mockup-pool",
-          "name": "Scene Mockup — Poolside",
+          "name": "Scene Mockup \u2014 Poolside",
           "description": "Shield pouch mockup in a luxury poolside setting.",
           "status": "done",
           "priority": "high",
@@ -151,7 +151,7 @@
         },
         {
           "id": "pd-mockup-bathroom",
-          "name": "Scene Mockup — Hotel Bathroom",
+          "name": "Scene Mockup \u2014 Hotel Bathroom",
           "description": "Shield pouch mockup in a premium hotel bathroom.",
           "status": "done",
           "priority": "high",
@@ -160,7 +160,7 @@
         },
         {
           "id": "pd-mockup-spa",
-          "name": "Scene Mockup — Spa / Wellness",
+          "name": "Scene Mockup \u2014 Spa / Wellness",
           "description": "Shield pouch mockup in a spa or wellness center.",
           "status": "done",
           "priority": "high",
@@ -169,7 +169,7 @@
         },
         {
           "id": "pd-mockup-beach",
-          "name": "Scene Mockup — Beach / Resort Outdoor",
+          "name": "Scene Mockup \u2014 Beach / Resort Outdoor",
           "description": "Shield pouch mockup in an outdoor beach or resort environment.",
           "status": "done",
           "priority": "high",
@@ -178,18 +178,50 @@
         },
         {
           "id": "pd-mockup-event",
-          "name": "Scene Mockup — Event / Welcome Kit",
+          "name": "Scene Mockup \u2014 Event / Welcome Kit",
           "description": "Shield pouch mockup in an event or hospitality welcome kit context.",
           "status": "done",
           "priority": "high",
           "tag": "Mockup",
           "completedAt": "2026-02-25T12:00:00.000Z"
+        },
+        {
+          "id": "pd-readability",
+          "name": "Pouch Design Readability \u2014 Bolder Text",
+          "description": "Make text bolder (not bigger) on the Shield pouch to improve readability without layout changes. Specific areas: 1) 'Mineral Sunscreen, Natural, Effective and Sustainable' tagline \u2014 increase font weight. 2) Drug Facts panel \u2014 increase font weight for readability. 3) 5ml volume text and bottom details. Chaim confirming with Joey (manufacturer) that bolder works. Per 3/1 meeting with Mark & Chaim.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Design"
+        },
+        {
+          "id": "pd-drugfacts-update",
+          "name": "Updated Drug Facts Panel from Chaim",
+          "description": "Waiting on Chaim to send the updated Drug Facts panel. Current design has an outdated version. Once received, replace the Drug Facts content on the pouch design. Needed before FDA registration and production order.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Waiting"
+        },
+        {
+          "id": "pd-upc-barcode",
+          "name": "GS1 UPC Barcode",
+          "description": "Obtain a GS1 UPC barcode for the Shield pouch. Needed for retail/gift shop sales and future retail outreach. Each SKU needs its own UPC. Chaim/Mark checking with Joey on requirements. Once received, add barcode to pouch design artwork.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Waiting"
+        },
+        {
+          "id": "pd-display-box",
+          "name": "Display Box Design Review",
+          "description": "Chaim designed prototype display boxes (testing color output). Samples arriving this week. Review design and suggest any updates to align with brand guidelines. Jorge to provide recommendations on the display box design.",
+          "status": "todo",
+          "priority": "medium",
+          "tag": "Design"
         }
       ]
     },
     {
       "id": "homepage-1-4",
-      "name": "Homepage — Sections 1–4",
+      "name": "Homepage \u2014 Sections 1\u20134",
       "order": 3,
       "phase": 1,
       "tasks": [
@@ -213,8 +245,8 @@
         },
         {
           "id": "hp-s3",
-          "name": "S3: Product Intro — Shield",
-          "description": "Product teaser. Headline: \"Shield by Solvyn\". Key attributes as badges: FDA SPF, 100% Mineral, Hypoallergenic, Reef-Safe, Sealed & Tamper-Proof. CTA: \"Learn More\" → /shield. Asymmetric layout.",
+          "name": "S3: Product Intro \u2014 Shield",
+          "description": "Product teaser. Headline: \"Shield by Solvyn\". Key attributes as badges: FDA SPF, 100% Mineral, Hypoallergenic, Reef-Safe, Sealed & Tamper-Proof. CTA: \"Learn More\" \u2192 /shield. Asymmetric layout.",
           "status": "todo",
           "priority": "high",
           "tag": "Homepage"
@@ -231,7 +263,7 @@
     },
     {
       "id": "homepage-5-7",
-      "name": "Homepage — Sections 5–7 + Responsive",
+      "name": "Homepage \u2014 Sections 5\u20137 + Responsive",
       "order": 4,
       "phase": 1,
       "tasks": [
@@ -246,7 +278,7 @@
         {
           "id": "hp-s6",
           "name": "S6: Trust & Credibility",
-          "description": "Three sub-blocks: A) Medical Advisory — Dr. Eduardo Weiss, MD. B) Certifications — FDA, Reef-Safe, Hypoallergenic. C) Partners — logo showcase.",
+          "description": "Three sub-blocks: A) Medical Advisory \u2014 Dr. Eduardo Weiss, MD. B) Certifications \u2014 FDA, Reef-Safe, Hypoallergenic. C) Partners \u2014 logo showcase.",
           "status": "todo",
           "priority": "high",
           "tag": "Homepage"
@@ -261,11 +293,20 @@
         },
         {
           "id": "hp-responsive",
-          "name": "Homepage Responsive — Desktop, Tablet, Mobile",
+          "name": "Homepage Responsive \u2014 Desktop, Tablet, Mobile",
           "description": "Full responsive optimization of all 7 homepage sections across desktop, tablet, and mobile breakpoints. Touch-friendly CTAs, proper stacking, image scaling, typography sizing.",
           "status": "todo",
           "priority": "high",
           "tag": "Responsive"
+        },
+        {
+          "id": "hp-content-revisions",
+          "name": "Homepage Content Revision & Updates",
+          "description": "Review and update homepage copy across all 7 sections based on team feedback, review calls, and evolving brand direction. Includes updating both the live site in Elementor and the source files (website-content.ts + solvyn-homepage-brief.md) to stay in sync.",
+          "status": "done",
+          "priority": "medium",
+          "tag": "Content",
+          "completedAt": "2026-03-01T18:00:00.000Z"
         }
       ]
     },
@@ -278,7 +319,7 @@
         {
           "id": "page-about",
           "name": "About Us",
-          "description": "Company story, mission statement, team bios (Chaim Cohen — CEO, Mark Caraher — Sales & Marketing), contact CTA. Responsive across all breakpoints.",
+          "description": "Company story, mission statement, team bios (Chaim Cohen \u2014 CEO, Mark Caraher \u2014 Sales & Marketing), contact CTA. Responsive across all breakpoints.",
           "status": "todo",
           "priority": "high",
           "tag": "Page"
@@ -358,7 +399,7 @@
         {
           "id": "cta-linking",
           "name": "CTA Linking & Functionality",
-          "description": "Ensure all CTAs across every page link to correct destinations. \"Request a Conversation\" → contact form, \"Join the Waitlist\" → waitlist form, \"Learn More\" → /shield, etc.",
+          "description": "Ensure all CTAs across every page link to correct destinations. \"Request a Conversation\" \u2192 contact form, \"Join the Waitlist\" \u2192 waitlist form, \"Learn More\" \u2192 /shield, etc.",
           "status": "todo",
           "priority": "high",
           "tag": "Form"
@@ -397,7 +438,7 @@
         },
         {
           "id": "seo-copy-meta",
-          "name": "SEO Copywriting — Titles & Meta Descriptions",
+          "name": "SEO Copywriting \u2014 Titles & Meta Descriptions",
           "description": "Write optimized title tags (under 60 chars) and meta descriptions (under 160 chars) for every page: Homepage, Shield, About, Contact, Partners, Discover, T&C, Privacy. Incorporate target keywords naturally.",
           "status": "todo",
           "priority": "high",
@@ -405,7 +446,7 @@
         },
         {
           "id": "seo-copy-headings",
-          "name": "SEO Copywriting — Headings & On-Page Copy",
+          "name": "SEO Copywriting \u2014 Headings & On-Page Copy",
           "description": "Audit and optimize H1/H2/H3 heading hierarchy across all pages. Ensure each page has one clear H1 with primary keyword. Refine body copy to include target keywords naturally without keyword stuffing.",
           "status": "todo",
           "priority": "high",
@@ -526,9 +567,33 @@
       ]
     },
     {
+      "id": "social-content",
+      "name": "Social Media & Content",
+      "order": 10,
+      "phase": 2,
+      "tasks": [
+        {
+          "id": "ig-content-section",
+          "name": "Instagram Content Section on SolvynHQ",
+          "description": "Build a new section on SolvynHQ dashboard for Instagram content planning. Include SEO keywords adapted for social media, suggested talking points, B-roll ideas, and brand vibe guidelines. Help Mark and the content team create videos that align with SEO strategy and brand positioning. Per 3/1 meeting.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Content"
+        },
+        {
+          "id": "ig-launch",
+          "name": "Instagram Hard Launch",
+          "description": "Mark hard launching Instagram starting 3/2. Content shoots planned \u2014 hiring someone to film at Chaim's apartment. Goal: 5-10 videos to compress and roll out. Focus on attention-grabbing hooks (first 2 seconds), reef-safe messaging, luxury brand vibe.",
+          "status": "todo",
+          "priority": "high",
+          "tag": "Social"
+        }
+      ]
+    },
+    {
       "id": "refinement",
       "name": "Refinement & Enhancements",
-      "order": 10,
+      "order": 11,
       "phase": 3,
       "tasks": [
         {

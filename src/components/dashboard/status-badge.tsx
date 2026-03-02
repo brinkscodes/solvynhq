@@ -1,29 +1,33 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { TaskStatus } from "@/lib/types";
 
 const statusConfig: Record<TaskStatus, { label: string; className: string }> = {
   todo: {
     label: "To Do",
-    className: "border-[#2A2A2A]/20 bg-transparent text-[#2A2A2A]/60",
+    className: "bg-[#1A1A1A]/[0.04] text-[#1A1A1A]/45 border-transparent",
   },
   "in-progress": {
-    label: "In Progress",
-    className: "border-transparent bg-[#B96E5C] text-white",
+    label: "Active",
+    className: "bg-[#B96E5C]/10 text-[#B96E5C] border-transparent",
   },
   done: {
     label: "Done",
-    className: "border-transparent bg-[#6C7B5A] text-white",
+    className: "bg-[#6C7B5A]/10 text-[#6C7B5A] border-transparent",
   },
 };
 
 export function StatusBadge({ status }: { status: TaskStatus }) {
   const config = statusConfig[status];
   return (
-    <Badge variant="outline" className={cn("text-xs font-medium", config.className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide",
+        config.className
+      )}
+    >
       {config.label}
-    </Badge>
+    </span>
   );
 }

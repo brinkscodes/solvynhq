@@ -1,28 +1,70 @@
-import fs from "fs";
-import path from "path";
 import { Dashboard } from "@/components/dashboard/dashboard";
 import { Sidebar } from "@/components/dashboard/sidebar";
-import type { ProjectData } from "@/lib/types";
+import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import type { ProjectData, Task, Section } from "@/lib/types";
+import { createClient } from "@/lib/supabase/server";
+import { getProjectId } from "@/lib/supabase/get-project";
 
 export const dynamic = "force-dynamic";
 
-function getTaskData(): ProjectData {
-  const filePath = path.join(process.cwd(), "data", "tasks.json");
-  const raw = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(raw);
+async function getTaskData(): Promise<ProjectData> {
+  const supabase = await createClient();
+  const projectId = await getProjectId();
+
+  const [projectRes, sectionsRes, tasksRes] = await Promise.all([
+    supabase.from("projects").select("name, description").eq("id", projectId).single(),
+    supabase.from("sections").select("*").eq("project_id", projectId).order("order"),
+    supabase.from("tasks").select("*").eq("project_id", projectId),
+  ]);
+
+  if (projectRes.error) throw projectRes.error;
+  if (sectionsRes.error) throw sectionsRes.error;
+  if (tasksRes.error) throw tasksRes.error;
+
+  const tasksBySection: Record<string, Task[]> = {};
+  for (const row of tasksRes.data) {
+    const task: Task = {
+      id: row.id,
+      name: row.name,
+      description: row.description || "",
+      status: row.status,
+      priority: row.priority,
+      tag: row.tag,
+      ...(row.completed_at ? { completedAt: row.completed_at } : {}),
+    };
+    if (!tasksBySection[row.section_id]) tasksBySection[row.section_id] = [];
+    tasksBySection[row.section_id].push(task);
+  }
+
+  const sections: Section[] = (sectionsRes.data || []).map((s) => ({
+    id: s.id,
+    name: s.name,
+    order: s.order,
+    phase: s.phase as 1 | 2 | 3,
+    tasks: tasksBySection[s.id] || [],
+  }));
+
+  return {
+    project: {
+      name: projectRes.data.name,
+      description: projectRes.data.description || "",
+    },
+    sections,
+  };
 }
 
-export default function Page() {
-  const data = getTaskData();
+export default async function Page() {
+  const data = await getTaskData();
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] font-[family-name:var(--font-inter)]">
-      <div className="mx-auto flex max-w-6xl gap-6 px-6 py-12">
-        <Sidebar />
-        <div className="min-w-0 flex-1">
+    <div className="flex min-h-screen bg-[#F8F7F4] font-[family-name:var(--font-inter)]">
+      <Sidebar />
+      <main className="ml-[232px] flex-1">
+        <div className="mx-auto max-w-[960px] px-8 py-10">
           <Dashboard data={data} />
         </div>
-      </div>
+      </main>
+      <FloatingNotepad />
     </div>
   );
 }

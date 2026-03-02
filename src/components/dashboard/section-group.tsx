@@ -19,21 +19,21 @@ export function SectionGroup({
 
   return (
     <div className="mb-8">
-      <div className="mb-3 flex items-end justify-between px-4">
-        <h2 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-[#2A2A2A]">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-[#1A1A1A]">
           {section.name}
         </h2>
-        <span className="text-xs text-[#2A2A2A]/40">
-          {done} of {total} complete
+        <span className="text-xs font-medium text-[#1A1A1A]/30">
+          {done}/{total}
         </span>
       </div>
-      <div className="mx-4 mb-4 h-1.5 overflow-hidden rounded-full bg-[#EAE4D9]">
+      <div className="mb-4 h-1 overflow-hidden rounded-full bg-[#EAE4D9]/50">
         <div
-          className="h-full rounded-full bg-[#6C7B5A] transition-all duration-500"
+          className="h-full rounded-full bg-[#6C7B5A]/60 transition-all duration-700 ease-out"
           style={{ width: `${percent}%` }}
         />
       </div>
-      <div className="rounded-lg border border-[#EAE4D9] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white">
         {activeTasks.map((task) => (
           <TaskRow key={task.id} task={task} onStatusChange={onStatusChange} />
         ))}

@@ -77,47 +77,53 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[#2A2A2A]/30 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#1A1A1A]/40 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative z-10 mx-4 w-full max-w-md rounded-xl border border-[#EAE4D9] bg-white shadow-lg">
+      <div className="relative z-10 mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#EAE4D9]/60 px-5 py-4">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4 text-[#6C7B5A]" />
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-[#2A2A2A]">
+        <div className="flex items-center justify-between px-6 py-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#6C7B5A]/10">
+              <MessageSquare className="h-4 w-4 text-[#6C7B5A]" />
+            </div>
+            <h3 className="text-sm font-bold text-[#1A1A1A]">
               Send Feedback
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-[#F7F5F0]"
+            className="flex h-8 w-8 items-center justify-center rounded-xl transition-colors hover:bg-[#F8F7F4]"
           >
-            <X className="h-4 w-4 text-[#2A2A2A]/40" />
+            <X className="h-4 w-4 text-[#1A1A1A]/30" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="px-5 py-4">
+        <div className="px-6 pb-5">
           {state === "success" ? (
-            <div className="flex flex-col items-center gap-2 py-6">
-              <CheckCircle className="h-8 w-8 text-[#6C7B5A]" />
-              <p className="text-sm font-medium text-[#2A2A2A]">
+            <div className="flex flex-col items-center gap-3 py-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#6C7B5A]/10">
+                <CheckCircle className="h-6 w-6 text-[#6C7B5A]" />
+              </div>
+              <p className="text-sm font-semibold text-[#1A1A1A]">
                 Feedback sent!
               </p>
-              <p className="text-xs text-[#2A2A2A]/40">
+              <p className="text-xs text-[#1A1A1A]/35">
                 Thanks for your message.
               </p>
             </div>
           ) : state === "warning" ? (
-            <div className="flex flex-col items-center gap-2 py-6">
-              <AlertTriangle className="h-8 w-8 text-[#B96E5C]" />
-              <p className="text-sm font-medium text-[#2A2A2A]">
+            <div className="flex flex-col items-center gap-3 py-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#B96E5C]/10">
+                <AlertTriangle className="h-6 w-6 text-[#B96E5C]" />
+              </div>
+              <p className="text-sm font-semibold text-[#1A1A1A]">
                 Feedback saved
               </p>
-              <p className="text-xs text-[#2A2A2A]/40">
+              <p className="text-center text-xs text-[#1A1A1A]/35">
                 Your message was saved but email delivery failed. The developer
                 will still see it.
               </p>
@@ -129,7 +135,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="What's on your mind? Feature requests, bugs, questions..."
-                className="h-32 w-full resize-none rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/50 px-4 py-3 text-sm leading-relaxed text-[#2A2A2A] placeholder-[#2A2A2A]/25 outline-none transition-colors focus:border-[#6C7B5A]/40 focus:bg-white"
+                className="h-32 w-full resize-none rounded-xl border border-[#E8E4DE] bg-[#F8F7F4]/50 px-4 py-3.5 text-[13px] leading-relaxed text-[#1A1A1A] placeholder-[#1A1A1A]/20 outline-none transition-all focus:border-[#6C7B5A]/30 focus:bg-white focus:shadow-sm"
                 disabled={state === "submitting"}
               />
 
@@ -144,15 +150,15 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
 
         {/* Footer */}
         {state !== "success" && state !== "warning" && (
-          <div className="flex justify-end border-t border-[#EAE4D9]/60 px-5 py-3">
+          <div className="flex justify-end border-t border-[#E8E4DE]/60 px-6 py-4">
             <button
               onClick={handleSubmit}
               disabled={!message.trim() || state === "submitting"}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold uppercase tracking-wide transition-colors",
+                "flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-semibold transition-all duration-200",
                 message.trim() && state !== "submitting"
-                  ? "bg-[#6C7B5A] text-white hover:bg-[#5a6a4a]"
-                  : "cursor-not-allowed bg-[#EAE4D9]/50 text-[#2A2A2A]/30"
+                  ? "bg-[#1A1B23] text-white hover:bg-[#2A2B33] shadow-sm"
+                  : "cursor-not-allowed bg-[#E8E4DE]/40 text-[#1A1A1A]/20"
               )}
             >
               <Send className="h-3.5 w-3.5" />

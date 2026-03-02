@@ -6,11 +6,13 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+export default function SignupPage() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -19,18 +21,51 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: { full_name: fullName },
+      },
     });
 
     if (authError) {
       setError(authError.message);
       setLoading(false);
     } else {
+      setSuccess(true);
+      setLoading(false);
+      // If email confirmation is disabled, redirect immediately
       router.push("/");
       router.refresh();
     }
+  }
+
+  if (success) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F8F7F4] px-6 font-[family-name:var(--font-inter)]">
+        <div className="w-full max-w-sm text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#6C7B5A]/10">
+            <svg className="h-6 w-6 text-[#6C7B5A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[#1A1A1A]">
+            Check your email
+          </h1>
+          <p className="mt-2 text-sm text-[#1A1A1A]/50">
+            We sent a confirmation link to <strong className="text-[#1A1A1A]/70">{email}</strong>.
+            Click the link to activate your account.
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-block text-[13px] font-medium text-[#6C7B5A] hover:underline"
+          >
+            Back to login
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -47,7 +82,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Right panel - login form */}
+      {/* Right panel - signup form */}
       <div className="flex flex-1 items-center justify-center bg-[#F8F7F4] px-6">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
@@ -64,14 +99,29 @@ export default function LoginPage() {
 
           <div className="hidden lg:block">
             <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[#1A1A1A]">
-              Welcome back
+              Create an account
             </h1>
             <p className="mt-1 text-sm text-[#1A1A1A]/35">
-              Sign in to your account to continue.
+              Get started with your project dashboard.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A]/30">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Your name"
+                autoFocus
+                required
+                className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
+              />
+            </div>
+
             <div>
               <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A]/30">
                 Email
@@ -84,7 +134,6 @@ export default function LoginPage() {
                   setError("");
                 }}
                 placeholder="you@example.com"
-                autoFocus
                 required
                 className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
               />
@@ -101,8 +150,9 @@ export default function LoginPage() {
                   setPassword(e.target.value);
                   setError("");
                 }}
-                placeholder="Enter password"
+                placeholder="At least 6 characters"
                 required
+                minLength={6}
                 className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
               />
             </div>
@@ -120,18 +170,18 @@ export default function LoginPage() {
               disabled={loading}
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1A1B23] px-4 py-3.5 text-sm font-semibold text-white transition-all hover:bg-[#2A2B33] disabled:opacity-50"
             >
-              {loading ? "Signing in..." : "Continue"}
+              {loading ? "Creating account..." : "Create account"}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>
 
           <p className="mt-6 text-center text-[13px] text-[#1A1A1A]/35">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="font-medium text-[#6C7B5A] hover:underline"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
         </div>

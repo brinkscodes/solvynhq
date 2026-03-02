@@ -1,7 +1,9 @@
-import fs from "fs";
-import path from "path";
 import { ContextEditor } from "@/components/product-context/context-editor";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
 import type { ProductContext } from "@/lib/product-context-types";
+import { createClient } from "@/lib/supabase/server";
+import { getProjectId } from "@/lib/supabase/get-project";
 
 export const dynamic = "force-dynamic";
 
@@ -10,16 +12,40 @@ export const metadata = {
   description: "Editable product marketing context for Solvyn",
 };
 
-export default function ProductContextPage() {
-  const file = path.join(process.cwd(), "data", "product-context.json");
-  const raw = fs.readFileSync(file, "utf-8");
-  const data: ProductContext = JSON.parse(raw);
+async function getProductContext(): Promise<ProductContext> {
+  const supabase = await createClient();
+  const projectId = await getProjectId();
+
+  const { data, error } = await supabase
+    .from("product_context")
+    .select("data, updated_at")
+    .eq("project_id", projectId)
+    .single();
+
+  if (error && error.code === "PGRST116") {
+    // No row yet — return empty context
+    return { lastUpdated: new Date().toISOString() } as ProductContext;
+  }
+  if (error) throw error;
+
+  return {
+    ...data.data,
+    lastUpdated: data.updated_at,
+  } as ProductContext;
+}
+
+export default async function ProductContextPage() {
+  const data = await getProductContext();
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] font-[family-name:var(--font-inter)]">
-      <div className="mx-auto max-w-5xl px-6 py-12">
-        <ContextEditor initialData={data} />
-      </div>
+    <div className="flex min-h-screen bg-[#F8F7F4] font-[family-name:var(--font-inter)]">
+      <Sidebar />
+      <main className="ml-[232px] flex-1">
+        <div className="mx-auto max-w-[960px] px-8 py-10">
+          <ContextEditor initialData={data} />
+        </div>
+      </main>
+      <FloatingNotepad />
     </div>
   );
 }

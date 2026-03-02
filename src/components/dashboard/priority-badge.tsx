@@ -1,29 +1,37 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { TaskPriority } from "@/lib/types";
 
-const priorityConfig: Record<TaskPriority, { label: string; className: string }> = {
+const priorityConfig: Record<TaskPriority, { label: string; dot: string; className: string }> = {
   low: {
     label: "Low",
-    className: "border-transparent bg-[#F7F5F0] text-[#2A2A2A]/50",
+    dot: "bg-[#1A1A1A]/20",
+    className: "text-[#1A1A1A]/35",
   },
   medium: {
-    label: "Medium",
-    className: "border-transparent bg-[#EAE4D9] text-[#2A2A2A]/70",
+    label: "Med",
+    dot: "bg-[#D4A843]",
+    className: "text-[#1A1A1A]/50",
   },
   high: {
     label: "High",
-    className: "border-transparent bg-[#B96E5C]/15 text-[#B96E5C]",
+    dot: "bg-[#B96E5C]",
+    className: "text-[#B96E5C]",
   },
 };
 
 export function PriorityBadge({ priority }: { priority: TaskPriority }) {
   const config = priorityConfig[priority];
   return (
-    <Badge variant="outline" className={cn("text-[11px] font-normal", config.className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 text-[10px] font-medium",
+        config.className
+      )}
+    >
+      <span className={cn("h-1.5 w-1.5 rounded-full", config.dot)} />
       {config.label}
-    </Badge>
+    </span>
   );
 }

@@ -1,27 +1,69 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const FILE = path.join(process.cwd(), "data", "product-context.json");
-
-function readContext() {
-  const raw = fs.readFileSync(FILE, "utf-8");
-  return JSON.parse(raw);
-}
-
-function writeContext(data: Record<string, unknown>) {
-  fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
-}
+import { createClient } from "@/lib/supabase/server";
+import { getProjectId } from "@/lib/supabase/get-project";
 
 export async function GET() {
-  const data = readContext();
-  return NextResponse.json(data);
+  try {
+    const supabase = await createClient();
+    const projectId = await getProjectId();
+
+    const { data, error } = await supabase
+      .from("product_context")
+      .select("data, updated_at")
+      .eq("project_id", projectId)
+      .single();
+
+    if (error && error.code === "PGRST116") {
+      // No row yet — return empty with lastUpdated
+      return NextResponse.json({ lastUpdated: new Date().toISOString() });
+    }
+    if (error) throw error;
+
+    // Return the JSONB data with lastUpdated mapped from updated_at
+    return NextResponse.json({
+      ...data.data,
+      lastUpdated: data.updated_at,
+    });
+  } catch (err) {
+    console.error("GET /api/product-context error:", err);
+    return NextResponse.json({ error: "Failed to load context" }, { status: 500 });
+  }
 }
 
 export async function PATCH(req: NextRequest) {
-  const updates = await req.json();
-  const current = readContext();
-  const merged = { ...current, ...updates, lastUpdated: new Date().toISOString() };
-  writeContext(merged);
-  return NextResponse.json({ success: true });
+  try {
+    const updates = await req.json();
+    const supabase = await createClient();
+    const projectId = await getProjectId();
+
+    // Strip lastUpdated from the data — we use updated_at column instead
+    const { lastUpdated: _, ...contextData } = updates;
+
+    // Fetch existing data to merge
+    const { data: existing } = await supabase
+      .from("product_context")
+      .select("data")
+      .eq("project_id", projectId)
+      .single();
+
+    const mergedData = { ...(existing?.data || {}), ...contextData };
+
+    const { error } = await supabase
+      .from("product_context")
+      .upsert(
+        {
+          project_id: projectId,
+          data: mergedData,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "project_id" }
+      );
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("PATCH /api/product-context error:", err);
+    return NextResponse.json({ error: "Failed to save context" }, { status: 500 });
+  }
 }

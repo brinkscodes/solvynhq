@@ -1,20 +1,8 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
-const PASSWORD = process.env.SOLVYNHQ_PASSWORD || "Mineral";
-
-export async function POST(request: Request) {
-  const { password } = await request.json();
-
-  if (password === PASSWORD) {
-    const response = NextResponse.json({ ok: true });
-    response.cookies.set("solvynhq_auth", "1", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-    return response;
-  }
-
-  return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+export async function POST() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  return NextResponse.json({ ok: true });
 }

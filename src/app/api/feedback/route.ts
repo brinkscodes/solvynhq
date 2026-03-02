@@ -1,32 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import fs from "fs";
-import path from "path";
-
-const FEEDBACK_FILE = path.join(process.cwd(), "data", "feedback.json");
-
-interface FeedbackEntry {
-  id: string;
-  message: string;
-  sentAt: string;
-  emailSent: boolean;
-}
-
-interface FeedbackLog {
-  entries: FeedbackEntry[];
-}
-
-function readFeedback(): FeedbackLog {
-  if (!fs.existsSync(FEEDBACK_FILE)) {
-    return { entries: [] };
-  }
-  const raw = fs.readFileSync(FEEDBACK_FILE, "utf-8");
-  return JSON.parse(raw);
-}
-
-function writeFeedback(data: FeedbackLog) {
-  fs.writeFileSync(FEEDBACK_FILE, JSON.stringify(data, null, 2));
-}
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -39,12 +13,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const entry: FeedbackEntry = {
-    id: crypto.randomUUID(),
-    message: message.trim(),
-    sentAt: new Date().toISOString(),
-    emailSent: false,
-  };
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let emailSent = false;
 
   try {
     const apiKey = process.env.RESEND_API_KEY;
@@ -58,23 +32,25 @@ export async function POST(req: NextRequest) {
       from,
       to,
       subject: "SolvynHQ Dashboard Feedback",
-      text: `New feedback from the dashboard:\n\n${entry.message}\n\nSent at: ${entry.sentAt}`,
+      text: `New feedback from the dashboard:\n\n${message.trim()}\n\nFrom: ${user?.email || "unknown"}\nSent at: ${new Date().toISOString()}`,
     });
-    entry.emailSent = true;
+    emailSent = true;
   } catch (error) {
     console.error("Failed to send feedback email:", error);
   }
 
-  // File logging is best-effort (Vercel has a read-only filesystem)
+  // Save to Supabase
   try {
-    const log = readFeedback();
-    log.entries.push(entry);
-    writeFeedback(log);
-  } catch {
-    // Ignore file write errors in serverless environments
+    await supabase.from("feedback").insert({
+      user_id: user?.id || null,
+      message: message.trim(),
+      email_sent: emailSent,
+    });
+  } catch (error) {
+    console.error("Failed to save feedback:", error);
   }
 
-  if (!entry.emailSent) {
+  if (!emailSent) {
     return NextResponse.json(
       { success: true, warning: "Feedback saved but email delivery failed" },
       { status: 207 }
