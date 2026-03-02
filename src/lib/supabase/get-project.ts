@@ -12,31 +12,29 @@ export async function getProjectId(): Promise<string> {
     throw new Error("Not authenticated");
   }
 
-  // Try to find existing project for this user
-  const { data: project, error: fetchError } = await supabase
+  // Try to find existing project for this user (order by created_at to get the oldest/original)
+  const { data: projects, error: fetchError } = await supabase
     .from("projects")
     .select("id")
     .eq("owner_id", user.id)
-    .limit(1)
-    .single();
+    .order("created_at", { ascending: true })
+    .limit(1);
 
-  if (project) return project.id;
+  if (fetchError) throw fetchError;
+
+  if (projects && projects.length > 0) return projects[0].id;
 
   // No project yet — auto-create one
-  if (fetchError && fetchError.code === "PGRST116") {
-    const { data: newProject, error: insertError } = await supabase
-      .from("projects")
-      .insert({
-        owner_id: user.id,
-        name: "SolvynHQ",
-        description: "Project dashboard",
-      })
-      .select("id")
-      .single();
+  const { data: newProject, error: insertError } = await supabase
+    .from("projects")
+    .insert({
+      owner_id: user.id,
+      name: "SolvynHQ",
+      description: "Project dashboard",
+    })
+    .select("id")
+    .single();
 
-    if (insertError) throw insertError;
-    return newProject!.id;
-  }
-
-  throw fetchError;
+  if (insertError) throw insertError;
+  return newProject!.id;
 }
