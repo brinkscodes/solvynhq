@@ -86,7 +86,7 @@ function CompetitorCard({ competitor }: { competitor: Competitor }) {
       )}
 
       {/* Strengths & Weaknesses */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {competitor.strengths.length > 0 && (
           <div>
             <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-[#6C7B5A]">

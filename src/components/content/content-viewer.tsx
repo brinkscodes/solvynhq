@@ -76,13 +76,13 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
         </div>
 
         {/* Page tab switcher */}
-        <div className="mt-6 flex gap-1 rounded-lg bg-[#EAE4D9]/60 p-1">
+        <div className="mt-6 flex gap-1 overflow-x-auto rounded-lg bg-[#EAE4D9]/60 p-1">
           {pages.map((page) => (
             <button
               key={page.id}
               onClick={() => setActivePageId(page.id)}
               className={cn(
-                "flex-1 rounded-md px-4 py-2 text-sm font-medium transition-all",
+                "flex-1 whitespace-nowrap rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:text-sm",
                 activePageId === page.id
                   ? "bg-white text-[#2A2A2A] shadow-sm"
                   : "text-[#2A2A2A]/40 hover:text-[#2A2A2A]/60"

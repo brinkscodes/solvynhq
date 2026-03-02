@@ -66,7 +66,7 @@ export function FloatingNotepad() {
             : "translate-y-3 scale-95 opacity-0 pointer-events-none"
         )}
       >
-        <div className="w-80 overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white shadow-2xl shadow-black/[0.08]">
+        <div className="w-[calc(100vw-3rem)] max-w-80 overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white shadow-2xl shadow-black/[0.08] sm:w-80">
           <div className="flex items-center gap-2.5 border-b border-[#E8E4DE]/60 px-5 py-3.5">
             <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#B96E5C]/10">
               <StickyNote className="h-3.5 w-3.5 text-[#B96E5C]" />

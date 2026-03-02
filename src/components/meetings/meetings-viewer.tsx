@@ -51,14 +51,14 @@ function MeetingCard({ meeting }: { meeting: Meeting }) {
             {formatDate(meeting.date)}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {pendingCount > 0 && (
-            <span className="rounded-full bg-[#B96E5C]/10 px-2.5 py-1 text-xs font-medium text-[#B96E5C]">
+            <span className="hidden rounded-full bg-[#B96E5C]/10 px-2.5 py-1 text-xs font-medium text-[#B96E5C] sm:inline-flex">
               {pendingCount} pending
             </span>
           )}
           {doneCount > 0 && (
-            <span className="rounded-full bg-[#6C7B5A]/10 px-2.5 py-1 text-xs font-medium text-[#6C7B5A]">
+            <span className="hidden rounded-full bg-[#6C7B5A]/10 px-2.5 py-1 text-xs font-medium text-[#6C7B5A] sm:inline-flex">
               {doneCount} done
             </span>
           )}
@@ -115,8 +115,8 @@ function MeetingCard({ meeting }: { meeting: Meeting }) {
             <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#2A2A2A]/30">
               Action Items
             </h4>
-            <div className="overflow-hidden rounded-xl border border-[#EAE4D9]/80">
-              <table className="w-full">
+            <div className="overflow-x-auto rounded-xl border border-[#EAE4D9]/80">
+              <table className="w-full min-w-[400px]">
                 <thead>
                   <tr className="border-b border-[#EAE4D9]/60 bg-[#F8F7F4]/50">
                     <th className="px-4 py-2.5 text-left text-xs font-medium text-[#2A2A2A]/40">

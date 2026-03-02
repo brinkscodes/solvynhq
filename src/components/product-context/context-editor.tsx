@@ -494,7 +494,7 @@ function TabPersonas({
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <EditText label="Persona" value={row.persona} onChange={(v) => setRow(i, "persona", v)} placeholder="e.g. Hotel GM" rows={1} />
                 <EditText label="Cares about" value={row.caresAbout} onChange={(v) => setRow(i, "caresAbout", v)} placeholder="What matters most..." rows={1} />
                 <EditText label="Challenge" value={row.challenge} onChange={(v) => setRow(i, "challenge", v)} placeholder="Their core challenge..." rows={1} />
@@ -520,7 +520,7 @@ function TabPersonas({
               <h3 className="text-sm font-semibold text-[#2A2A2A]">
                 {row.persona}
               </h3>
-              <div className="mt-2 grid grid-cols-3 gap-4">
+              <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
                 <div>
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-[#2A2A2A]/35">
                     Cares about
@@ -782,7 +782,7 @@ function TabSwitching({
           <EditText label="Anxiety — What worries them about switching" value={data.anxiety} onChange={(v) => set("anxiety", v)} rows={3} />
         </>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4">
             <FieldLabel>Push</FieldLabel>
             <p className="text-sm text-[#2A2A2A]/70">{data.push}</p>
@@ -905,7 +905,7 @@ function TabLanguage({
                       i % 2 === 0 ? "bg-[#F7F5F0]/30" : "bg-white"
                     )}
                   >
-                    <span className="w-1/4 shrink-0 font-medium text-[#2A2A2A]">
+                    <span className="w-1/3 shrink-0 font-medium text-[#2A2A2A] sm:w-1/4">
                       {row.term}
                     </span>
                     <span className="text-[#2A2A2A]/70">{row.meaning}</span>
@@ -1072,7 +1072,7 @@ function TabProofPoints({
                       i % 2 === 0 ? "bg-[#F7F5F0]/30" : "bg-white"
                     )}
                   >
-                    <span className="w-1/4 shrink-0 font-medium text-[#2A2A2A]">
+                    <span className="w-1/3 shrink-0 font-medium text-[#2A2A2A] sm:w-1/4">
                       {row.theme}
                     </span>
                     <span className="text-[#2A2A2A]/70">{row.proof}</span>

@@ -14,8 +14,8 @@ export default function SeoPage() {
   return (
     <div className="flex min-h-screen bg-[#F8F7F4] font-[family-name:var(--font-inter)]">
       <Sidebar />
-      <main className="ml-[232px] flex-1">
-        <div className="mx-auto max-w-[960px] px-8 py-10">
+      <main className="flex-1 lg:ml-[232px]">
+        <div className="mx-auto max-w-[960px] px-4 py-16 sm:px-8 sm:py-10 lg:py-10">
           <SeoViewer data={seoResearch} />
         </div>
       </main>

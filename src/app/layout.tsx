@@ -15,6 +15,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Solvyn - Project Dashboard",
   description: "Development tracker for the Solvyn website project",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({

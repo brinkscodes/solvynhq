@@ -63,7 +63,7 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
       </div>
 
       {/* Stats row */}
-      <div className="mb-6 grid grid-cols-3 gap-4">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
