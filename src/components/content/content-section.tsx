@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, MessageSquare } from "lucide-react";
+import { Copy, Check, MessageSquare, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ContentSection as ContentSectionType, ContentBlock } from "@/lib/content-types";
+import type {
+  ContentSection as ContentSectionType,
+  ContentBlock,
+  Comment,
+} from "@/lib/content-types";
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -48,9 +52,7 @@ function BlockDisplay({ block }: { block: ContentBlock }) {
 
     case "subheading":
       return (
-        <p className="text-sm font-medium text-[#6C7B5A]">
-          {block.text}
-        </p>
+        <p className="text-sm font-medium text-[#6C7B5A]">{block.text}</p>
       );
 
     case "body":
@@ -87,11 +89,11 @@ function BlockDisplay({ block }: { block: ContentBlock }) {
       return (
         <div className="space-y-2">
           {block.text !== "Display as compact badges or minimal grid" &&
-           block.text !== "Display as horizontal row of badges or seals" &&
-           block.text !== "Display as grid or badge row" &&
-           block.text !== "Badge label" && (
-            <p className="text-sm text-[#2A2A2A]/50">{block.text}</p>
-          )}
+            block.text !== "Display as horizontal row of badges or seals" &&
+            block.text !== "Display as grid or badge row" &&
+            block.text !== "Badge label" && (
+              <p className="text-sm text-[#2A2A2A]/50">{block.text}</p>
+            )}
           <div className="flex flex-wrap gap-1.5">
             {block.items?.map((item, i) => (
               <span
@@ -122,14 +124,120 @@ function BlockDisplay({ block }: { block: ContentBlock }) {
   }
 }
 
-interface ContentSectionProps {
-  section: ContentSectionType;
-  comment: string;
-  onCommentChange: (sectionId: string, value: string) => void;
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+  });
 }
 
-export function ContentSection({ section, comment, onCommentChange }: ContentSectionProps) {
+function formatFullDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }) +
+    " at " +
+    date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+}
+
+function getInitial(name: string): string {
+  return name.charAt(0).toUpperCase();
+}
+
+function CommentItem({
+  comment,
+  onDelete,
+}: {
+  comment: Comment;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <div className="group/comment flex gap-3 py-3">
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#6C7B5A]/15 text-xs font-semibold text-[#6C7B5A]">
+        {getInitial(comment.author_name)}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="text-[13px] font-medium text-[#2A2A2A]">
+            {comment.author_name}
+          </span>
+          <span
+            className="text-[11px] text-[#2A2A2A]/30"
+            title={formatFullDate(comment.created_at)}
+          >
+            {formatDate(comment.created_at)}
+          </span>
+          <button
+            onClick={() => onDelete(comment.id)}
+            className="ml-auto rounded p-1 opacity-0 transition-opacity hover:bg-red-50 group-hover/comment:opacity-100"
+            title="Delete comment"
+          >
+            <Trash2 className="h-3 w-3 text-[#2A2A2A]/25 hover:text-red-400" />
+          </button>
+        </div>
+        <p className="mt-0.5 text-[13px] leading-relaxed text-[#2A2A2A]/60">
+          {comment.comment}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+interface ContentSectionProps {
+  section: ContentSectionType;
+  comments: Comment[];
+  onPostComment: (sectionId: string, text: string) => Promise<void>;
+  onDeleteComment: (sectionId: string, commentId: string) => Promise<void>;
+}
+
+export function ContentSection({
+  section,
+  comments,
+  onPostComment,
+  onDeleteComment,
+}: ContentSectionProps) {
   const [expanded, setExpanded] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [posting, setPosting] = useState(false);
+
+  const hasComments = comments.length > 0;
+
+  const handlePost = async () => {
+    if (!draft.trim() || posting) return;
+    setPosting(true);
+    try {
+      await onPostComment(section.id, draft);
+      setDraft("");
+    } finally {
+      setPosting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      handlePost();
+    }
+  };
 
   return (
     <div className="mb-8">
@@ -164,53 +272,91 @@ export function ContentSection({ section, comment, onCommentChange }: ContentSec
           </div>
         ))}
 
-        {/* Section comment */}
+        {/* Comments area */}
         <div
           className={cn(
             "border-t border-[#EAE4D9]/60 px-5 py-3 transition-colors",
-            comment && !expanded && "bg-[#6C7B5A]/[0.04]",
-            !comment && !expanded && "opacity-0 group-hover/section:opacity-100"
+            hasComments && "bg-[#F8F7F4]/60",
+            !hasComments && !expanded && "opacity-0 group-hover/section:opacity-100"
           )}
         >
-          {expanded ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
+          {expanded || hasComments ? (
+            <div>
+              {/* Header */}
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="flex items-center gap-2"
+              >
                 <MessageSquare className="h-3.5 w-3.5 text-[#6C7B5A]" />
                 <span className="text-[11px] font-medium text-[#2A2A2A]/40">
-                  Section Note
+                  Comments{hasComments ? ` (${comments.length})` : ""}
                 </span>
-              </div>
-              <textarea
-                autoFocus
-                value={comment}
-                onChange={(e) => onCommentChange(section.id, e.target.value)}
-                onBlur={() => {
-                  if (!comment.trim()) setExpanded(false);
-                }}
-                placeholder="Add a note about this section..."
-                rows={3}
-                className="w-full resize-none rounded-md border border-[#EAE4D9] bg-[#F8F7F4] px-3 py-2 text-[13px] leading-relaxed text-[#2A2A2A] placeholder-[#2A2A2A]/20 outline-none focus:border-[#6C7B5A]/40"
-                spellCheck={false}
-              />
+              </button>
+
+              {/* Comment list */}
+              {(expanded || hasComments) && comments.length > 0 && (
+                <div className="mt-1 divide-y divide-[#EAE4D9]/40">
+                  {comments.map((c) => (
+                    <CommentItem
+                      key={c.id}
+                      comment={c}
+                      onDelete={(id) => onDeleteComment(section.id, id)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Comment input */}
+              {expanded && (
+                <div className="mt-3 space-y-2">
+                  <textarea
+                    autoFocus
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Write a comment..."
+                    rows={2}
+                    className="w-full resize-none rounded-md border border-[#EAE4D9] bg-white px-3 py-2 text-[13px] leading-relaxed text-[#2A2A2A] placeholder-[#2A2A2A]/20 outline-none focus:border-[#6C7B5A]/40"
+                    spellCheck={false}
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-[#2A2A2A]/20">
+                      Cmd+Enter to post
+                    </span>
+                    <button
+                      onClick={handlePost}
+                      disabled={!draft.trim() || posting}
+                      className={cn(
+                        "rounded-md px-4 py-1.5 text-[13px] font-medium transition-colors",
+                        draft.trim() && !posting
+                          ? "bg-[#6C7B5A] text-white hover:bg-[#5A6A4A]"
+                          : "cursor-not-allowed bg-[#EAE4D9]/60 text-[#2A2A2A]/25"
+                      )}
+                    >
+                      {posting ? "Posting..." : "Comment"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Show "Add a comment" if collapsed with existing comments */}
+              {!expanded && hasComments && (
+                <button
+                  onClick={() => setExpanded(true)}
+                  className="mt-2 text-[12px] text-[#6C7B5A]/60 hover:text-[#6C7B5A]"
+                >
+                  Add a comment...
+                </button>
+              )}
             </div>
           ) : (
             <button
               onClick={() => setExpanded(true)}
               className="flex w-full items-center gap-2 text-left"
             >
-              <MessageSquare
-                className={cn(
-                  "h-3.5 w-3.5 shrink-0",
-                  comment ? "text-[#6C7B5A]" : "text-[#2A2A2A]/20"
-                )}
-              />
-              <span
-                className={cn(
-                  "truncate text-[13px]",
-                  comment ? "text-[#2A2A2A]/60" : "text-[#2A2A2A]/25"
-                )}
-              >
-                {comment || "Add a note..."}
+              <MessageSquare className="h-3.5 w-3.5 shrink-0 text-[#2A2A2A]/20" />
+              <span className="truncate text-[13px] text-[#2A2A2A]/25">
+                Add a comment...
               </span>
             </button>
           )}

@@ -20,4 +20,12 @@ export interface ContentPage {
   sections: ContentSection[];
 }
 
-export type SectionComments = Record<string, string>;
+export interface Comment {
+  id: string;
+  author_name: string;
+  author_email: string;
+  comment: string;
+  created_at: string;
+}
+
+export type SectionComments = Record<string, Comment[]>;
