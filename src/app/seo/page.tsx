@@ -3,6 +3,8 @@ import { SeoViewer } from "@/components/seo/seo-viewer";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Solvyn - SEO Research",
   description: "Keyword research, competitor analysis & content strategy",

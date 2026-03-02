@@ -3,6 +3,8 @@ import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
 import { MeetingsViewer } from "@/components/meetings/meetings-viewer";
 import { meetings } from "../../../data/meetings";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Meetings — SolvynHQ",
   description: "Meeting history, decisions, and action items",

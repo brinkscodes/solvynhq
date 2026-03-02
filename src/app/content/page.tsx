@@ -3,6 +3,8 @@ import { ContentViewer } from "@/components/content/content-viewer";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Solvyn - Website Content",
   description: "Website copy reference for the Solvyn WordPress build",
