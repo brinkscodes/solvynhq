@@ -239,6 +239,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
                   task={task}
                   showSection={task.sectionName}
                   showCompletedAt
+                  onStatusChange={updateTaskStatus}
                 />
               ))}
             </div>

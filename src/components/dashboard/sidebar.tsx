@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Calendar,
+  CheckSquare,
   Menu,
   X,
 } from "lucide-react";
@@ -20,6 +21,7 @@ import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
   { href: "/content", label: "Content", icon: FileText },
   { href: "/product-context", label: "Marketing", icon: Crosshair },
   { href: "/seo", label: "SEO Research", icon: Search },
@@ -98,14 +100,14 @@ export function Sidebar() {
         </button>
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 pt-7 pb-2">
+        <div className="flex justify-center pt-7 pb-2">
           <img
             src="/solvyn-logo.png"
             alt="Solvyn"
             className="w-24 brightness-0 invert"
           />
         </div>
-        <p className="px-6 pb-6 text-[11px] font-medium uppercase tracking-[0.15em] text-white/25">
+        <p className="pb-6 text-center text-[11px] font-medium uppercase tracking-[0.15em] text-white/25">
           Project HQ
         </p>
 
@@ -193,11 +195,12 @@ export function Sidebar() {
           </button>
         </div>
 
-        <FeedbackModal
-          open={feedbackOpen}
-          onClose={() => setFeedbackOpen(false)}
-        />
       </aside>
+
+      <FeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </>
   );
 }

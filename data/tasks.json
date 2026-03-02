@@ -292,9 +292,27 @@
           "tag": "Homepage"
         },
         {
-          "id": "hp-responsive",
-          "name": "Homepage Responsive \u2014 Desktop, Tablet, Mobile",
-          "description": "Full responsive optimization of all 7 homepage sections across desktop, tablet, and mobile breakpoints. Touch-friendly CTAs, proper stacking, image scaling, typography sizing.",
+          "id": "hp-responsive-desktop",
+          "name": "Homepage Responsive — Desktop",
+          "description": "Desktop optimization of all homepage sections. Proper layout, spacing, typography sizing, and CTA placement at desktop breakpoints.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Responsive",
+          "completedAt": "2026-03-02T18:00:00.000Z"
+        },
+        {
+          "id": "hp-responsive-tablet",
+          "name": "Homepage Responsive — Tablet",
+          "description": "Tablet optimization of all homepage sections. Proper stacking, image scaling, touch-friendly CTAs, and typography sizing at tablet breakpoints.",
+          "status": "done",
+          "priority": "high",
+          "tag": "Responsive",
+          "completedAt": "2026-03-02T18:00:00.000Z"
+        },
+        {
+          "id": "hp-responsive-mobile",
+          "name": "Homepage Responsive — Mobile",
+          "description": "Mobile optimization of all homepage sections. Hero and header optimized — rest of sections still need mobile responsive work.",
           "status": "todo",
           "priority": "high",
           "tag": "Responsive"

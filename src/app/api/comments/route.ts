@@ -10,18 +10,33 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from("section_comments")
-      .select("id, section_id, author_name, author_email, comment, created_at")
+      .select("id, section_id, author_name, author_email, comment, created_at, user_id")
       .eq("project_id", projectId)
       .order("created_at", { ascending: true });
 
     if (error) throw error;
+
+    // Fetch live profile names so comments update when users rename
+    const userIds = [...new Set((data || []).map((r) => r.user_id).filter(Boolean))];
+    const profileNames: Record<string, string> = {};
+
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", userIds);
+
+      for (const p of profiles || []) {
+        if (p.full_name) profileNames[p.id] = p.full_name;
+      }
+    }
 
     const result: Record<string, Comment[]> = {};
     for (const row of data || []) {
       if (!result[row.section_id]) result[row.section_id] = [];
       result[row.section_id].push({
         id: row.id,
-        author_name: row.author_name,
+        author_name: (row.user_id && profileNames[row.user_id]) || row.author_name,
         author_email: row.author_email,
         comment: row.comment,
         created_at: row.created_at,
@@ -59,7 +74,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Use live profile name so new comments also reflect current name
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+
     const authorName =
+      profile?.full_name ||
       user.user_metadata?.full_name ||
       user.email?.split("@")[0] ||
       "Unknown";

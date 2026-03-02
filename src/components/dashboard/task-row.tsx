@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Undo2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./status-badge";
 import { PriorityBadge } from "./priority-badge";
@@ -32,17 +32,50 @@ export function TaskRow({
   onStatusChange?: (taskId: string, status: TaskStatus) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [showUndoConfirm, setShowUndoConfirm] = useState(false);
 
   return (
     <div
       className={cn(
-        "border-b border-[#E8E4DE]/60 transition-colors last:border-b-0",
-        task.status === "done" ? "opacity-50" : "hover:bg-[#FAFAF7]"
+        "relative border-b border-[#E8E4DE]/60 transition-colors last:border-b-0",
+        task.status === "done" ? "opacity-50 hover:opacity-100" : "hover:bg-[#FAFAF7]"
       )}
     >
+      {/* Undo confirmation popup */}
+      {showUndoConfirm && (
+        <div className="absolute left-10 top-1/2 z-20 -translate-y-1/2 animate-[slideUp_0.15s_ease-out]">
+          <div className="flex items-center gap-2 rounded-xl border border-[#E8E4DE] bg-white px-4 py-2.5 shadow-lg shadow-black/8">
+            <p className="text-[12px] text-[#1A1A1A]/60">Move back to active?</p>
+            <button
+              onClick={() => {
+                onStatusChange?.(task.id, "todo");
+                setShowUndoConfirm(false);
+              }}
+              className="rounded-lg bg-[#B96E5C] px-3 py-1 text-[11px] font-semibold text-white transition-colors hover:bg-[#A35D4B]"
+            >
+              Undo
+            </button>
+            <button
+              onClick={() => setShowUndoConfirm(false)}
+              className="rounded-lg bg-[#1A1A1A]/5 px-3 py-1 text-[11px] font-medium text-[#1A1A1A]/40 transition-colors hover:bg-[#1A1A1A]/10 hover:text-[#1A1A1A]/60"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex w-full items-center gap-3.5 px-5 py-3.5">
-        {/* Checkbox */}
-        {onStatusChange && task.status !== "done" ? (
+        {/* Checkbox / Undo */}
+        {onStatusChange && task.status === "done" ? (
+          <button
+            onClick={() => setShowUndoConfirm(true)}
+            className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[#6C7B5A]/30 bg-[#6C7B5A]/10 text-[#6C7B5A]/40 transition-all duration-200 hover:border-[#B96E5C] hover:bg-[#B96E5C]/10 hover:text-[#B96E5C] hover:scale-110"
+            title="Mark as to do"
+          >
+            <Undo2 className="h-3 w-3" strokeWidth={2.5} />
+          </button>
+        ) : onStatusChange && task.status !== "done" ? (
           <button
             onClick={() => onStatusChange(task.id, "done")}
             className={cn(
