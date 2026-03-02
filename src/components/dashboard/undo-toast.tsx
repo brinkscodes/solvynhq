@@ -29,32 +29,32 @@ export function UndoToast({ taskName, onUndo, onDismiss }: UndoToastProps) {
 
   return (
     <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-[slideUp_0.3s_ease-out]">
-      <div className="relative overflow-hidden rounded-xl border border-[#6C7B5A]/20 bg-[#1A1A1A] px-5 py-3.5 shadow-lg shadow-black/10">
+      <div className="relative overflow-hidden rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-5 py-3.5 shadow-lg shadow-black/20">
         {/* Progress bar */}
-        <div className="absolute bottom-0 left-0 h-[2px] w-full bg-white/5">
+        <div className="absolute bottom-0 left-0 h-[2px] w-full bg-[var(--solvyn-bg-base)]">
           <div
-            className="h-full bg-[#6C7B5A]/60 transition-[width] duration-100 ease-linear"
+            className="h-full bg-[var(--solvyn-olive)]/60 transition-[width] duration-100 ease-linear"
             style={{ width: `${progress}%` }}
           />
         </div>
 
         <div className="flex items-center gap-4">
-          <p className="text-[13px] text-white/80">
-            <span className="font-medium text-white">Done!</span>{" "}
+          <p className="text-[13px] text-[var(--solvyn-text-secondary)]">
+            <span className="font-medium text-[var(--solvyn-text-primary)]">Done!</span>{" "}
             <span className="max-w-[200px] truncate inline-block align-bottom">
               {taskName}
             </span>
           </p>
           <button
             onClick={onUndo}
-            className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-white/20"
+            className="flex items-center gap-1.5 rounded-lg bg-[var(--solvyn-bg-base)] px-3 py-1.5 text-[12px] font-medium text-[var(--solvyn-text-primary)] transition-colors hover:bg-[var(--solvyn-border-subtle)]"
           >
             <Undo2 className="h-3 w-3" />
             Undo
           </button>
           <button
             onClick={onDismiss}
-            className="text-white/30 transition-colors hover:text-white/60"
+            className="text-[var(--solvyn-text-tertiary)] transition-colors hover:text-[var(--solvyn-text-secondary)]"
           >
             <X className="h-3.5 w-3.5" />
           </button>

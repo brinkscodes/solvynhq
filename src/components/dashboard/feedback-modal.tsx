@@ -75,55 +75,51 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[#1A1A1A]/40 backdrop-blur-md"
+        className="absolute inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative z-10 mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white shadow-2xl">
-        {/* Header */}
+      <div className="relative z-10 mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)] shadow-2xl">
         <div className="flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#6C7B5A]/10">
-              <MessageSquare className="h-4 w-4 text-[#6C7B5A]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--solvyn-olive)]/15">
+              <MessageSquare className="h-4 w-4 text-[var(--solvyn-olive)]" />
             </div>
-            <h3 className="text-sm font-bold text-[#1A1A1A]">
+            <h3 className="text-sm font-bold text-[var(--solvyn-text-primary)]">
               Send Feedback
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-xl transition-colors hover:bg-[#F8F7F4]"
+            className="flex h-8 w-8 items-center justify-center rounded-xl transition-colors hover:bg-[var(--solvyn-bg-elevated)]"
           >
-            <X className="h-4 w-4 text-[#1A1A1A]/30" />
+            <X className="h-4 w-4 text-[var(--solvyn-text-tertiary)]" />
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-6 pb-5">
           {state === "success" ? (
             <div className="flex flex-col items-center gap-3 py-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#6C7B5A]/10">
-                <CheckCircle className="h-6 w-6 text-[#6C7B5A]" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--solvyn-olive-bg)]">
+                <CheckCircle className="h-6 w-6 text-[var(--solvyn-olive)]" />
               </div>
-              <p className="text-sm font-semibold text-[#1A1A1A]">
+              <p className="text-sm font-semibold text-[var(--solvyn-text-primary)]">
                 Feedback sent!
               </p>
-              <p className="text-xs text-[#1A1A1A]/35">
+              <p className="text-xs text-[var(--solvyn-text-tertiary)]">
                 Thanks for your message.
               </p>
             </div>
           ) : state === "warning" ? (
             <div className="flex flex-col items-center gap-3 py-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#B96E5C]/10">
-                <AlertTriangle className="h-6 w-6 text-[#B96E5C]" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--solvyn-rust-bg)]">
+                <AlertTriangle className="h-6 w-6 text-[var(--solvyn-rust)]" />
               </div>
-              <p className="text-sm font-semibold text-[#1A1A1A]">
+              <p className="text-sm font-semibold text-[var(--solvyn-text-primary)]">
                 Feedback saved
               </p>
-              <p className="text-center text-xs text-[#1A1A1A]/35">
+              <p className="text-center text-xs text-[var(--solvyn-text-tertiary)]">
                 Your message was saved but email delivery failed. The developer
                 will still see it.
               </p>
@@ -135,12 +131,12 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="What's on your mind? Feature requests, bugs, questions..."
-                className="h-32 w-full resize-none rounded-xl border border-[#E8E4DE] bg-[#F8F7F4]/50 px-4 py-3.5 text-[13px] leading-relaxed text-[#1A1A1A] placeholder-[#1A1A1A]/20 outline-none transition-all focus:border-[#6C7B5A]/30 focus:bg-white focus:shadow-sm"
+                className="h-32 w-full resize-none rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-sunken)] px-4 py-3.5 text-[13px] leading-relaxed text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-all focus:border-[var(--solvyn-olive)]/30 focus:bg-[var(--solvyn-bg-base)]"
                 disabled={state === "submitting"}
               />
 
               {state === "error" && (
-                <p className="mt-2 text-xs text-[#B96E5C]">
+                <p className="mt-2 text-xs text-[var(--solvyn-rust)]">
                   Something went wrong. Please try again.
                 </p>
               )}
@@ -148,17 +144,16 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
           )}
         </div>
 
-        {/* Footer */}
         {state !== "success" && state !== "warning" && (
-          <div className="flex justify-end border-t border-[#E8E4DE]/60 px-6 py-4">
+          <div className="flex justify-end border-t border-[var(--solvyn-border-subtle)] px-6 py-4">
             <button
               onClick={handleSubmit}
               disabled={!message.trim() || state === "submitting"}
               className={cn(
                 "flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-semibold transition-all duration-200",
                 message.trim() && state !== "submitting"
-                  ? "bg-[#1A1B23] text-white hover:bg-[#2A2B33] shadow-sm"
-                  : "cursor-not-allowed bg-[#E8E4DE]/40 text-[#1A1A1A]/20"
+                  ? "bg-[var(--solvyn-olive)] text-white hover:brightness-110 shadow-sm"
+                  : "cursor-not-allowed bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-tertiary)]"
               )}
             >
               <Send className="h-3.5 w-3.5" />

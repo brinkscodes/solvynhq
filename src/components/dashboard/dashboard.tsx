@@ -9,6 +9,7 @@ import { CurrentFocus } from "./current-focus";
 import { SectionGroup } from "./section-group";
 import { TaskRow } from "./task-row";
 import { UndoToast } from "./undo-toast";
+import { TaskDetailPanel } from "../shared/task-detail-panel";
 import type { ProjectData, Task, TaskStatus } from "@/lib/types";
 
 type SortOption = "newest" | "oldest" | "name-asc" | "name-desc";
@@ -17,6 +18,8 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
   const [data, setData] = useState(initialData);
   const [view, setView] = useState<"active" | "completed">("active");
   const [sort, setSort] = useState<SortOption>("newest");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [undoToast, setUndoToast] = useState<{
     taskId: string;
     taskName: string;
@@ -30,7 +33,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
       particleCount: 80,
       spread: 70,
       origin: { y: 0.7 },
-      colors: ["#6C7B5A", "#B96E5C", "#D4A843", "#EAE4D9", "#ffffff"],
+      colors: ["#8CA878", "#C97A68", "#D4A843", "#E8E4D8", "#ffffff"],
     });
   }, []);
 
@@ -38,7 +41,6 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     async (taskId: string, status: TaskStatus) => {
       const now = new Date().toISOString();
 
-      // Find the task before updating (for undo)
       let previousTask: Task | undefined;
       for (const section of data.sections) {
         previousTask = section.tasks.find((t) => t.id === taskId);
@@ -61,7 +63,13 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
         })),
       }));
 
-      // Fire confetti and show undo toast when marking done
+      // Keep detail panel in sync
+      setSelectedTask((prev) =>
+        prev && prev.id === taskId
+          ? { ...prev, status, completedAt: status === "done" ? now : undefined }
+          : prev
+      );
+
       if (status === "done" && previousTask) {
         fireConfetti();
         if (undoToastTimeoutRef.current) clearTimeout(undoToastTimeoutRef.current);
@@ -105,7 +113,6 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     const { taskId, previousStatus, previousCompletedAt } = undoToast;
     setUndoToast(null);
 
-    // Optimistic revert
     setData((prev) => ({
       ...prev,
       sections: prev.sections.map((section) => ({
@@ -124,6 +131,37 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
       body: JSON.stringify({ taskId, status: previousStatus }),
     });
   }, [undoToast]);
+
+  const handleTaskClick = useCallback((task: Task) => {
+    setSelectedTask(task);
+    setDetailPanelOpen(true);
+  }, []);
+
+  const handleTaskUpdate = useCallback(
+    async (taskId: string, updates: Partial<Task>) => {
+      setData((prev) => ({
+        ...prev,
+        sections: prev.sections.map((section) => ({
+          ...section,
+          tasks: section.tasks.map((t) =>
+            t.id === taskId ? { ...t, ...updates } : t
+          ),
+        })),
+      }));
+
+      // Update the selected task in the panel too
+      setSelectedTask((prev) =>
+        prev && prev.id === taskId ? { ...prev, ...updates } : prev
+      );
+
+      await fetch("/api/tasks", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId, ...updates }),
+      });
+    },
+    []
+  );
 
   const doneTasks = useMemo(() => {
     const tasks = data.sections.flatMap((section) =>
@@ -159,12 +197,6 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     3: "Phase 3 — Refinement",
   };
 
-  const phaseColors: Record<number, string> = {
-    1: "bg-[#6C7B5A] text-white",
-    2: "bg-[#1A1A1A]/[0.06] text-[#1A1A1A]/50",
-    3: "bg-[#B96E5C]/10 text-[#B96E5C]",
-  };
-
   return (
     <>
       <ProjectHeader data={data} view={view} onViewChange={setView} />
@@ -186,23 +218,22 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
 
             return (
               <div key={phase} className="mb-4">
+                {/* Phase header — line style divider */}
                 <div className="mb-6 flex items-center gap-3">
-                  <div className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-1.5 text-[11px] font-bold tracking-wide uppercase",
-                    phaseColors[phase]
-                  )}>
+                  <span className="text-[11px] font-bold tracking-wide uppercase text-[var(--solvyn-text-tertiary)] whitespace-nowrap">
                     {phaseLabels[phase] ?? `Phase ${phase}`}
-                  </div>
-                  <span className="text-xs font-medium text-[#1A1A1A]/30">
+                  </span>
+                  <span className="text-xs font-medium text-[var(--solvyn-text-tertiary)]">
                     {phaseDone}/{phaseTotal} — {phasePercent}%
                   </span>
-                  <div className="h-px flex-1 bg-[#EAE4D9]/50" />
+                  <div className="h-px flex-1 bg-[var(--solvyn-border-subtle)]" />
                 </div>
                 {phaseSections.map((section) => (
                   <SectionGroup
                     key={section.id}
                     section={section}
                     onStatusChange={updateTaskStatus}
+                    onTaskClick={handleTaskClick}
                   />
                 ))}
               </div>
@@ -213,7 +244,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
         <div>
           {/* Sort controls */}
           <div className="mb-4 flex items-center gap-1.5">
-            <span className="mr-2 text-xs font-medium text-[#1A1A1A]/30">Sort</span>
+            <span className="mr-2 text-xs font-medium text-[var(--solvyn-text-tertiary)]">Sort</span>
             {sortOptions.map((opt) => (
               <button
                 key={opt.value}
@@ -221,8 +252,8 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
                 className={cn(
                   "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-all duration-200",
                   sort === opt.value
-                    ? "bg-[#1A1A1A] text-white"
-                    : "bg-white text-[#1A1A1A]/40 border border-[#E8E4DE] hover:border-[#1A1A1A]/15 hover:text-[#1A1A1A]/60"
+                    ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] border border-[var(--solvyn-border-default)]"
+                    : "text-[var(--solvyn-text-tertiary)] border border-[var(--solvyn-border-subtle)] hover:border-[var(--solvyn-border-default)] hover:text-[var(--solvyn-text-secondary)]"
                 )}
               >
                 {opt.icon}
@@ -232,7 +263,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
           </div>
 
           {doneTasks.length > 0 ? (
-            <div className="overflow-hidden rounded-2xl border border-[#6C7B5A]/15 bg-white">
+            <div className="overflow-hidden rounded-2xl border border-[var(--solvyn-olive)]/15 bg-[var(--solvyn-bg-raised)]">
               {doneTasks.map((task) => (
                 <TaskRow
                   key={task.id}
@@ -240,18 +271,27 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
                   showSection={task.sectionName}
                   showCompletedAt
                   onStatusChange={updateTaskStatus}
+                  onClick={handleTaskClick}
                 />
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E8E4DE] py-16">
-              <p className="text-sm text-[#1A1A1A]/25">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--solvyn-border-default)] py-16">
+              <p className="text-sm text-[var(--solvyn-text-tertiary)]">
                 No completed tasks yet.
               </p>
             </div>
           )}
         </div>
       )}
+
+      <TaskDetailPanel
+        task={selectedTask}
+        open={detailPanelOpen}
+        onClose={() => { setDetailPanelOpen(false); setSelectedTask(null); }}
+        onUpdate={handleTaskUpdate}
+        onStatusChange={updateTaskStatus}
+      />
 
       {undoToast && (
         <UndoToast

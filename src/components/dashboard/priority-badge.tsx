@@ -6,18 +6,18 @@ import type { TaskPriority } from "@/lib/types";
 const priorityConfig: Record<TaskPriority, { label: string; dot: string; className: string }> = {
   low: {
     label: "Low",
-    dot: "bg-[#1A1A1A]/20",
-    className: "text-[#1A1A1A]/35",
+    dot: "bg-[var(--solvyn-text-tertiary)]",
+    className: "text-[var(--solvyn-text-tertiary)]",
   },
   medium: {
     label: "Med",
-    dot: "bg-[#D4A843]",
-    className: "text-[#1A1A1A]/50",
+    dot: "bg-[var(--solvyn-amber)]",
+    className: "text-[var(--solvyn-amber)]",
   },
   high: {
     label: "High",
-    dot: "bg-[#B96E5C]",
-    className: "text-[#B96E5C]",
+    dot: "bg-[var(--solvyn-rust)]",
+    className: "text-[var(--solvyn-rust)]",
   },
 };
 

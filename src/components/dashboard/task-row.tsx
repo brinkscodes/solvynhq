@@ -25,39 +25,51 @@ export function TaskRow({
   showSection,
   showCompletedAt,
   onStatusChange,
+  onClick,
 }: {
   task: Task;
   showSection?: string;
   showCompletedAt?: boolean;
   onStatusChange?: (taskId: string, status: TaskStatus) => void;
+  onClick?: (task: Task) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showUndoConfirm, setShowUndoConfirm] = useState(false);
 
+  const handleRowClick = () => {
+    if (onClick) {
+      onClick(task);
+    } else {
+      setExpanded(!expanded);
+    }
+  };
+
   return (
     <div
       className={cn(
-        "relative border-b border-[#E8E4DE]/60 transition-colors last:border-b-0",
-        task.status === "done" ? "opacity-50 hover:opacity-100" : "hover:bg-[#FAFAF7]"
+        "relative border-b border-[var(--solvyn-border-subtle)] transition-colors last:border-b-0",
+        task.status === "done"
+          ? "opacity-50 hover:opacity-100"
+          : "hover:bg-[var(--solvyn-bg-elevated)]/50"
       )}
     >
       {/* Undo confirmation popup */}
       {showUndoConfirm && (
         <div className="absolute left-10 top-1/2 z-20 -translate-y-1/2 animate-[slideUp_0.15s_ease-out]">
-          <div className="flex items-center gap-2 rounded-xl border border-[#E8E4DE] bg-white px-4 py-2.5 shadow-lg shadow-black/8">
-            <p className="text-[12px] text-[#1A1A1A]/60">Move back to active?</p>
+          <div className="flex items-center gap-2 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-4 py-2.5 shadow-lg shadow-black/20">
+            <p className="text-[12px] text-[var(--solvyn-text-secondary)]">Move back to active?</p>
             <button
               onClick={() => {
                 onStatusChange?.(task.id, "todo");
                 setShowUndoConfirm(false);
               }}
-              className="rounded-lg bg-[#B96E5C] px-3 py-1 text-[11px] font-semibold text-white transition-colors hover:bg-[#A35D4B]"
+              className="rounded-lg bg-[var(--solvyn-rust)] px-3 py-1 text-[11px] font-semibold text-white transition-colors hover:brightness-110"
             >
               Undo
             </button>
             <button
               onClick={() => setShowUndoConfirm(false)}
-              className="rounded-lg bg-[#1A1A1A]/5 px-3 py-1 text-[11px] font-medium text-[#1A1A1A]/40 transition-colors hover:bg-[#1A1A1A]/10 hover:text-[#1A1A1A]/60"
+              className="rounded-lg bg-[var(--solvyn-bg-base)] px-3 py-1 text-[11px] font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:text-[var(--solvyn-text-secondary)]"
             >
               Cancel
             </button>
@@ -70,7 +82,7 @@ export function TaskRow({
         {onStatusChange && task.status === "done" ? (
           <button
             onClick={() => setShowUndoConfirm(true)}
-            className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[#6C7B5A]/30 bg-[#6C7B5A]/10 text-[#6C7B5A]/40 transition-all duration-200 hover:border-[#B96E5C] hover:bg-[#B96E5C]/10 hover:text-[#B96E5C] hover:scale-110"
+            className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--solvyn-olive)]/30 bg-[var(--solvyn-olive)]/10 text-[var(--solvyn-olive)]/40 transition-all duration-200 hover:border-[var(--solvyn-rust)] hover:bg-[var(--solvyn-rust)]/10 hover:text-[var(--solvyn-rust)] hover:scale-110"
             title="Mark as to do"
           >
             <Undo2 className="h-3 w-3" strokeWidth={2.5} />
@@ -81,8 +93,8 @@ export function TaskRow({
             className={cn(
               "flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 text-transparent transition-all duration-200",
               task.status === "in-progress"
-                ? "border-[#B96E5C]/35 hover:border-[#6C7B5A] hover:bg-[#6C7B5A] hover:text-white hover:scale-110"
-                : "border-[#1A1A1A]/15 hover:border-[#6C7B5A] hover:bg-[#6C7B5A] hover:text-white hover:scale-110"
+                ? "border-[var(--solvyn-rust)]/35 hover:border-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)] hover:text-white hover:scale-110"
+                : "border-[var(--solvyn-border-strong)] hover:border-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)] hover:text-white hover:scale-110"
             )}
             title="Mark as done"
           >
@@ -90,12 +102,12 @@ export function TaskRow({
           </button>
         ) : (
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={handleRowClick}
             className="shrink-0"
           >
             <ChevronDown
               className={cn(
-                "h-4 w-4 text-[#1A1A1A]/25 transition-transform duration-200",
+                "h-4 w-4 text-[var(--solvyn-text-tertiary)] transition-transform duration-200",
                 expanded && "rotate-180"
               )}
             />
@@ -104,19 +116,19 @@ export function TaskRow({
 
         {/* Task name */}
         <button
-          onClick={() => setExpanded(!expanded)}
+          onClick={handleRowClick}
           className="min-w-0 flex-1 text-left"
         >
           <span
             className={cn(
-              "text-[13px] font-medium text-[#1A1A1A]",
-              task.status === "done" && "line-through text-[#1A1A1A]/40"
+              "text-[13px] font-medium text-[var(--solvyn-text-primary)]",
+              task.status === "done" && "line-through text-[var(--solvyn-text-tertiary)]"
             )}
           >
             {task.name}
           </span>
           {showCompletedAt && task.completedAt && (
-            <span className="ml-2 text-[11px] text-[#1A1A1A]/25">
+            <span className="ml-2 text-[11px] text-[var(--solvyn-text-tertiary)]">
               {formatCompletedAt(task.completedAt)}
             </span>
           )}
@@ -139,9 +151,9 @@ export function TaskRow({
         <div className="overflow-hidden">
           <div className="px-5 pb-4 pl-[52px]">
             {showSection && (
-              <p className="mb-1 text-[11px] font-medium text-[#1A1A1A]/25">{showSection}</p>
+              <p className="mb-1 text-[11px] font-medium text-[var(--solvyn-text-tertiary)]">{showSection}</p>
             )}
-            <p className="text-[13px] leading-relaxed text-[#1A1A1A]/45">
+            <p className="text-[13px] leading-relaxed text-[var(--solvyn-text-secondary)]">
               {task.description}
             </p>
           </div>

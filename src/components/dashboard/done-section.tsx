@@ -27,24 +27,24 @@ export function DoneSection({ sections }: { sections: Section[] }) {
         onClick={() => setOpen(!open)}
         className="mb-3 flex w-full items-center gap-2 px-4 transition-colors hover:opacity-80"
       >
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#6C7B5A]">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--solvyn-olive)]">
           <Check className="h-3.5 w-3.5 text-white" />
         </div>
-        <h2 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-[#6C7B5A]">
+        <h2 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-[var(--solvyn-olive)]">
           Completed
         </h2>
-        <span className="text-xs text-[#2A2A2A]/40">
+        <span className="text-xs text-[var(--solvyn-text-tertiary)]">
           {doneTasks.length} {doneTasks.length === 1 ? "task" : "tasks"}
         </span>
         <ChevronDown
           className={cn(
-            "ml-auto h-4 w-4 text-[#6C7B5A]/50 transition-transform",
+            "ml-auto h-4 w-4 text-[var(--solvyn-olive)]/50 transition-transform",
             open && "rotate-180"
           )}
         />
       </button>
       {open && (
-        <div className="rounded-lg border border-[#6C7B5A]/20 bg-white">
+        <div className="rounded-lg border border-[var(--solvyn-olive)]/20 bg-[var(--solvyn-bg-raised)]">
           {doneTasks.map((task) => (
             <TaskRow key={task.id} task={task} showSection={task.sectionName} />
           ))}

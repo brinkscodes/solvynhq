@@ -43,23 +43,23 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F7F4] px-6 font-[family-name:var(--font-inter)]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--solvyn-bg-base)] px-6 font-[family-name:var(--font-inter)]">
         <div className="w-full max-w-sm text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#6C7B5A]/10">
-            <svg className="h-6 w-6 text-[#6C7B5A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--solvyn-olive-bg)]">
+            <svg className="h-6 w-6 text-[var(--solvyn-olive)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[#1A1A1A]">
+          <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[var(--solvyn-text-primary)]">
             Check your email
           </h1>
-          <p className="mt-2 text-sm text-[#1A1A1A]/50">
-            We sent a confirmation link to <strong className="text-[#1A1A1A]/70">{email}</strong>.
+          <p className="mt-2 text-sm text-[var(--solvyn-text-secondary)]">
+            We sent a confirmation link to <strong className="text-[var(--solvyn-text-primary)]">{email}</strong>.
             Click the link to activate your account.
           </p>
           <Link
             href="/login"
-            className="mt-6 inline-block text-[13px] font-medium text-[#6C7B5A] hover:underline"
+            className="mt-6 inline-block text-[13px] font-medium text-[var(--solvyn-olive)] hover:underline"
           >
             Back to login
           </Link>
@@ -70,45 +70,45 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen font-[family-name:var(--font-inter)]">
-      {/* Left panel - branding */}
-      <div className="hidden w-[480px] shrink-0 bg-[#1A1B23] lg:flex lg:flex-col lg:items-center lg:justify-center">
+      {/* Left panel - branding with olive gradient overlay */}
+      <div className="hidden w-[480px] shrink-0 bg-gradient-to-b from-[#111110] via-[#141614] to-[#111110] lg:flex lg:flex-col lg:items-center lg:justify-center">
         <img
           src="/solvyn-logo.png"
           alt="Solvyn"
-          className="w-36 brightness-0 invert"
+          className="w-36 brightness-0 invert opacity-80"
         />
-        <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.2em] text-white/20">
+        <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--solvyn-text-tertiary)]">
           Project Dashboard
         </p>
       </div>
 
       {/* Right panel - signup form */}
-      <div className="flex flex-1 items-center justify-center bg-[#F8F7F4] px-6">
+      <div className="flex flex-1 items-center justify-center bg-[var(--solvyn-bg-base)] px-6">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
           <div className="mb-10 text-center lg:hidden">
             <img
               src="/solvyn-logo.png"
               alt="Solvyn"
-              className="mx-auto mb-3 w-32"
+              className="mx-auto mb-3 w-32 brightness-0 invert opacity-80"
             />
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#1A1A1A]/25">
+            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--solvyn-text-tertiary)]">
               Project Dashboard
             </p>
           </div>
 
           <div className="hidden lg:block">
-            <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[#1A1A1A]">
+            <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[var(--solvyn-text-primary)]">
               Create an account
             </h1>
-            <p className="mt-1 text-sm text-[#1A1A1A]/35">
+            <p className="mt-1 text-sm text-[var(--solvyn-text-tertiary)]">
               Get started with your project dashboard.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A]/30">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[var(--solvyn-text-tertiary)]">
                 Full Name
               </label>
               <input
@@ -118,12 +118,12 @@ export default function SignupPage() {
                 placeholder="Your name"
                 autoFocus
                 required
-                className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
+                className="w-full rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-sunken)] px-4 py-3.5 text-[var(--solvyn-text-primary)] outline-none transition-all placeholder:text-[var(--solvyn-text-tertiary)] focus:border-[var(--solvyn-olive)]/40 focus:bg-[var(--solvyn-bg-base)]"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A]/30">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[var(--solvyn-text-tertiary)]">
                 Email
               </label>
               <input
@@ -135,12 +135,12 @@ export default function SignupPage() {
                 }}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
+                className="w-full rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-sunken)] px-4 py-3.5 text-[var(--solvyn-text-primary)] outline-none transition-all placeholder:text-[var(--solvyn-text-tertiary)] focus:border-[var(--solvyn-olive)]/40 focus:bg-[var(--solvyn-bg-base)]"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A]/30">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-[var(--solvyn-text-tertiary)]">
                 Password
               </label>
               <input
@@ -153,13 +153,13 @@ export default function SignupPage() {
                 placeholder="At least 6 characters"
                 required
                 minLength={6}
-                className="w-full rounded-xl border border-[#E8E4DE] bg-white px-4 py-3.5 text-[#1A1A1A] outline-none transition-all placeholder:text-[#1A1A1A]/20 focus:border-[#6C7B5A]/40 focus:shadow-sm"
+                className="w-full rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-sunken)] px-4 py-3.5 text-[var(--solvyn-text-primary)] outline-none transition-all placeholder:text-[var(--solvyn-text-tertiary)] focus:border-[var(--solvyn-olive)]/40 focus:bg-[var(--solvyn-bg-base)]"
               />
             </div>
 
             {error && (
-              <div className="rounded-xl bg-[#B96E5C]/[0.06] px-4 py-2.5">
-                <p className="text-[13px] font-medium text-[#B96E5C]">
+              <div className="rounded-xl bg-[var(--solvyn-rust-bg)] px-4 py-2.5">
+                <p className="text-[13px] font-medium text-[var(--solvyn-rust)]">
                   {error}
                 </p>
               </div>
@@ -168,18 +168,18 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1A1B23] px-4 py-3.5 text-sm font-semibold text-white transition-all hover:bg-[#2A2B33] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--solvyn-olive)] px-4 py-3.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
             >
               {loading ? "Creating account..." : "Create account"}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-[13px] text-[#1A1A1A]/35">
+          <p className="mt-6 text-center text-[13px] text-[var(--solvyn-text-tertiary)]">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-[#6C7B5A] hover:underline"
+              className="font-medium text-[var(--solvyn-olive)] hover:underline"
             >
               Sign in
             </Link>

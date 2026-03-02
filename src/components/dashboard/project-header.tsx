@@ -25,28 +25,28 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
       label: "Completed",
       value: done,
       icon: CheckCircle2,
-      color: "#6C7B5A",
-      bg: "bg-[#6C7B5A]/[0.06]",
-      border: "border-[#6C7B5A]/10",
-      iconBg: "bg-[#6C7B5A]/10",
+      color: "var(--solvyn-olive)",
+      bg: "bg-[var(--solvyn-olive-bg)]",
+      border: "border-[var(--solvyn-olive)]/10",
+      iconBg: "bg-[var(--solvyn-olive)]/15",
     },
     {
       label: "In Progress",
       value: inProgress,
       icon: Clock,
-      color: "#B96E5C",
-      bg: "bg-[#B96E5C]/[0.04]",
-      border: "border-[#B96E5C]/10",
-      iconBg: "bg-[#B96E5C]/10",
+      color: "var(--solvyn-rust)",
+      bg: "bg-[var(--solvyn-rust-bg)]",
+      border: "border-[var(--solvyn-rust)]/10",
+      iconBg: "bg-[var(--solvyn-rust)]/15",
     },
     {
       label: "To Do",
       value: todo,
       icon: Circle,
-      color: "#2A2A2A",
-      bg: "bg-[#2A2A2A]/[0.02]",
-      border: "border-[#2A2A2A]/[0.06]",
-      iconBg: "bg-[#2A2A2A]/[0.04]",
+      color: "var(--solvyn-text-tertiary)",
+      bg: "bg-[var(--solvyn-bg-raised)]",
+      border: "border-[var(--solvyn-border-subtle)]",
+      iconBg: "bg-[var(--solvyn-bg-elevated)]",
     },
   ];
 
@@ -54,10 +54,10 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
     <div className="mb-10">
       {/* Title area */}
       <div className="mb-8">
-        <h1 className="font-[family-name:var(--font-playfair)] text-[28px] font-bold tracking-tight text-[#1A1A1A]">
+        <h1 className="font-[family-name:var(--font-playfair)] text-[28px] font-bold tracking-tight text-[var(--solvyn-text-primary)]">
           {data.project.name}
         </h1>
-        <p className="mt-1 text-sm text-[#1A1A1A]/40">
+        <p className="mt-1 text-sm text-[var(--solvyn-text-tertiary)]">
           {data.project.description}
         </p>
       </div>
@@ -75,10 +75,10 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[32px] font-bold leading-none tracking-tight text-[#1A1A1A]">
+                <p className="text-[32px] font-bold leading-none tracking-tight text-[var(--solvyn-text-primary)]">
                   {stat.value}
                 </p>
-                <p className="mt-2 text-[13px] font-medium text-[#1A1A1A]/40">
+                <p className="mt-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)]">
                   {stat.label}
                 </p>
               </div>
@@ -99,53 +99,53 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
       </div>
 
       {/* Progress bar */}
-      <div className="rounded-2xl border border-[#E8E4DE] bg-white p-5">
+      <div className="rounded-2xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)] p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#6C7B5A]/10">
-              <TrendingUp className="h-4 w-4 text-[#6C7B5A]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--solvyn-olive)]/15">
+              <TrendingUp className="h-4 w-4 text-[var(--solvyn-olive)]" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#1A1A1A]">
+              <p className="text-sm font-semibold text-[var(--solvyn-text-primary)]">
                 Overall Progress
               </p>
-              <p className="text-xs text-[#1A1A1A]/35">
+              <p className="text-xs text-[var(--solvyn-text-tertiary)]">
                 {done} of {total} tasks completed
               </p>
             </div>
           </div>
-          <span className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[#1A1A1A]">
+          <span className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-[var(--solvyn-text-primary)]">
             {percent}%
           </span>
         </div>
-        <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[#EAE4D9]/60">
+        <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[var(--solvyn-bg-elevated)]">
           <div
             className="h-full rounded-full transition-all duration-700 ease-out"
             style={{
               width: `${percent}%`,
-              background: "linear-gradient(90deg, #C9A96E 0%, #6C7B5A 100%)",
+              background: "linear-gradient(90deg, #D4A843 0%, #8CA878 100%)",
             }}
           />
         </div>
       </div>
 
       {/* Tab switcher */}
-      <div className="mt-6 flex gap-1 rounded-2xl bg-[#EAE4D9]/40 p-1.5">
+      <div className="mt-6 flex gap-1 rounded-2xl bg-[var(--solvyn-bg-raised)] p-1.5 border border-[var(--solvyn-border-subtle)]">
         <button
           onClick={() => onViewChange("active")}
           className={cn(
             "flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200",
             view === "active"
-              ? "bg-white text-[#1A1A1A] shadow-sm"
-              : "text-[#1A1A1A]/35 hover:text-[#1A1A1A]/55"
+              ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-sm"
+              : "text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-secondary)]"
           )}
         >
           Active
           <span className={cn(
             "ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold",
             view === "active"
-              ? "bg-[#1A1A1A]/[0.06] text-[#1A1A1A]/60"
-              : "bg-transparent text-[#1A1A1A]/25"
+              ? "bg-[var(--solvyn-olive)]/15 text-[var(--solvyn-olive)]"
+              : "text-[var(--solvyn-text-tertiary)]"
           )}>
             {todo + inProgress}
           </span>
@@ -155,16 +155,16 @@ export function ProjectHeader({ data, view, onViewChange }: ProjectHeaderProps) 
           className={cn(
             "flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200",
             view === "completed"
-              ? "bg-white text-[#1A1A1A] shadow-sm"
-              : "text-[#1A1A1A]/35 hover:text-[#1A1A1A]/55"
+              ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-sm"
+              : "text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-secondary)]"
           )}
         >
           Completed
           <span className={cn(
             "ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold",
             view === "completed"
-              ? "bg-[#6C7B5A]/10 text-[#6C7B5A]"
-              : "bg-transparent text-[#1A1A1A]/25"
+              ? "bg-[var(--solvyn-olive)]/15 text-[var(--solvyn-olive)]"
+              : "text-[var(--solvyn-text-tertiary)]"
           )}>
             {done}
           </span>

@@ -59,16 +59,16 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
       <div className="mb-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[#2A2A2A]">
+            <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[var(--solvyn-text-primary)]">
               Website Content
             </h1>
-            <p className="mt-1 text-sm text-[#2A2A2A]/50">
+            <p className="mt-1 text-sm text-[var(--solvyn-text-secondary)]">
               Copy reference for the Solvyn WordPress build
             </p>
           </div>
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-full border border-[#EAE4D9] bg-white px-4 py-2 text-sm font-medium text-[#2A2A2A]/60 transition-colors hover:bg-[#F7F5F0] hover:text-[#2A2A2A]"
+            className="flex items-center gap-2 rounded-full border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-4 py-2 text-sm font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)] hover:text-[var(--solvyn-text-primary)]"
           >
             <ArrowLeft className="h-4 w-4" />
             Dashboard
@@ -76,7 +76,7 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
         </div>
 
         {/* Page tab switcher */}
-        <div className="mt-6 flex gap-1 overflow-x-auto rounded-lg bg-[#EAE4D9]/60 p-1">
+        <div className="mt-6 flex gap-1 overflow-x-auto rounded-lg bg-[var(--solvyn-border-subtle)]/60 p-1">
           {pages.map((page) => (
             <button
               key={page.id}
@@ -84,8 +84,8 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
               className={cn(
                 "flex-1 whitespace-nowrap rounded-md px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:text-sm",
                 activePageId === page.id
-                  ? "bg-white text-[#2A2A2A] shadow-sm"
-                  : "text-[#2A2A2A]/40 hover:text-[#2A2A2A]/60"
+                  ? "bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-primary)] shadow-sm"
+                  : "text-[var(--solvyn-text-secondary)] hover:text-[var(--solvyn-text-secondary)]"
               )}
             >
               {page.name}
@@ -96,7 +96,7 @@ export function ContentViewer({ pages }: { pages: ContentPage[] }) {
 
       {/* Page description */}
       {activePage && (
-        <p className="mb-6 px-4 text-sm text-[#2A2A2A]/50">
+        <p className="mb-6 px-4 text-sm text-[var(--solvyn-text-secondary)]">
           {activePage.description}
         </p>
       )}

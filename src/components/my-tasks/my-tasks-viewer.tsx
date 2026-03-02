@@ -75,7 +75,7 @@ export function MyTasksViewer() {
       particleCount: 80,
       spread: 70,
       origin: { y: 0.7 },
-      colors: ["#6C7B5A", "#B96E5C", "#D4A843", "#EAE4D9", "#ffffff"],
+      colors: ["#8CA878", "#C97A68", "#D4A843", "#E8E4D8", "#ffffff"],
     });
   }, []);
 
@@ -322,8 +322,8 @@ export function MyTasksViewer() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-32">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#EAE4D9] border-t-[#6C7B5A]" />
-        <p className="mt-4 text-sm text-[#1A1A1A]/30">Loading tasks...</p>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--solvyn-border-default)] border-t-[var(--solvyn-olive)]" />
+        <p className="mt-4 text-sm text-[var(--solvyn-text-tertiary)]">Loading tasks...</p>
       </div>
     );
   }
@@ -332,15 +332,15 @@ export function MyTasksViewer() {
     <>
       {/* Migration banner */}
       {migrationNeeded && (
-        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#D4A843]/20 bg-[#D4A843]/[0.06] px-5 py-4">
-          <AlertTriangle className="h-5 w-5 shrink-0 text-[#D4A843]" />
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[var(--solvyn-amber)]/20 bg-[var(--solvyn-amber-bg)] px-5 py-4">
+          <AlertTriangle className="h-5 w-5 shrink-0 text-[var(--solvyn-amber)]" />
           <div>
-            <p className="text-[13px] font-semibold text-[#1A1A1A]">
+            <p className="text-[13px] font-semibold text-[var(--solvyn-text-primary)]">
               Database tables not found
             </p>
-            <p className="text-[12px] text-[#1A1A1A]/50">
+            <p className="text-[12px] text-[var(--solvyn-text-secondary)]">
               Run the SQL migration in your Supabase SQL Editor:{" "}
-              <code className="rounded bg-[#1A1A1A]/[0.06] px-1.5 py-0.5 text-[11px] font-mono">
+              <code className="rounded bg-[var(--solvyn-bg-elevated)] px-1.5 py-0.5 text-[11px] font-mono">
                 supabase-my-tasks-migration.sql
               </code>
             </p>

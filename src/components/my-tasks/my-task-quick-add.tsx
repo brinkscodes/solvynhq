@@ -19,17 +19,17 @@ export function MyTaskQuickAdd({ onAdd }: MyTaskQuickAddProps) {
 
   return (
     <form onSubmit={handleSubmit} className="mb-6">
-      <div className="flex items-center gap-2 rounded-xl border border-dashed border-[#E8E4DE] bg-white/60 px-4 py-2.5 transition-colors focus-within:border-[#6C7B5A]/30 focus-within:bg-white">
-        <Plus className="h-4 w-4 shrink-0 text-[#1A1A1A]/20" />
+      <div className="flex items-center gap-2 rounded-xl border border-dashed border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)]/60 px-4 py-2.5 transition-colors focus-within:border-[var(--solvyn-olive)]/30 focus-within:bg-[var(--solvyn-bg-raised)]">
+        <Plus className="h-4 w-4 shrink-0 text-[var(--solvyn-text-tertiary)]" />
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Quick add task... (press Enter)"
-          className="min-w-0 flex-1 bg-transparent text-[13px] text-[#1A1A1A] placeholder-[#1A1A1A]/25 outline-none"
+          className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none"
         />
         {value.trim() && (
-          <span className="shrink-0 text-[10px] font-medium text-[#1A1A1A]/25">
+          <span className="shrink-0 text-[10px] font-medium text-[var(--solvyn-text-tertiary)]">
             Enter
           </span>
         )}

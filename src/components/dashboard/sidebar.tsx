@@ -14,14 +14,19 @@ import {
   CheckSquare,
   Menu,
   X,
+  Command,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FeedbackModal } from "./feedback-modal";
 import { createClient } from "@/lib/supabase/client";
 
-const navItems = [
+const viewItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
+];
+
+const toolItems = [
   { href: "/content", label: "Content", icon: FileText },
   { href: "/product-context", label: "Marketing", icon: Crosshair },
   { href: "/seo", label: "SEO Research", icon: Search },
@@ -33,7 +38,7 @@ type UserProfile = {
   avatar_url: string | null;
 };
 
-export function Sidebar() {
+export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void }) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -52,7 +57,6 @@ export function Sidebar() {
       .catch(() => {});
   }, []);
 
-  // Close mobile sidebar on navigation
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
@@ -63,12 +67,38 @@ export function Sidebar() {
     router.refresh();
   }
 
+  function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }) {
+    const isActive = pathname === href;
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+          isActive
+            ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)]"
+            : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+        )}
+      >
+        {isActive && (
+          <div className="absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-r-full bg-[var(--solvyn-olive)]" />
+        )}
+        <Icon
+          className={cn(
+            "h-4 w-4 shrink-0 transition-colors",
+            isActive ? "text-[var(--solvyn-olive)]" : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
+          )}
+        />
+        {label}
+      </Link>
+    );
+  }
+
   return (
     <>
-      {/* Mobile hamburger button */}
+      {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-[#1A1B23] text-white shadow-lg lg:hidden"
+        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-lg lg:hidden"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -77,7 +107,7 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -85,95 +115,93 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-screen w-[232px] flex-col bg-[#1A1B23] transition-transform duration-300",
+          "fixed left-0 top-0 z-50 flex h-screen w-[232px] flex-col border-r border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-sidebar-bg)] transition-transform duration-300",
           "lg:z-40 lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        {/* Mobile close button */}
+        {/* Mobile close */}
         <button
           onClick={() => setMobileOpen(false)}
-          className="absolute right-3 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-white/40 hover:text-white lg:hidden"
+          className="absolute right-3 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-primary)] lg:hidden"
           aria-label="Close menu"
         >
           <X className="h-5 w-5" />
         </button>
 
-        {/* Logo */}
-        <div className="flex justify-center pt-7 pb-2">
-          <img
-            src="/solvyn-logo.png"
-            alt="Solvyn"
-            className="w-24 brightness-0 invert"
-          />
+        {/* Workspace header */}
+        <div className="px-4 pt-5 pb-4">
+          <div className="flex items-center gap-3">
+            <img
+              src="/solvyn-logo.png"
+              alt="Solvyn"
+              className="h-7 w-auto brightness-0 invert opacity-80"
+            />
+          </div>
+          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-[var(--solvyn-text-tertiary)]">
+            Project HQ
+          </p>
         </div>
-        <p className="pb-6 text-center text-[11px] font-medium uppercase tracking-[0.15em] text-white/25">
-          Project HQ
-        </p>
 
-        {/* Divider */}
-        <div className="mx-5 h-px bg-white/[0.06]" />
+        {/* Search trigger */}
+        <div className="px-3 pb-4">
+          <button
+            onClick={onCommandPalette}
+            className="flex w-full items-center gap-2 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-sunken)] px-3 py-2 text-[12px] text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-border-default)] hover:text-[var(--solvyn-text-secondary)]"
+          >
+            <Search className="h-3.5 w-3.5" />
+            <span className="flex-1 text-left">Search...</span>
+            <kbd className="flex items-center gap-0.5 rounded bg-[var(--solvyn-bg-elevated)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--solvyn-text-tertiary)]">
+              <Command className="h-2.5 w-2.5" />K
+            </kbd>
+          </button>
+        </div>
+
+        <div className="mx-3 h-px bg-[var(--solvyn-border-subtle)]" />
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col gap-1 px-3 pt-5">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] font-medium transition-all duration-200",
-                  isActive
-                    ? "bg-white/[0.08] text-white"
-                    : "text-white/40 hover:bg-white/[0.04] hover:text-white/70"
-                )}
-              >
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#6C7B5A]" />
-                )}
-                <item.icon
-                  className={cn(
-                    "h-[18px] w-[18px] shrink-0 transition-colors",
-                    isActive ? "text-[#9CAF88]" : "text-white/30 group-hover:text-white/50"
-                  )}
-                />
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-1 flex-col overflow-y-auto px-3 pt-4">
+          {/* Views section */}
+          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--solvyn-text-tertiary)]">
+            Views
+          </p>
+          <div className="flex flex-col gap-0.5">
+            {viewItems.map((item) => (
+              <NavLink key={item.href} {...item} />
+            ))}
+          </div>
+
+          {/* Tools section */}
+          <p className="mb-2 mt-6 px-3 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--solvyn-text-tertiary)]">
+            Tools
+          </p>
+          <div className="flex flex-col gap-0.5">
+            {toolItems.map((item) => (
+              <NavLink key={item.href} {...item} />
+            ))}
+          </div>
         </nav>
 
         {/* Bottom section */}
-        <div className="mx-5 h-px bg-white/[0.06]" />
-        <div className="flex flex-col gap-1 px-3 py-4">
-          {/* User profile link */}
+        <div className="mx-3 h-px bg-[var(--solvyn-border-subtle)]" />
+        <div className="flex flex-col gap-0.5 px-3 py-3">
           <Link
             href="/profile"
             className={cn(
-              "group flex items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] font-medium transition-all duration-200",
+              "group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
               pathname === "/profile"
-                ? "bg-white/[0.08] text-white"
-                : "text-white/40 hover:bg-white/[0.04] hover:text-white/70"
+                ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)]"
+                : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
             )}
           >
-            <div className="relative h-[18px] w-[18px] shrink-0 overflow-hidden rounded-full bg-[#6C7B5A]">
+            <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full bg-[var(--solvyn-olive)]/20">
               {userProfile?.avatar_url ? (
-                <img
-                  src={userProfile.avatar_url}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
+                <img src={userProfile.avatar_url} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="flex h-full w-full items-center justify-center text-[8px] font-semibold text-white">
+                <span className="flex h-full w-full items-center justify-center text-[8px] font-semibold text-[var(--solvyn-olive)]">
                   {userProfile?.full_name
-                    ? userProfile.full_name
-                        .split(" ")
-                        .map((w) => w[0])
-                        .slice(0, 2)
-                        .join("")
-                        .toUpperCase()
-                    : "?"}
+                    ? userProfile.full_name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()
+                    : <User className="h-3 w-3" />}
                 </span>
               )}
             </div>
@@ -181,20 +209,19 @@ export function Sidebar() {
           </Link>
           <button
             onClick={() => setFeedbackOpen(true)}
-            className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] font-medium text-white/40 transition-all duration-200 hover:bg-white/[0.04] hover:text-white/70"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)] transition-all duration-150 hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
           >
-            <MessageSquare className="h-[18px] w-[18px] shrink-0 text-white/30" />
+            <MessageSquare className="h-4 w-4 shrink-0" />
             Feedback
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-[13px] font-medium text-white/40 transition-all duration-200 hover:bg-white/[0.04] hover:text-white/70"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)] transition-all duration-150 hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-rust)]"
           >
-            <LogOut className="h-[18px] w-[18px] shrink-0 text-white/30" />
+            <LogOut className="h-4 w-4 shrink-0" />
             Log out
           </button>
         </div>
-
       </aside>
 
       <FeedbackModal

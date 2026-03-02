@@ -6,15 +6,15 @@ import type { TaskStatus } from "@/lib/types";
 const statusConfig: Record<TaskStatus, { label: string; className: string }> = {
   todo: {
     label: "To Do",
-    className: "bg-[#1A1A1A]/[0.04] text-[#1A1A1A]/45 border-transparent",
+    className: "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-tertiary)] border-transparent",
   },
   "in-progress": {
     label: "Active",
-    className: "bg-[#B96E5C]/10 text-[#B96E5C] border-transparent",
+    className: "bg-[var(--solvyn-rust-bg)] text-[var(--solvyn-rust)] border-transparent",
   },
   done: {
     label: "Done",
-    className: "bg-[#6C7B5A]/10 text-[#6C7B5A] border-transparent",
+    className: "bg-[var(--solvyn-olive-bg)] text-[var(--solvyn-olive)] border-transparent",
   },
 };
 

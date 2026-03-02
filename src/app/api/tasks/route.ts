@@ -30,6 +30,7 @@ export async function GET() {
         priority: row.priority,
         tag: row.tag,
         ...(row.completed_at ? { completedAt: row.completed_at } : {}),
+        ...(row.subtasks ? { subtasks: row.subtasks } : {}),
       };
       if (!tasksBySection[row.section_id]) tasksBySection[row.section_id] = [];
       tasksBySection[row.section_id].push(task);
@@ -62,21 +63,37 @@ export async function GET() {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { taskId, status } = body as { taskId: string; status: string };
+    const { taskId, status, subtasks, name, description, priority, tag } = body as {
+      taskId: string;
+      status?: string;
+      subtasks?: Array<{ id: string; name: string; completed: boolean; completedAt?: string }>;
+      name?: string;
+      description?: string;
+      priority?: string;
+      tag?: string;
+    };
 
-    if (!taskId || !status) {
-      return NextResponse.json({ error: "taskId and status required" }, { status: 400 });
+    if (!taskId) {
+      return NextResponse.json({ error: "taskId required" }, { status: 400 });
     }
 
     const supabase = await createClient();
     const projectId = await getProjectId();
 
-    const updates: Record<string, unknown> = { status };
-    if (status === "done") {
-      updates.completed_at = new Date().toISOString();
-    } else {
-      updates.completed_at = null;
+    const updates: Record<string, unknown> = {};
+    if (status !== undefined) {
+      updates.status = status;
+      if (status === "done") {
+        updates.completed_at = new Date().toISOString();
+      } else {
+        updates.completed_at = null;
+      }
     }
+    if (subtasks !== undefined) updates.subtasks = subtasks;
+    if (name !== undefined) updates.name = name;
+    if (description !== undefined) updates.description = description;
+    if (priority !== undefined) updates.priority = priority;
+    if (tag !== undefined) updates.tag = tag;
 
     const { error } = await supabase
       .from("tasks")

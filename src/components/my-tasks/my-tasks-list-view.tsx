@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo, useCallback } from "react";
 import { MyTaskSectionGroup } from "./my-task-section-group";
+import { useKeyboardNav } from "@/hooks/useKeyboardNav";
 import type {
   MyTask,
   MyTaskSection,
@@ -55,13 +57,11 @@ export function MyTasksListView({
   const activeTasks = tasks.filter((t) => t.status !== "done");
   const completedTasks = tasks.filter((t) => t.status === "done");
 
-  // Inbox = tasks with no section
   const inboxTasks = sortTasks(
     activeTasks.filter((t) => !t.sectionId),
     sort
   );
 
-  // Tasks grouped by section
   const sectionGroups = sections.map((section) => ({
     section,
     tasks: sortTasks(
@@ -70,28 +70,70 @@ export function MyTasksListView({
     ),
   }));
 
+  // Flat list of all visible active tasks for keyboard nav
+  const allVisibleTasks = useMemo(() => {
+    const flat: MyTask[] = [...inboxTasks];
+    sectionGroups.forEach((g) => flat.push(...g.tasks));
+    if (showCompleted) {
+      flat.push(...tasks.filter((t) => t.status === "done"));
+    }
+    return flat;
+  }, [inboxTasks, sectionGroups, showCompleted, tasks]);
+
+  const handleNavSelect = useCallback(
+    (index: number) => {
+      const task = allVisibleTasks[index];
+      if (task) onEdit(task);
+    },
+    [allVisibleTasks, onEdit]
+  );
+
+  const handleNavEdit = useCallback(
+    (index: number) => {
+      const task = allVisibleTasks[index];
+      if (task) onEdit(task);
+    },
+    [allVisibleTasks, onEdit]
+  );
+
+  const handleNavDone = useCallback(
+    (index: number) => {
+      const task = allVisibleTasks[index];
+      if (task) onStatusChange(task.id, task.status === "done" ? "todo" : "done");
+    },
+    [allVisibleTasks, onStatusChange]
+  );
+
+  const { focusedIndex } = useKeyboardNav({
+    itemCount: allVisibleTasks.length,
+    onSelect: handleNavSelect,
+    onEdit: handleNavEdit,
+    onMarkDone: handleNavDone,
+  });
+
+  const focusedTaskId = focusedIndex >= 0 ? allVisibleTasks[focusedIndex]?.id : undefined;
+
   const hasActiveTasks = inboxTasks.length > 0 || sectionGroups.some((g) => g.tasks.length > 0);
 
   return (
     <div>
       {!hasActiveTasks && completedTasks.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E8E4DE] py-16">
-          <p className="text-sm text-[#1A1A1A]/25">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--solvyn-border-default)] py-16">
+          <p className="text-sm text-[var(--solvyn-text-tertiary)]">
             No tasks yet. Click &quot;Add Task&quot; to get started.
           </p>
         </div>
       )}
 
-      {/* Inbox section first */}
       <MyTaskSectionGroup
         name="Inbox"
         isInbox
         tasks={inboxTasks}
         onStatusChange={onStatusChange}
         onEdit={onEdit}
+        focusedTaskId={focusedTaskId}
       />
 
-      {/* Custom sections */}
       {sectionGroups.map(({ section, tasks: sectionTasks }) => (
         <MyTaskSectionGroup
           key={section.id}
@@ -99,16 +141,17 @@ export function MyTasksListView({
           tasks={sectionTasks}
           onStatusChange={onStatusChange}
           onEdit={onEdit}
+          focusedTaskId={focusedTaskId}
         />
       ))}
 
-      {/* Completed section */}
       {showCompleted && completedTasks.length > 0 && (
         <MyTaskSectionGroup
           name="Completed"
           tasks={sortTasks(completedTasks, "created")}
           onStatusChange={onStatusChange}
           onEdit={onEdit}
+          focusedTaskId={focusedTaskId}
         />
       )}
     </div>

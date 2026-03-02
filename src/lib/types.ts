@@ -23,6 +23,13 @@ export type TaskTag =
   | "Content"
   | "Social";
 
+export interface Subtask {
+  id: string;
+  name: string;
+  completed: boolean;
+  completedAt?: string;
+}
+
 export interface Task {
   id: string;
   name: string;
@@ -31,6 +38,7 @@ export interface Task {
   priority: TaskPriority;
   tag: TaskTag;
   completedAt?: string;
+  subtasks?: Subtask[];
 }
 
 export interface Section {

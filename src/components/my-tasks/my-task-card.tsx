@@ -35,31 +35,28 @@ export function MyTaskCard({
   const transitions = statusTransitions[task.status];
 
   return (
-    <div className="rounded-xl border border-[#E8E4DE] bg-white p-3.5 transition-all hover:shadow-sm">
-      {/* Name + edit */}
+    <div className="rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)] p-3.5 transition-all hover:border-[var(--solvyn-border-strong)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <p className={cn(
-          "text-[13px] font-medium text-[#1A1A1A] leading-snug",
-          task.status === "done" && "line-through text-[#1A1A1A]/40"
+          "text-[13px] font-medium text-[var(--solvyn-text-primary)] leading-snug",
+          task.status === "done" && "line-through text-[var(--solvyn-text-tertiary)]"
         )}>
           {task.name}
         </p>
         <button
           onClick={() => onEdit(task)}
-          className="shrink-0 rounded-md p-1 text-[#1A1A1A]/20 transition-colors hover:bg-[#1A1A1A]/[0.04] hover:text-[#1A1A1A]/50"
+          className="shrink-0 rounded-md p-1 text-[var(--solvyn-text-tertiary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)] hover:text-[var(--solvyn-text-secondary)]"
         >
           <Pencil className="h-3 w-3" />
         </button>
       </div>
 
-      {/* Notes preview */}
       {task.notes && (
-        <p className="mb-2 line-clamp-2 text-[11px] leading-relaxed text-[#1A1A1A]/35">
+        <p className="mb-2 line-clamp-2 text-[11px] leading-relaxed text-[var(--solvyn-text-tertiary)]">
           {task.notes}
         </p>
       )}
 
-      {/* Tags + priority + deadline */}
       <div className="mb-3 flex flex-wrap items-center gap-1">
         {task.tags.map((tag) => (
           <MyTaskTagBadge key={tag} tag={tag} />
@@ -69,7 +66,7 @@ export function MyTaskCard({
           <span
             className={cn(
               "inline-flex items-center gap-1 text-[10px] font-medium",
-              overdue ? "text-[#B96E5C]" : "text-[#1A1A1A]/35"
+              overdue ? "text-[var(--solvyn-rust)]" : "text-[var(--solvyn-text-tertiary)]"
             )}
           >
             <Calendar className="h-3 w-3" />
@@ -78,12 +75,11 @@ export function MyTaskCard({
         )}
       </div>
 
-      {/* Status move buttons */}
       <div className="flex items-center gap-1.5">
         {transitions.prev && (
           <button
             onClick={() => onStatusChange(task.id, transitions.prev!)}
-            className="flex items-center gap-1 rounded-lg bg-[#1A1A1A]/[0.04] px-2.5 py-1 text-[10px] font-semibold text-[#1A1A1A]/40 transition-colors hover:bg-[#1A1A1A]/[0.08]"
+            className="flex items-center gap-1 rounded-lg bg-[var(--solvyn-bg-elevated)] px-2.5 py-1 text-[10px] font-semibold text-[var(--solvyn-text-tertiary)] transition-colors hover:text-[var(--solvyn-text-secondary)]"
           >
             <ArrowLeft className="h-3 w-3" />
             {transitions.prev === "todo" ? "To Do" : "In Progress"}
@@ -95,8 +91,8 @@ export function MyTaskCard({
             className={cn(
               "flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-semibold transition-colors",
               transitions.next === "done"
-                ? "bg-[#6C7B5A]/10 text-[#6C7B5A] hover:bg-[#6C7B5A]/15"
-                : "bg-[#B96E5C]/10 text-[#B96E5C] hover:bg-[#B96E5C]/15"
+                ? "bg-[var(--solvyn-olive-bg)] text-[var(--solvyn-olive)] hover:brightness-110"
+                : "bg-[var(--solvyn-rust-bg)] text-[var(--solvyn-rust)] hover:brightness-110"
             )}
           >
             {transitions.next === "done" ? "Done" : "In Progress"}

@@ -108,7 +108,7 @@ export function ProfileEditor() {
   if (!profile) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-[var(--solvyn-text-tertiary)]" />
       </div>
     );
   }
@@ -117,19 +117,19 @@ export function ProfileEditor() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-neutral-900">Profile</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <h1 className="text-2xl font-semibold text-[var(--solvyn-text-primary)]">Profile</h1>
+      <p className="mt-1 text-sm text-[var(--solvyn-text-secondary)]">
         Manage your account settings
       </p>
 
-      <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-8">
+      <div className="mt-8 rounded-2xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)] p-8">
         {/* Avatar */}
         <div className="flex items-center gap-6">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-full bg-[#9CAF88] transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-full bg-[var(--solvyn-olive)] transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {avatarUrl ? (
               <img
@@ -162,23 +162,23 @@ export function ProfileEditor() {
             }}
           />
           <div>
-            <p className="text-sm font-medium text-neutral-900">
+            <p className="text-sm font-medium text-[var(--solvyn-text-primary)]">
               Profile photo
             </p>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-[var(--solvyn-text-secondary)]">
               Click to upload a new photo
             </p>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="my-6 h-px bg-neutral-100" />
+        <div className="my-6 h-px bg-[var(--solvyn-border-subtle)]" />
 
         {/* Name field */}
         <div>
           <label
             htmlFor="full_name"
-            className="block text-sm font-medium text-neutral-700"
+            className="block text-sm font-medium text-[var(--solvyn-text-secondary)]"
           >
             Full name
           </label>
@@ -187,7 +187,7 @@ export function ProfileEditor() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1.5 w-full max-w-md rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none transition-colors focus:border-[#9CAF88] focus:ring-1 focus:ring-[#9CAF88]"
+            className="mt-1.5 w-full max-w-md rounded-lg border border-[var(--solvyn-border-default)] px-3 py-2 text-sm text-[var(--solvyn-text-primary)] bg-[var(--solvyn-bg-raised)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]"
             placeholder="Your full name"
           />
         </div>
@@ -196,7 +196,7 @@ export function ProfileEditor() {
         <div className="mt-5">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-neutral-700"
+            className="block text-sm font-medium text-[var(--solvyn-text-secondary)]"
           >
             Email
           </label>
@@ -205,9 +205,9 @@ export function ProfileEditor() {
             type="email"
             value={profile.email || ""}
             disabled
-            className="mt-1.5 w-full max-w-md rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2 text-sm text-neutral-500"
+            className="mt-1.5 w-full max-w-md rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-sunken)] px-3 py-2 text-sm text-[var(--solvyn-text-secondary)]"
           />
-          <p className="mt-1 text-xs text-neutral-400">
+          <p className="mt-1 text-xs text-[var(--solvyn-text-tertiary)]">
             Email cannot be changed here
           </p>
         </div>
@@ -222,7 +222,7 @@ export function ProfileEditor() {
           <button
             onClick={handleSave}
             disabled={!hasChanges || saveState === "saving"}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#1A1B23] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--solvyn-olive)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             {saveState === "saving" && (
               <Loader2 className="h-4 w-4 animate-spin" />

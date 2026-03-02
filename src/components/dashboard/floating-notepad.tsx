@@ -46,8 +46,8 @@ export function FloatingNotepad() {
         className={cn(
           "fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300",
           open
-            ? "bg-[#1A1B23] text-white shadow-xl shadow-[#1A1B23]/20 rotate-12"
-            : "bg-white text-[#1A1A1A]/40 shadow-lg shadow-black/[0.06] border border-[#E8E4DE] hover:text-[#B96E5C] hover:shadow-xl hover:scale-105"
+            ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-xl shadow-black/30 rotate-12 border border-[var(--solvyn-border-default)]"
+            : "bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-tertiary)] shadow-lg shadow-black/20 border border-[var(--solvyn-border-default)] hover:text-[var(--solvyn-rust)] hover:shadow-xl hover:scale-105"
         )}
       >
         {open ? (
@@ -66,21 +66,21 @@ export function FloatingNotepad() {
             : "translate-y-3 scale-95 opacity-0 pointer-events-none"
         )}
       >
-        <div className="w-[calc(100vw-3rem)] max-w-80 overflow-hidden rounded-2xl border border-[#E8E4DE] bg-white shadow-2xl shadow-black/[0.08] sm:w-80">
-          <div className="flex items-center gap-2.5 border-b border-[#E8E4DE]/60 px-5 py-3.5">
-            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#B96E5C]/10">
-              <StickyNote className="h-3.5 w-3.5 text-[#B96E5C]" />
+        <div className="w-[calc(100vw-3rem)] max-w-80 overflow-hidden rounded-2xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-raised)] shadow-2xl shadow-black/30 sm:w-80">
+          <div className="flex items-center gap-2.5 border-b border-[var(--solvyn-border-subtle)] px-5 py-3.5">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--solvyn-rust)]/15">
+              <StickyNote className="h-3.5 w-3.5 text-[var(--solvyn-rust)]" />
             </div>
-            <h3 className="text-[13px] font-bold text-[#1A1A1A]">
+            <h3 className="text-[13px] font-bold text-[var(--solvyn-text-primary)]">
               Notepad
             </h3>
             {saving && (
-              <span className="ml-auto text-[10px] font-medium text-[#1A1A1A]/25">
+              <span className="ml-auto text-[10px] font-medium text-[var(--solvyn-text-tertiary)]">
                 Saving...
               </span>
             )}
             {!saving && loaded && notes.length > 0 && (
-              <span className="ml-auto text-[10px] font-medium text-[#6C7B5A]/50">
+              <span className="ml-auto text-[10px] font-medium text-[var(--solvyn-olive)]/50">
                 Saved
               </span>
             )}
@@ -89,7 +89,7 @@ export function FloatingNotepad() {
             value={notes}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="Quick notes, ideas, reminders..."
-            className="h-72 w-full resize-none bg-transparent px-5 py-4 text-[13px] leading-relaxed text-[#1A1A1A] placeholder-[#1A1A1A]/20 outline-none"
+            className="h-72 w-full resize-none bg-transparent px-5 py-4 text-[13px] leading-relaxed text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none"
             spellCheck={false}
           />
         </div>

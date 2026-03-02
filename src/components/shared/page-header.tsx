@@ -1,0 +1,25 @@
+"use client";
+
+interface PageHeaderProps {
+  title: string;
+  description?: string;
+  actions?: React.ReactNode;
+}
+
+export function PageHeader({ title, description, actions }: PageHeaderProps) {
+  return (
+    <div className="mb-8 flex items-start justify-between">
+      <div>
+        <h1 className="font-[family-name:var(--font-playfair)] text-[24px] font-bold tracking-tight text-[var(--solvyn-text-primary)]">
+          {title}
+        </h1>
+        {description && (
+          <p className="mt-1 text-sm text-[var(--solvyn-text-tertiary)]">
+            {description}
+          </p>
+        )}
+      </div>
+      {actions && <div className="flex items-center gap-2">{actions}</div>}
+    </div>
+  );
+}

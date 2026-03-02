@@ -39,7 +39,7 @@ type TabId = (typeof TABS)[number]["id"];
 // ── Shared display components (read-only) ───────────────────
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="mb-1 block text-[11px] font-semibold uppercase tracking-widest text-[#2A2A2A]/45">
+    <label className="mb-1 block text-[11px] font-semibold uppercase tracking-widest text-[var(--solvyn-text-secondary)]">
       {children}
     </label>
   );
@@ -50,7 +50,7 @@ function ReadText({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <FieldLabel>{label}</FieldLabel>
-      <p className="text-sm leading-relaxed text-[#2A2A2A] whitespace-pre-wrap">
+      <p className="text-sm leading-relaxed text-[var(--solvyn-text-primary)] whitespace-pre-wrap">
         {value}
       </p>
     </div>
@@ -66,9 +66,9 @@ function ReadList({ label, items }: { label: string; items: string[] }) {
         {items.map((item, i) => (
           <li
             key={i}
-            className="flex items-start gap-2 text-sm text-[#2A2A2A]"
+            className="flex items-start gap-2 text-sm text-[var(--solvyn-text-primary)]"
           >
-            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#6C7B5A]/40" />
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--solvyn-olive)]/40" />
             {item}
           </li>
         ))}
@@ -99,7 +99,7 @@ function EditText({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full resize-none rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2.5 text-sm leading-relaxed text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+        className="w-full resize-none rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2.5 text-sm leading-relaxed text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
       />
     </div>
   );
@@ -132,11 +132,11 @@ function EditList({
               value={item}
               onChange={(e) => updateItem(i, e.target.value)}
               placeholder={placeholder}
-              className="flex-1 rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2 text-sm text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+              className="flex-1 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2 text-sm text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
             />
             <button
               onClick={() => removeItem(i)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#EAE4D9] bg-white text-[#2A2A2A]/25 transition-colors hover:border-[#B96E5C]/30 hover:bg-[#B96E5C]/5 hover:text-[#B96E5C]"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-rust)]/30 hover:bg-[var(--solvyn-rust)]/5 hover:text-[var(--solvyn-rust)]"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -144,7 +144,7 @@ function EditList({
         ))}
         <button
           onClick={addItem}
-          className="flex items-center gap-1.5 rounded-lg border border-dashed border-[#EAE4D9] px-3 py-2 text-xs font-medium text-[#2A2A2A]/35 transition-colors hover:border-[#6C7B5A]/40 hover:text-[#6C7B5A]"
+          className="flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--solvyn-border-subtle)] px-3 py-2 text-xs font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-olive)]/40 hover:text-[var(--solvyn-olive)]"
         >
           <Plus className="h-3 w-3" />
           Add item
@@ -204,19 +204,19 @@ export function ContextEditor({
       <div className="mb-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[#2A2A2A]">
+            <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold tracking-tight text-[var(--solvyn-text-primary)]">
               Product Marketing Context
             </h1>
-            <p className="mt-1 flex items-center gap-2 text-sm text-[#2A2A2A]/50">
+            <p className="mt-1 flex items-center gap-2 text-sm text-[var(--solvyn-text-secondary)]">
               Last updated {lastUpdated}
               {saveStatus === "saving" && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-[#2A2A2A]/30">
+                <span className="inline-flex items-center gap-1 text-[11px] text-[var(--solvyn-text-tertiary)]">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Saving...
                 </span>
               )}
               {saveStatus === "saved" && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-[#6C7B5A]">
+                <span className="inline-flex items-center gap-1 text-[11px] text-[var(--solvyn-olive)]">
                   <Check className="h-3 w-3" />
                   Saved
                 </span>
@@ -225,7 +225,7 @@ export function ContextEditor({
           </div>
           <Link
             href="/"
-            className="flex items-center gap-2 rounded-full border border-[#EAE4D9] bg-white px-4 py-2 text-sm font-medium text-[#2A2A2A]/60 transition-colors hover:bg-[#F7F5F0] hover:text-[#2A2A2A]"
+            className="flex items-center gap-2 rounded-full border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-4 py-2 text-sm font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)] hover:text-[var(--solvyn-text-primary)]"
           >
             <ArrowLeft className="h-4 w-4" />
             Dashboard
@@ -233,7 +233,7 @@ export function ContextEditor({
         </div>
 
         {/* Tab switcher */}
-        <div className="mt-6 flex flex-wrap gap-1 rounded-lg bg-[#EAE4D9]/60 p-1">
+        <div className="mt-6 flex flex-wrap gap-1 rounded-lg bg-[var(--solvyn-border-subtle)]/60 p-1">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -241,8 +241,8 @@ export function ContextEditor({
               className={cn(
                 "rounded-md px-3 py-2 text-sm font-medium transition-all",
                 activeTab === tab.id
-                  ? "bg-white text-[#2A2A2A] shadow-sm"
-                  : "text-[#2A2A2A]/40 hover:text-[#2A2A2A]/60"
+                  ? "bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-primary)] shadow-sm"
+                  : "text-[var(--solvyn-text-secondary)] hover:text-[var(--solvyn-text-secondary)]"
               )}
             >
               {tab.label}
@@ -252,7 +252,7 @@ export function ContextEditor({
       </div>
 
       {/* Tab content */}
-      <div className="relative rounded-xl border border-[#EAE4D9] bg-white p-6 pb-8 shadow-sm">
+      <div className="relative rounded-xl border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] p-6 pb-8 shadow-sm">
         {activeTab === "overview" && (
           <TabOverview
             data={data.productOverview}
@@ -336,8 +336,8 @@ export function ContextEditor({
           className={cn(
             "absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full transition-all hover:scale-105",
             editing
-              ? "bg-[#6C7B5A] text-white shadow-sm hover:bg-[#5a694b]"
-              : "bg-[#F7F5F0] text-[#2A2A2A]/35 hover:text-[#6C7B5A] hover:bg-[#6C7B5A]/10"
+              ? "bg-[var(--solvyn-olive)] text-white shadow-sm hover:brightness-110"
+              : "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)]/10"
           )}
           title={editing ? "Done editing" : "Edit"}
         >
@@ -363,10 +363,10 @@ function TabHeader({
 }) {
   return (
     <div className="mb-6">
-      <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold text-[#2A2A2A]">
+      <h2 className="font-[family-name:var(--font-playfair)] text-xl font-semibold text-[var(--solvyn-text-primary)]">
         {title}
       </h2>
-      <p className="mt-1 text-sm text-[#2A2A2A]/40">{description}</p>
+      <p className="mt-1 text-sm text-[var(--solvyn-text-secondary)]">{description}</p>
     </div>
   );
 }
@@ -486,11 +486,11 @@ function TabPersonas({
           {data.map((row, i) => (
             <div
               key={i}
-              className="relative rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/50 p-4 space-y-3"
+              className="relative rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/50 p-4 space-y-3"
             >
               <button
                 onClick={() => removeRow(i)}
-                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md text-[#2A2A2A]/20 transition-colors hover:bg-[#B96E5C]/10 hover:text-[#B96E5C]"
+                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md text-[var(--solvyn-text-tertiary)] transition-colors hover:bg-[var(--solvyn-rust)]/10 hover:text-[var(--solvyn-rust)]"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -504,7 +504,7 @@ function TabPersonas({
           ))}
           <button
             onClick={addRow}
-            className="flex items-center gap-1.5 rounded-lg border border-dashed border-[#EAE4D9] px-3 py-2 text-xs font-medium text-[#2A2A2A]/35 transition-colors hover:border-[#6C7B5A]/40 hover:text-[#6C7B5A]"
+            className="flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--solvyn-border-subtle)] px-3 py-2 text-xs font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-olive)]/40 hover:text-[var(--solvyn-olive)]"
           >
             <Plus className="h-3 w-3" />
             Add persona
@@ -515,33 +515,33 @@ function TabPersonas({
           {data.map((row, i) => (
             <div
               key={i}
-              className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4"
+              className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4"
             >
-              <h3 className="text-sm font-semibold text-[#2A2A2A]">
+              <h3 className="text-sm font-semibold text-[var(--solvyn-text-primary)]">
                 {row.persona}
               </h3>
               <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#2A2A2A]/35">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--solvyn-text-tertiary)]">
                     Cares about
                   </span>
-                  <p className="mt-0.5 text-sm text-[#2A2A2A]/70">
+                  <p className="mt-0.5 text-sm text-[var(--solvyn-text-secondary)]">
                     {row.caresAbout}
                   </p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#2A2A2A]/35">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--solvyn-text-tertiary)]">
                     Challenge
                   </span>
-                  <p className="mt-0.5 text-sm text-[#2A2A2A]/70">
+                  <p className="mt-0.5 text-sm text-[var(--solvyn-text-secondary)]">
                     {row.challenge}
                   </p>
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#2A2A2A]/35">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--solvyn-text-tertiary)]">
                     Value we promise
                   </span>
-                  <p className="mt-0.5 text-sm text-[#2A2A2A]/70">
+                  <p className="mt-0.5 text-sm text-[var(--solvyn-text-secondary)]">
                     {row.valuePromise}
                   </p>
                 </div>
@@ -710,11 +710,11 @@ function TabObjections({
           {data.items.map((row, i) => (
             <div
               key={i}
-              className="relative rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/50 p-4 space-y-3"
+              className="relative rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/50 p-4 space-y-3"
             >
               <button
                 onClick={() => removeRow(i)}
-                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md text-[#2A2A2A]/20 transition-colors hover:bg-[#B96E5C]/10 hover:text-[#B96E5C]"
+                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md text-[var(--solvyn-text-tertiary)] transition-colors hover:bg-[var(--solvyn-rust)]/10 hover:text-[var(--solvyn-rust)]"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -724,7 +724,7 @@ function TabObjections({
           ))}
           <button
             onClick={addRow}
-            className="flex items-center gap-1.5 rounded-lg border border-dashed border-[#EAE4D9] px-3 py-2 text-xs font-medium text-[#2A2A2A]/35 transition-colors hover:border-[#6C7B5A]/40 hover:text-[#6C7B5A]"
+            className="flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--solvyn-border-subtle)] px-3 py-2 text-xs font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-olive)]/40 hover:text-[var(--solvyn-olive)]"
           >
             <Plus className="h-3 w-3" />
             Add objection
@@ -737,12 +737,12 @@ function TabObjections({
             {data.items.map((row, i) => (
               <div
                 key={i}
-                className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4"
+                className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4"
               >
-                <p className="text-sm font-medium text-[#2A2A2A]">
+                <p className="text-sm font-medium text-[var(--solvyn-text-primary)]">
                   &ldquo;{row.objection}&rdquo;
                 </p>
-                <p className="mt-2 text-sm text-[#2A2A2A]/70">
+                <p className="mt-2 text-sm text-[var(--solvyn-text-secondary)]">
                   {row.response}
                 </p>
               </div>
@@ -783,21 +783,21 @@ function TabSwitching({
         </>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-          <div className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4">
+          <div className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4">
             <FieldLabel>Push</FieldLabel>
-            <p className="text-sm text-[#2A2A2A]/70">{data.push}</p>
+            <p className="text-sm text-[var(--solvyn-text-secondary)]">{data.push}</p>
           </div>
-          <div className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4">
+          <div className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4">
             <FieldLabel>Pull</FieldLabel>
-            <p className="text-sm text-[#2A2A2A]/70">{data.pull}</p>
+            <p className="text-sm text-[var(--solvyn-text-secondary)]">{data.pull}</p>
           </div>
-          <div className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4">
+          <div className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4">
             <FieldLabel>Habit</FieldLabel>
-            <p className="text-sm text-[#2A2A2A]/70">{data.habit}</p>
+            <p className="text-sm text-[var(--solvyn-text-secondary)]">{data.habit}</p>
           </div>
-          <div className="rounded-lg border border-[#EAE4D9] bg-[#F7F5F0]/30 p-4">
+          <div className="rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)]/30 p-4">
             <FieldLabel>Anxiety</FieldLabel>
-            <p className="text-sm text-[#2A2A2A]/70">{data.anxiety}</p>
+            <p className="text-sm text-[var(--solvyn-text-secondary)]">{data.anxiety}</p>
           </div>
         </div>
       )}
@@ -859,7 +859,7 @@ function TabLanguage({
                     value={row.term}
                     onChange={(e) => setGlossaryRow(i, "term", e.target.value)}
                     placeholder="Term"
-                    className="w-1/3 rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2 text-sm font-medium text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+                    className="w-1/3 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2 text-sm font-medium text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
                   />
                   <input
                     value={row.meaning}
@@ -867,11 +867,11 @@ function TabLanguage({
                       setGlossaryRow(i, "meaning", e.target.value)
                     }
                     placeholder="Meaning"
-                    className="flex-1 rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2 text-sm text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+                    className="flex-1 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2 text-sm text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
                   />
                   <button
                     onClick={() => removeGlossaryRow(i)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#EAE4D9] bg-white text-[#2A2A2A]/25 transition-colors hover:border-[#B96E5C]/30 hover:bg-[#B96E5C]/5 hover:text-[#B96E5C]"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-rust)]/30 hover:bg-[var(--solvyn-rust)]/5 hover:text-[var(--solvyn-rust)]"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -879,7 +879,7 @@ function TabLanguage({
               ))}
               <button
                 onClick={addGlossaryRow}
-                className="flex items-center gap-1.5 rounded-lg border border-dashed border-[#EAE4D9] px-3 py-2 text-xs font-medium text-[#2A2A2A]/35 transition-colors hover:border-[#6C7B5A]/40 hover:text-[#6C7B5A]"
+                className="flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--solvyn-border-subtle)] px-3 py-2 text-xs font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-olive)]/40 hover:text-[var(--solvyn-olive)]"
               >
                 <Plus className="h-3 w-3" />
                 Add term
@@ -896,19 +896,19 @@ function TabLanguage({
           {data.glossary.length > 0 && (
             <div>
               <FieldLabel>Glossary</FieldLabel>
-              <div className="mt-1 overflow-hidden rounded-lg border border-[#EAE4D9]">
+              <div className="mt-1 overflow-hidden rounded-lg border border-[var(--solvyn-border-subtle)]">
                 {data.glossary.map((row, i) => (
                   <div
                     key={i}
                     className={cn(
                       "flex gap-4 px-4 py-2.5 text-sm",
-                      i % 2 === 0 ? "bg-[#F7F5F0]/30" : "bg-white"
+                      i % 2 === 0 ? "bg-[var(--solvyn-bg-elevated)]/30" : "bg-[var(--solvyn-bg-raised)]"
                     )}
                   >
-                    <span className="w-1/3 shrink-0 font-medium text-[#2A2A2A] sm:w-1/4">
+                    <span className="w-1/3 shrink-0 font-medium text-[var(--solvyn-text-primary)] sm:w-1/4">
                       {row.term}
                     </span>
-                    <span className="text-[#2A2A2A]/70">{row.meaning}</span>
+                    <span className="text-[var(--solvyn-text-secondary)]">{row.meaning}</span>
                   </div>
                 ))}
               </div>
@@ -1013,17 +1013,17 @@ function TabProofPoints({
                     value={row.theme}
                     onChange={(e) => setThemeRow(i, "theme", e.target.value)}
                     placeholder="Theme"
-                    className="w-1/3 rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2 text-sm font-medium text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+                    className="w-1/3 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2 text-sm font-medium text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
                   />
                   <input
                     value={row.proof}
                     onChange={(e) => setThemeRow(i, "proof", e.target.value)}
                     placeholder="Supporting proof"
-                    className="flex-1 rounded-lg border border-[#EAE4D9] bg-white px-3.5 py-2 text-sm text-[#2A2A2A] placeholder-[#2A2A2A]/30 outline-none transition-colors focus:border-[#6C7B5A] focus:ring-1 focus:ring-[#6C7B5A]/20"
+                    className="flex-1 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-3.5 py-2 text-sm text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-olive)] focus:ring-1 focus:ring-[var(--solvyn-olive)]/20"
                   />
                   <button
                     onClick={() => removeThemeRow(i)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#EAE4D9] bg-white text-[#2A2A2A]/25 transition-colors hover:border-[#B96E5C]/30 hover:bg-[#B96E5C]/5 hover:text-[#B96E5C]"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-rust)]/30 hover:bg-[var(--solvyn-rust)]/5 hover:text-[var(--solvyn-rust)]"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -1031,7 +1031,7 @@ function TabProofPoints({
               ))}
               <button
                 onClick={addThemeRow}
-                className="flex items-center gap-1.5 rounded-lg border border-dashed border-[#EAE4D9] px-3 py-2 text-xs font-medium text-[#2A2A2A]/35 transition-colors hover:border-[#6C7B5A]/40 hover:text-[#6C7B5A]"
+                className="flex items-center gap-1.5 rounded-lg border border-dashed border-[var(--solvyn-border-subtle)] px-3 py-2 text-xs font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:border-[var(--solvyn-olive)]/40 hover:text-[var(--solvyn-olive)]"
               >
                 <Plus className="h-3 w-3" />
                 Add theme
@@ -1052,7 +1052,7 @@ function TabProofPoints({
                 {data.certifications.map((cert, i) => (
                   <span
                     key={i}
-                    className="rounded-full border border-[#6C7B5A]/20 bg-[#6C7B5A]/5 px-3 py-1 text-xs font-medium text-[#6C7B5A]"
+                    className="rounded-full border border-[var(--solvyn-olive)]/20 bg-[var(--solvyn-olive)]/5 px-3 py-1 text-xs font-medium text-[var(--solvyn-olive)]"
                   >
                     {cert}
                   </span>
@@ -1063,19 +1063,19 @@ function TabProofPoints({
           {data.valueThemes.length > 0 && (
             <div>
               <FieldLabel>Value themes</FieldLabel>
-              <div className="mt-1 overflow-hidden rounded-lg border border-[#EAE4D9]">
+              <div className="mt-1 overflow-hidden rounded-lg border border-[var(--solvyn-border-subtle)]">
                 {data.valueThemes.map((row, i) => (
                   <div
                     key={i}
                     className={cn(
                       "flex gap-4 px-4 py-2.5 text-sm",
-                      i % 2 === 0 ? "bg-[#F7F5F0]/30" : "bg-white"
+                      i % 2 === 0 ? "bg-[var(--solvyn-bg-elevated)]/30" : "bg-[var(--solvyn-bg-raised)]"
                     )}
                   >
-                    <span className="w-1/3 shrink-0 font-medium text-[#2A2A2A] sm:w-1/4">
+                    <span className="w-1/3 shrink-0 font-medium text-[var(--solvyn-text-primary)] sm:w-1/4">
                       {row.theme}
                     </span>
-                    <span className="text-[#2A2A2A]/70">{row.proof}</span>
+                    <span className="text-[var(--solvyn-text-secondary)]">{row.proof}</span>
                   </div>
                 ))}
               </div>
