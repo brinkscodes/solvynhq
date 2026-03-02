@@ -189,10 +189,9 @@
 }
 
 /* Focus ring styles for keyboard navigation */
-.dark *:focus-visible {
+.dark :focus-visible:not([data-slot]) {
   outline: 2px solid var(--solvyn-olive);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 /* Smooth scrollbar for dark theme */

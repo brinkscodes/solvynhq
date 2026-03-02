@@ -38,6 +38,42 @@ type UserProfile = {
   avatar_url: string | null;
 };
 
+function NavLink({
+  href,
+  label,
+  icon: Icon,
+  pathname,
+}: {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  pathname: string;
+}) {
+  const isActive = pathname === href;
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+        isActive
+          ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)]"
+          : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+      )}
+    >
+      {isActive && (
+        <div className="absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-r-full bg-[var(--solvyn-olive)]" />
+      )}
+      <Icon
+        className={cn(
+          "h-4 w-4 shrink-0 transition-colors",
+          isActive ? "text-[var(--solvyn-olive)]" : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
+        )}
+      />
+      {label}
+    </Link>
+  );
+}
+
 export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void }) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -65,32 +101,6 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
-  }
-
-  function NavLink({ href, label, icon: Icon }: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }) {
-    const isActive = pathname === href;
-    return (
-      <Link
-        href={href}
-        className={cn(
-          "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
-          isActive
-            ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)]"
-            : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
-        )}
-      >
-        {isActive && (
-          <div className="absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-r-full bg-[var(--solvyn-olive)]" />
-        )}
-        <Icon
-          className={cn(
-            "h-4 w-4 shrink-0 transition-colors",
-            isActive ? "text-[var(--solvyn-olive)]" : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
-          )}
-        />
-        {label}
-      </Link>
-    );
   }
 
   return (
@@ -167,7 +177,7 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
           </p>
           <div className="flex flex-col gap-0.5">
             {viewItems.map((item) => (
-              <NavLink key={item.href} {...item} />
+              <NavLink key={item.href} {...item} pathname={pathname} />
             ))}
           </div>
 
@@ -177,7 +187,7 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
           </p>
           <div className="flex flex-col gap-0.5">
             {toolItems.map((item) => (
-              <NavLink key={item.href} {...item} />
+              <NavLink key={item.href} {...item} pathname={pathname} />
             ))}
           </div>
         </nav>
