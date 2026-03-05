@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Crosshair,
   LayoutDashboard,
+  Megaphone,
   LogOut,
   Calendar,
   CheckSquare,
@@ -36,6 +37,7 @@ const toolItems = [
   { href: "/seo", label: "SEO Research", icon: Search },
   { href: "/meetings", label: "Meetings", icon: Calendar },
   { href: "/team", label: "Team", icon: Users },
+  { href: "/changelog", label: "Patch Notes", icon: Megaphone },
 ];
 
 type UserProfile = {
