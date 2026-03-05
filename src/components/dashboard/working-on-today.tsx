@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle } from "lucide-react";
+import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks } from "lucide-react";
 import { TagBadge } from "./tag-badge";
+import { TodaySummaryModal } from "./today-summary-modal";
 import type { ProjectData, Task, TaskStatus } from "@/lib/types";
 
 export function WorkingOnToday({
@@ -30,6 +31,7 @@ export function WorkingOnToday({
 
   const totalTasks = activeTasks.length + doneTasks.length;
 
+  const [summaryOpen, setSummaryOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; taskId: string; taskStatus: TaskStatus } | null>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +58,7 @@ export function WorkingOnToday({
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--solvyn-amber)] to-[var(--solvyn-rust)]">
             <CalendarCheck className="h-4 w-4 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <h2 className="text-sm font-bold text-[var(--solvyn-text-primary)]">
               Working on Today
             </h2>
@@ -66,6 +68,16 @@ export function WorkingOnToday({
                 : "No tasks set for today"}
             </p>
           </div>
+          {doneTasks.length > 0 && (
+            <button
+              onClick={() => setSummaryOpen(true)}
+              className="flex h-8 items-center gap-1.5 rounded-xl border border-[var(--solvyn-olive)]/20 bg-[var(--solvyn-olive)]/[0.08] px-3 text-[11px] font-semibold text-[var(--solvyn-olive)] transition-all duration-200 hover:bg-[var(--solvyn-olive)]/15 hover:border-[var(--solvyn-olive)]/30"
+              title="View today's summary"
+            >
+              <ListChecks className="h-3.5 w-3.5" />
+              Summary
+            </button>
+          )}
         </div>
 
         {/* Active tasks */}
@@ -158,6 +170,13 @@ export function WorkingOnToday({
           </>
         )}
       </div>
+
+      <TodaySummaryModal
+        open={summaryOpen}
+        onClose={() => setSummaryOpen(false)}
+        doneTasks={doneTasks}
+        onTaskClick={onTaskClick}
+      />
 
       {/* Context menu */}
       {contextMenu && (

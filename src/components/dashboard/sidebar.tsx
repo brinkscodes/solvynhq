@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -20,8 +20,16 @@ import {
   Users,
   Sun,
   Moon,
+  ChevronRight,
+  Fingerprint,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 import { FeedbackModal } from "./feedback-modal";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/components/shared/theme-provider";
@@ -31,9 +39,16 @@ const viewItems = [
   { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
 ];
 
-const toolItems = [
+const toolItemsBefore = [
   { href: "/content", label: "Content", icon: FileText },
-  { href: "/product-context", label: "Marketing", icon: Crosshair },
+];
+
+const marketingChildren = [
+  { href: "/marketing/brand-identity", label: "Brand Identity", icon: Fingerprint },
+  { href: "/marketing/social-proof", label: "Social Proof", icon: Award },
+];
+
+const toolItemsAfter = [
   { href: "/seo", label: "SEO Research", icon: Search },
   { href: "/meetings", label: "Meetings", icon: Calendar },
   { href: "/team", label: "Team", icon: Users },
@@ -78,6 +93,55 @@ function NavLink({
       />
       {label}
     </Link>
+  );
+}
+
+function MarketingDropdown({ pathname }: { pathname: string }) {
+  const collapsibleId = useId();
+  const isMarketingRoute = pathname.startsWith("/marketing");
+  const [open, setOpen] = useState(isMarketingRoute);
+
+  // Sync open state with route
+  useEffect(() => {
+    if (isMarketingRoute) setOpen(true);
+  }, [isMarketingRoute]);
+
+  return (
+    <Collapsible id={collapsibleId} open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger asChild>
+        <button
+          className={cn(
+            "group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+            isMarketingRoute
+              ? "bg-[var(--solvyn-bg-elevated)]/50 text-[var(--solvyn-text-primary)]"
+              : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+          )}
+        >
+          <Crosshair
+            className={cn(
+              "h-4 w-4 shrink-0 transition-colors",
+              isMarketingRoute
+                ? "text-[var(--solvyn-olive)]"
+                : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
+            )}
+          />
+          Marketing
+          <ChevronRight
+            className={cn(
+              "ml-auto h-3 w-3 transition-transform duration-200",
+              open && "rotate-90"
+            )}
+          />
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="ml-7 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--solvyn-border-subtle)] pl-3">
+          {marketingChildren.map((item) => (
+            <NavLink key={item.href} {...item} pathname={pathname} />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
@@ -195,7 +259,14 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
             Tools
           </p>
           <div className="flex flex-col gap-0.5">
-            {toolItems.map((item) => (
+            {toolItemsBefore.map((item) => (
+              <NavLink key={item.href} {...item} pathname={pathname} />
+            ))}
+
+            {/* Marketing collapsible */}
+            <MarketingDropdown pathname={pathname} />
+
+            {toolItemsAfter.map((item) => (
               <NavLink key={item.href} {...item} pathname={pathname} />
             ))}
           </div>
