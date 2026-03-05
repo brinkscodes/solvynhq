@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
 import { ProjectHeader } from "./project-header";
 import { CurrentFocus } from "./current-focus";
+import { WorkingOnToday } from "./working-on-today";
 import { SectionGroup } from "./section-group";
 import { TaskRow } from "./task-row";
 import { UndoToast } from "./undo-toast";
@@ -163,6 +164,31 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     []
   );
 
+  const toggleTodayFocus = useCallback(
+    async (taskId: string, todayFocus: boolean) => {
+      setData((prev) => ({
+        ...prev,
+        sections: prev.sections.map((section) => ({
+          ...section,
+          tasks: section.tasks.map((t) =>
+            t.id === taskId ? { ...t, todayFocus } : t
+          ),
+        })),
+      }));
+
+      setSelectedTask((prev) =>
+        prev && prev.id === taskId ? { ...prev, todayFocus } : prev
+      );
+
+      await fetch("/api/tasks", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId, todayFocus }),
+      });
+    },
+    []
+  );
+
   const doneTasks = useMemo(() => {
     const tasks = data.sections.flatMap((section) =>
       section.tasks
@@ -201,7 +227,8 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     <>
       <ProjectHeader data={data} view={view} onViewChange={setView} />
 
-      <CurrentFocus data={data} onMarkDone={updateTaskStatus} />
+      <CurrentFocus data={data} onMarkDone={updateTaskStatus} onTaskClick={handleTaskClick} />
+      <WorkingOnToday data={data} onMarkDone={updateTaskStatus} onToggleTodayFocus={toggleTodayFocus} onTaskClick={handleTaskClick} />
 
       {view === "active" ? (
         <>
@@ -234,6 +261,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
                     section={section}
                     onStatusChange={updateTaskStatus}
                     onTaskClick={handleTaskClick}
+                    onToggleTodayFocus={toggleTodayFocus}
                   />
                 ))}
               </div>
@@ -291,6 +319,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
         onClose={() => { setDetailPanelOpen(false); setSelectedTask(null); }}
         onUpdate={handleTaskUpdate}
         onStatusChange={updateTaskStatus}
+        onToggleTodayFocus={toggleTodayFocus}
       />
 
       {undoToast && (

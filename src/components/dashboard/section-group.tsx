@@ -10,10 +10,12 @@ export function SectionGroup({
   section,
   onStatusChange,
   onTaskClick,
+  onToggleTodayFocus,
 }: {
   section: Section;
   onStatusChange?: (taskId: string, status: TaskStatus) => void;
   onTaskClick?: (task: Task) => void;
+  onToggleTodayFocus?: (taskId: string, todayFocus: boolean) => void;
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const activeTasks = section.tasks.filter((t) => t.status !== "done");
@@ -58,6 +60,7 @@ export function SectionGroup({
               task={task}
               onStatusChange={onStatusChange}
               onClick={onTaskClick}
+              onToggleTodayFocus={onToggleTodayFocus}
             />
           ))}
         </div>

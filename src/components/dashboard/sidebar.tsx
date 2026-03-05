@@ -16,10 +16,14 @@ import {
   X,
   Command,
   User,
+  Users,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FeedbackModal } from "./feedback-modal";
 import { createClient } from "@/lib/supabase/client";
+import { useTheme } from "@/components/shared/theme-provider";
 
 const viewItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -31,6 +35,7 @@ const toolItems = [
   { href: "/product-context", label: "Marketing", icon: Crosshair },
   { href: "/seo", label: "SEO Research", icon: Search },
   { href: "/meetings", label: "Meetings", icon: Calendar },
+  { href: "/team", label: "Team", icon: Users },
 ];
 
 type UserProfile = {
@@ -81,6 +86,7 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     fetch("/api/profile")
@@ -140,15 +146,16 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
         </button>
 
         {/* Workspace header */}
-        <div className="px-4 pt-5 pb-4">
-          <div className="flex items-center gap-3">
-            <img
-              src="/solvyn-logo.png"
-              alt="Solvyn"
-              className="h-7 w-auto brightness-0 invert opacity-80"
-            />
-          </div>
-          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-[var(--solvyn-text-tertiary)]">
+        <div className="flex flex-col items-center px-4 pt-6 pb-4">
+          <img
+            src="/solvyn-logo.png"
+            alt="Solvyn"
+            className={cn(
+              "h-14 w-auto opacity-90",
+              theme === "dark" && "brightness-0 invert"
+            )}
+          />
+          <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-[var(--solvyn-text-tertiary)]">
             Project HQ
           </p>
         </div>
@@ -217,6 +224,17 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
             </div>
             Profile
           </Link>
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)] transition-all duration-150 hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4 shrink-0" />
+            ) : (
+              <Moon className="h-4 w-4 shrink-0" />
+            )}
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
           <button
             onClick={() => setFeedbackOpen(true)}
             className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)] transition-all duration-150 hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"

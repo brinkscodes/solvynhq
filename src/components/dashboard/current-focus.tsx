@@ -1,21 +1,34 @@
 "use client";
 
-import { Check, Zap } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Check, Zap, Circle, CalendarCheck } from "lucide-react";
 import { TagBadge } from "./tag-badge";
-import type { ProjectData, TaskStatus } from "@/lib/types";
+import type { ProjectData, Task, TaskStatus } from "@/lib/types";
 
 export function CurrentFocus({
   data,
   onMarkDone,
+  onTaskClick,
 }: {
   data: ProjectData;
   onMarkDone: (taskId: string, status: TaskStatus) => void;
+  onTaskClick: (task: Task) => void;
 }) {
   const inProgressTasks = data.sections.flatMap((section) =>
     section.tasks
       .filter((t) => t.status === "in-progress")
       .map((t) => ({ ...t, sectionName: section.name }))
   );
+
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; taskId: string } | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const handleClick = () => setContextMenu(null);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [contextMenu]);
 
   if (inProgressTasks.length === 0) return null;
 
@@ -50,10 +63,12 @@ export function CurrentFocus({
           {inProgressTasks.map((task) => (
             <div
               key={task.id}
-              className="group flex items-center gap-3.5 rounded-xl bg-[var(--solvyn-bg-elevated)] px-4 py-3 transition-all duration-200 hover:bg-[var(--solvyn-bg-elevated)]/80"
+              className="group flex cursor-pointer items-center gap-3.5 rounded-xl bg-[var(--solvyn-bg-elevated)] px-4 py-3 transition-all duration-200 hover:bg-[var(--solvyn-bg-elevated)]/80"
+              onClick={() => onTaskClick(task)}
+              onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, taskId: task.id }); }}
             >
               <button
-                onClick={() => onMarkDone(task.id, "done")}
+                onClick={(e) => { e.stopPropagation(); onMarkDone(task.id, "done"); }}
                 className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--solvyn-rust)]/30 text-transparent transition-all duration-200 hover:border-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)] hover:text-white hover:scale-110"
                 title="Mark as done"
               >
@@ -70,6 +85,36 @@ export function CurrentFocus({
           ))}
         </div>
       </div>
+
+      {/* Context menu */}
+      {contextMenu && (
+        <div
+          ref={contextMenuRef}
+          className="fixed z-50 min-w-[180px] rounded-lg border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] py-1 shadow-xl shadow-black/20"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <button
+            onClick={() => {
+              onMarkDone(contextMenu.taskId, "todo");
+              setContextMenu(null);
+            }}
+            className="flex w-full items-center gap-2.5 px-3.5 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-base)]"
+          >
+            <Circle className="h-3.5 w-3.5 text-[var(--solvyn-text-tertiary)]" />
+            Set to Todo
+          </button>
+          <button
+            onClick={() => {
+              onMarkDone(contextMenu.taskId, "done");
+              setContextMenu(null);
+            }}
+            className="flex w-full items-center gap-2.5 px-3.5 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-base)]"
+          >
+            <Check className="h-3.5 w-3.5 text-[var(--solvyn-olive)]" />
+            Mark as Done
+          </button>
+        </div>
+      )}
     </div>
   );
 }

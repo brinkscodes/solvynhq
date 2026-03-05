@@ -9,19 +9,49 @@ export async function GET() {
     const projectId = await getProjectId();
 
     // Parallel queries
-    const [projectRes, sectionsRes, tasksRes] = await Promise.all([
+    const [projectRes, sectionsRes, tasksRes, commentsCountRes] = await Promise.all([
       supabase.from("projects").select("name, description").eq("id", projectId).single(),
       supabase.from("sections").select("*").eq("project_id", projectId).order("order"),
       supabase.from("tasks").select("*").eq("project_id", projectId),
+      supabase.from("task_comments").select("task_id").eq("project_id", projectId),
     ]);
 
     if (projectRes.error) throw projectRes.error;
     if (sectionsRes.error) throw sectionsRes.error;
     if (tasksRes.error) throw tasksRes.error;
 
+    // Count comments per task
+    const commentCounts: Record<string, number> = {};
+    if (commentsCountRes.data) {
+      for (const row of commentsCountRes.data) {
+        commentCounts[row.task_id] = (commentCounts[row.task_id] || 0) + 1;
+      }
+    }
+
+    // Resolve assignee profiles
+    const assigneeIds = [...new Set(
+      tasksRes.data
+        .map((t: any) => t.assignee_id)
+        .filter(Boolean)
+    )];
+
+    let assigneeMap: Record<string, { fullName: string; avatarUrl: string | null }> = {};
+    if (assigneeIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", assigneeIds);
+      if (profiles) {
+        assigneeMap = Object.fromEntries(
+          profiles.map((p: any) => [p.id, { fullName: p.full_name || "Unknown", avatarUrl: p.avatar_url }])
+        );
+      }
+    }
+
     // Group tasks by section_id
     const tasksBySection: Record<string, Task[]> = {};
     for (const row of tasksRes.data) {
+      const assigneeProfile = row.assignee_id ? assigneeMap[row.assignee_id] : null;
       const task: Task = {
         id: row.id,
         name: row.name,
@@ -31,6 +61,12 @@ export async function GET() {
         tag: row.tag,
         ...(row.completed_at ? { completedAt: row.completed_at } : {}),
         ...(row.subtasks ? { subtasks: row.subtasks } : {}),
+        todayFocus: row.today_focus ?? false,
+        assigneeId: row.assignee_id || null,
+        assignee: assigneeProfile
+          ? { userId: row.assignee_id, fullName: assigneeProfile.fullName, avatarUrl: assigneeProfile.avatarUrl }
+          : null,
+        commentCount: commentCounts[row.id] || 0,
       };
       if (!tasksBySection[row.section_id]) tasksBySection[row.section_id] = [];
       tasksBySection[row.section_id].push(task);
@@ -63,7 +99,7 @@ export async function GET() {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { taskId, status, subtasks, name, description, priority, tag } = body as {
+    const { taskId, status, subtasks, name, description, priority, tag, todayFocus, assigneeId } = body as {
       taskId: string;
       status?: string;
       subtasks?: Array<{ id: string; name: string; completed: boolean; completedAt?: string }>;
@@ -71,6 +107,8 @@ export async function PATCH(req: NextRequest) {
       description?: string;
       priority?: string;
       tag?: string;
+      todayFocus?: boolean;
+      assigneeId?: string | null;
     };
 
     if (!taskId) {
@@ -94,6 +132,8 @@ export async function PATCH(req: NextRequest) {
     if (description !== undefined) updates.description = description;
     if (priority !== undefined) updates.priority = priority;
     if (tag !== undefined) updates.tag = tag;
+    if (todayFocus !== undefined) updates.today_focus = todayFocus;
+    if (assigneeId !== undefined) updates.assignee_id = assigneeId;
 
     const { error } = await supabase
       .from("tasks")

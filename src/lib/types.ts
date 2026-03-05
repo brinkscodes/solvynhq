@@ -30,6 +30,12 @@ export interface Subtask {
   completedAt?: string;
 }
 
+export interface TaskAssignee {
+  userId: string;
+  fullName: string;
+  avatarUrl: string | null;
+}
+
 export interface Task {
   id: string;
   name: string;
@@ -39,6 +45,10 @@ export interface Task {
   tag: TaskTag;
   completedAt?: string;
   subtasks?: Subtask[];
+  todayFocus?: boolean;
+  assigneeId?: string | null;
+  assignee?: TaskAssignee | null;
+  commentCount?: number;
 }
 
 export interface Section {

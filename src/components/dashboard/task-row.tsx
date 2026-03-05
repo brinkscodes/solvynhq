@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ChevronDown, Undo2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Check, ChevronDown, Undo2, CalendarCheck, Zap, Circle, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./status-badge";
 import { PriorityBadge } from "./priority-badge";
 import { TagBadge } from "./tag-badge";
+import { Avatar } from "@/components/shared/avatar";
 import type { Task, TaskStatus } from "@/lib/types";
 
 function formatCompletedAt(iso: string): string {
@@ -26,15 +27,26 @@ export function TaskRow({
   showCompletedAt,
   onStatusChange,
   onClick,
+  onToggleTodayFocus,
 }: {
   task: Task;
   showSection?: string;
   showCompletedAt?: boolean;
   onStatusChange?: (taskId: string, status: TaskStatus) => void;
   onClick?: (task: Task) => void;
+  onToggleTodayFocus?: (taskId: string, todayFocus: boolean) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showUndoConfirm, setShowUndoConfirm] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!contextMenu) return;
+    const handleClick = () => setContextMenu(null);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [contextMenu]);
 
   const handleRowClick = () => {
     if (onClick) {
@@ -52,7 +64,57 @@ export function TaskRow({
           ? "opacity-50 hover:opacity-100"
           : "hover:bg-[var(--solvyn-bg-elevated)]/50"
       )}
+      onContextMenu={(e) => {
+        if (!onToggleTodayFocus && !onStatusChange) return;
+        e.preventDefault();
+        setContextMenu({ x: e.clientX, y: e.clientY });
+      }}
     >
+      {/* Context menu */}
+      {contextMenu && (onToggleTodayFocus || onStatusChange) && (
+        <div
+          ref={contextMenuRef}
+          className="fixed z-50 min-w-[180px] rounded-lg border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] py-1 shadow-xl shadow-black/20"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          {onStatusChange && task.status !== "in-progress" && task.status !== "done" && (
+            <button
+              onClick={() => {
+                onStatusChange(task.id, "in-progress");
+                setContextMenu(null);
+              }}
+              className="flex w-full items-center gap-2.5 px-3.5 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-base)]"
+            >
+              <Zap className="h-3.5 w-3.5 text-[var(--solvyn-rust)]" />
+              Set to In Progress
+            </button>
+          )}
+          {onStatusChange && task.status === "in-progress" && (
+            <button
+              onClick={() => {
+                onStatusChange(task.id, "todo");
+                setContextMenu(null);
+              }}
+              className="flex w-full items-center gap-2.5 px-3.5 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-base)]"
+            >
+              <Circle className="h-3.5 w-3.5 text-[var(--solvyn-text-tertiary)]" />
+              Set to Todo
+            </button>
+          )}
+          {onToggleTodayFocus && (
+            <button
+              onClick={() => {
+                onToggleTodayFocus(task.id, !task.todayFocus);
+                setContextMenu(null);
+              }}
+              className="flex w-full items-center gap-2.5 px-3.5 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-base)]"
+            >
+              <CalendarCheck className={cn("h-3.5 w-3.5", task.todayFocus ? "text-[var(--solvyn-amber)]" : "text-[var(--solvyn-text-tertiary)]")} />
+              {task.todayFocus ? "Remove from Today" : "Add to Today"}
+            </button>
+          )}
+        </div>
+      )}
       {/* Undo confirmation popup */}
       {showUndoConfirm && (
         <div className="absolute left-10 top-1/2 z-20 -translate-y-1/2 animate-[slideUp_0.15s_ease-out]">
@@ -135,6 +197,19 @@ export function TaskRow({
         </button>
 
         <div className="flex shrink-0 items-center gap-1.5">
+          {task.assignee && (
+            <Avatar
+              name={task.assignee.fullName}
+              avatarUrl={task.assignee.avatarUrl}
+              size="xs"
+            />
+          )}
+          {(task.commentCount ?? 0) > 0 && (
+            <span className="flex items-center gap-0.5 text-[11px] font-medium text-[var(--solvyn-text-tertiary)]">
+              <MessageSquare className="h-3 w-3" />
+              {task.commentCount}
+            </span>
+          )}
           <TagBadge tag={task.tag} />
           <PriorityBadge priority={task.priority} />
           <StatusBadge status={task.status} />

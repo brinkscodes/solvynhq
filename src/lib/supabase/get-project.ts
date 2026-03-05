@@ -12,7 +12,19 @@ export async function getProjectId(): Promise<string> {
     throw new Error("Not authenticated");
   }
 
-  // Try to find existing project for this user (order by created_at to get the oldest/original)
+  // Check project_members first (covers both owner and invited members)
+  const { data: memberships, error: memberError } = await supabase
+    .from("project_members")
+    .select("project_id")
+    .eq("user_id", user.id)
+    .order("joined_at", { ascending: true })
+    .limit(1);
+
+  if (!memberError && memberships && memberships.length > 0) {
+    return memberships[0].project_id;
+  }
+
+  // Fallback: legacy check via projects.owner_id
   const { data: projects, error: fetchError } = await supabase
     .from("projects")
     .select("id")

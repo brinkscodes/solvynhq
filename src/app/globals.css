@@ -46,24 +46,6 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* Solvyn brand tokens */
-  --solvyn-bg-base: #0F0F0D;
-  --solvyn-bg-raised: #161614;
-  --solvyn-bg-elevated: #1E1E1B;
-  --solvyn-bg-sunken: #0B0B09;
-  --solvyn-sidebar-bg: #111110;
-  --solvyn-border-subtle: #252520;
-  --solvyn-border-default: #2E2E28;
-  --solvyn-border-strong: #3A3A32;
-  --solvyn-text-primary: #E8E4D8;
-  --solvyn-text-secondary: #A09888;
-  --solvyn-text-tertiary: #5E5A52;
-  --solvyn-olive: #8CA878;
-  --solvyn-olive-bg: #1A2218;
-  --solvyn-rust: #C97A68;
-  --solvyn-rust-bg: #211816;
-  --solvyn-amber: #D4A843;
-  --solvyn-amber-bg: #1E1A10;
 }
 
 :root {
@@ -99,6 +81,25 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Solvyn light mode brand tokens */
+  --solvyn-bg-base: #F5F3EE;
+  --solvyn-bg-raised: #FFFFFF;
+  --solvyn-bg-elevated: #F0EDE6;
+  --solvyn-bg-sunken: #EBE8E0;
+  --solvyn-sidebar-bg: #FAF9F6;
+  --solvyn-border-subtle: #E5E0D5;
+  --solvyn-border-default: #D5CFC2;
+  --solvyn-border-strong: #C0B9A8;
+  --solvyn-text-primary: #1A1A18;
+  --solvyn-text-secondary: #5E5A52;
+  --solvyn-text-tertiary: #9A9488;
+  --solvyn-olive: #5E8A48;
+  --solvyn-olive-bg: #EEF4EB;
+  --solvyn-rust: #B0563E;
+  --solvyn-rust-bg: #F8EFEC;
+  --solvyn-amber: #A07E2A;
+  --solvyn-amber-bg: #F6F0E0;
 }
 
 .dark {
@@ -133,6 +134,25 @@
   --sidebar-accent-foreground: #E8E4D8;
   --sidebar-border: #252520;
   --sidebar-ring: #3A3A32;
+
+  /* Solvyn dark mode brand tokens */
+  --solvyn-bg-base: #0F0F0D;
+  --solvyn-bg-raised: #161614;
+  --solvyn-bg-elevated: #1E1E1B;
+  --solvyn-bg-sunken: #0B0B09;
+  --solvyn-sidebar-bg: #111110;
+  --solvyn-border-subtle: #252520;
+  --solvyn-border-default: #2E2E28;
+  --solvyn-border-strong: #3A3A32;
+  --solvyn-text-primary: #E8E4D8;
+  --solvyn-text-secondary: #A09888;
+  --solvyn-text-tertiary: #5E5A52;
+  --solvyn-olive: #8CA878;
+  --solvyn-olive-bg: #1A2218;
+  --solvyn-rust: #C97A68;
+  --solvyn-rust-bg: #211816;
+  --solvyn-amber: #D4A843;
+  --solvyn-amber-bg: #1E1A10;
 }
 
 @layer base {
@@ -189,26 +209,26 @@
 }
 
 /* Focus ring styles for keyboard navigation */
-.dark :focus-visible:not([data-slot]) {
+:focus-visible:not([data-slot]) {
   outline: 2px solid var(--solvyn-olive);
   outline-offset: 2px;
 }
 
-/* Smooth scrollbar for dark theme */
-.dark ::-webkit-scrollbar {
+/* Smooth scrollbar */
+::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.dark ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.dark ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: var(--solvyn-border-default);
   border-radius: 3px;
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: var(--solvyn-border-strong);
 }

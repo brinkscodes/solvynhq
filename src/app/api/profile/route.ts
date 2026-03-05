@@ -21,7 +21,7 @@ export async function GET() {
 
     if (error) throw error;
 
-    return NextResponse.json(data);
+    return NextResponse.json({ id: user.id, ...data });
   } catch (err) {
     console.error("GET /api/profile error:", err);
     return NextResponse.json({ error: "Failed to load profile" }, { status: 500 });
