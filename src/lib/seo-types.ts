@@ -60,10 +60,21 @@ export interface PageGaps {
   gaps: ContentGap[];
 }
 
+export interface ImageSeo {
+  id: string;
+  filename: string;
+  url: string;
+  altText: string;
+  title: string;
+  caption: string;
+  description: string;
+}
+
 export interface SeoResearch {
   lastUpdated: string;
   competitors: Competitor[];
   keywords: PageKeywords[];
   metaTags: MetaTag[];
   contentGaps: PageGaps[];
+  imageSeo: ImageSeo[];
 }

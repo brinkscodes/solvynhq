@@ -2093,4 +2093,64 @@ export const seoResearch: SeoResearch = {
       ],
     },
   ],
+
+  // ─────────────────────────────────────────────
+  // IMAGE SEO — Website images with meta data
+  // ─────────────────────────────────────────────
+  imageSeo: [
+    {
+      id: "aloe",
+      filename: "Aloe-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/Aloe-solvyn-skin-scaled.png",
+      altText: "Fresh aloe vera leaf sliced open revealing clear gel on a warm sand-toned surface",
+      title: "Aloe Vera — Solvyn Shield Ingredient",
+      caption: "Aloe Vera Leaf Juice — soothing hydration that calms and comforts sun-exposed skin.",
+      description: "A close-up macro photograph of a freshly cut aloe vera leaf resting on a soft beige surface. Clear gel glistens at the cross-section, with warm golden light casting a calming, spa-like atmosphere. Used on the Shield by Solvyn ingredient section to visually communicate skin-soothing benefits.",
+    },
+    {
+      id: "avocado-oil",
+      filename: "avacado-oil-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/avacado-oil-solvyn-skin-scaled.png",
+      altText: "Avocado halves and dark green avocado oil dripping into a ceramic dish on natural linen",
+      title: "Avocado Oil — Solvyn Shield Ingredient",
+      caption: "Avocado Oil — a nourishing plant lipid that softens and conditions the skin.",
+      description: "A styled flat-lay of halved avocados, fresh leaves, and a glass bottle of deep green avocado oil being poured into a speckled ceramic dish, set on natural linen. Warm, diffused lighting reinforces the clean, plant-derived identity of Solvyn's formula. Used on the Shield product page to highlight nourishing skincare ingredients.",
+    },
+    {
+      id: "green-tea",
+      filename: "Green-tea-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/Green-tea-solvyn-skin-scaled.png",
+      altText: "Loose green tea leaves in a ceramic bowl beside a glass cup of brewed tea on linen",
+      title: "Green Tea Extract — Solvyn Shield Ingredient",
+      caption: "Green Tea Extract — antioxidant protection against environmental stressors.",
+      description: "An overhead shot of dried loose-leaf green tea in a cream ceramic bowl, accompanied by a partially visible glass cup of pale brewed tea and a fresh sprig of green tea leaves, all resting on textured natural linen with soft shadow patterns. The serene, minimal composition aligns with Solvyn's calm luxury aesthetic. Used on the Shield product page to highlight antioxidant-rich ingredients.",
+    },
+    {
+      id: "shea-butter",
+      filename: "Shea-butter-gemini-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/Shea-butter-gemini-solvyn-skin-scaled.png",
+      altText: "Creamy raw shea butter on a wooden tray with shea nuts on a warm beige background",
+      title: "Shea Butter — Solvyn Shield Ingredient",
+      caption: "Shea Butter — barrier-supporting moisture that nourishes without heaviness.",
+      description: "A close-up photograph of a smooth, ivory mound of raw shea butter resting in a carved wooden tray, surrounded by whole shea nuts on a warm sand-toned surface. Soft, directional lighting enhances the rich, natural texture of the butter. Used on the Shield by Solvyn ingredient section to communicate deep, skin-barrier moisturization.",
+    },
+    {
+      id: "vitamin-e",
+      filename: "Vitamin-e-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/Vitamin-e-solvyn-skin-scaled.png",
+      altText: "Golden amber Vitamin E oil drop falling from a glass dropper against a dark background",
+      title: "Vitamin E (Tocopherol) — Solvyn Shield Ingredient",
+      caption: "Vitamin E (Tocopherol) — supports the skin barrier while defending against free-radical damage.",
+      description: "A dramatic macro photograph of a single luminous amber drop of Vitamin E oil suspended from a glass dropper, backlit against a deep charcoal background. The golden liquid catches light with striking clarity, conveying potency and purity. Used on the Shield by Solvyn ingredient section to highlight antioxidant and skin-barrier benefits.",
+    },
+    {
+      id: "zinc-oxide",
+      filename: "Zinc-oxide-powder-solvyn-skin.png",
+      url: "https://solvynskin.com/wp-content/uploads/2026/03/Zinc-oxide-powder-solvyn-skin-scaled.png",
+      altText: "Fine white zinc oxide powder in a ceramic bowl surrounded by eucalyptus and rosemary on natural linen",
+      title: "Zinc Oxide (17.5%) — Solvyn Shield Active Ingredient",
+      caption: "Zinc Oxide 17.5% — non-nano mineral UV protection providing broad-spectrum UVA and UVB defense.",
+      description: "An overhead flat-lay of fine white zinc oxide powder in a rustic ceramic bowl, set on textured natural linen and framed by scattered eucalyptus branches and rosemary sprigs. Soft natural light casts gentle shadows across the composition. Used on the Shield by Solvyn ingredient section to visually anchor the product's core active mineral UV filter.",
+    },
+  ],
 };

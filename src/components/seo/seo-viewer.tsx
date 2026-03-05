@@ -8,6 +8,7 @@ import { CompetitorsTab } from "./competitors-tab";
 import { KeywordsTab } from "./keywords-tab";
 import { MetaTagsTab } from "./meta-tags-tab";
 import { ContentGapsTab } from "./content-gaps-tab";
+import { ImageSeoTab } from "./image-seo-tab";
 import type { SeoResearch } from "@/lib/seo-types";
 
 const tabs = [
@@ -15,6 +16,7 @@ const tabs = [
   { id: "keywords", label: "Keywords" },
   { id: "meta-tags", label: "Meta Tags" },
   { id: "content-gaps", label: "Content Gaps" },
+  { id: "image-seo", label: "Image SEO" },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -74,6 +76,9 @@ export function SeoViewer({ data }: { data: SeoResearch }) {
       {activeTab === "meta-tags" && <MetaTagsTab metaTags={data.metaTags} />}
       {activeTab === "content-gaps" && (
         <ContentGapsTab contentGaps={data.contentGaps} />
+      )}
+      {activeTab === "image-seo" && (
+        <ImageSeoTab images={data.imageSeo} />
       )}
     </>
   );
