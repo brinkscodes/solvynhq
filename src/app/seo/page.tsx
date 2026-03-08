@@ -2,6 +2,7 @@ import { seoResearch } from "../../../data/seo-research";
 import { SeoViewer } from "@/components/seo/seo-viewer";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default function SeoPage() {
           <SeoViewer data={seoResearch} />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

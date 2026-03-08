@@ -20,6 +20,13 @@ export function FloatingNotepad() {
       });
   }, []);
 
+  // Listen for close event from other floating panels
+  useEffect(() => {
+    const handleClose = () => setOpen(false);
+    window.addEventListener("close-floating-panels", handleClose);
+    return () => window.removeEventListener("close-floating-panels", handleClose);
+  }, []);
+
   const save = useCallback((value: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
@@ -42,7 +49,10 @@ export function FloatingNotepad() {
     <>
       {/* Floating button */}
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (!open) window.dispatchEvent(new CustomEvent("close-floating-panels"));
+          setOpen(!open);
+        }}
         className={cn(
           "fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300",
           open

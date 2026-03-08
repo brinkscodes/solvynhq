@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 import { MeetingsViewer } from "@/components/meetings/meetings-viewer";
 import { meetings } from "../../../data/meetings";
 
@@ -19,6 +20,7 @@ export default function MeetingsPage() {
           <MeetingsViewer meetings={meetings} />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

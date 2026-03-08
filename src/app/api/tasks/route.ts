@@ -96,6 +96,54 @@ export async function GET() {
   }
 }
 
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { sectionId, name } = body as { sectionId: string; name: string };
+
+    if (!sectionId || !name?.trim()) {
+      return NextResponse.json({ error: "sectionId and name required" }, { status: 400 });
+    }
+
+    const supabase = await createClient();
+    const projectId = await getProjectId();
+
+    const taskId = crypto.randomUUID();
+
+    const { data: task, error } = await supabase
+      .from("tasks")
+      .insert({
+        id: taskId,
+        project_id: projectId,
+        section_id: sectionId,
+        name: name.trim(),
+        status: "todo",
+        priority: "medium",
+        tag: "Config",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({
+      id: task.id,
+      name: task.name,
+      description: task.description || "",
+      status: task.status,
+      priority: task.priority,
+      tag: task.tag,
+      todayFocus: task.today_focus ?? false,
+      assigneeId: null,
+      assignee: null,
+      commentCount: 0,
+    });
+  } catch (err) {
+    console.error("POST /api/tasks error:", err);
+    return NextResponse.json({ error: "Failed to create task" }, { status: 500 });
+  }
+}
+
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();

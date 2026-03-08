@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 import { ProfileEditor } from "@/components/profile/profile-editor";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ export default function ProfilePage() {
           <ProfileEditor />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

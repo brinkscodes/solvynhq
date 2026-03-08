@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 import { MyTasksViewer } from "@/components/my-tasks/my-tasks-viewer";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ export default function MyTasksPage() {
           <MyTasksViewer />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

@@ -2,6 +2,7 @@ import { websiteContent } from "../../../data/website-content";
 import { ContentViewer } from "@/components/content/content-viewer";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default function ContentPage() {
           <ContentViewer pages={websiteContent} />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

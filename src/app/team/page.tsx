@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 import { TeamViewer } from "@/components/team/team-viewer";
 import { PageHeader } from "@/components/shared/page-header";
 
@@ -15,6 +16,7 @@ export default function TeamPage() {
           <TeamViewer />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

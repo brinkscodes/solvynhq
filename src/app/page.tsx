@@ -1,6 +1,7 @@
 import { Dashboard } from "@/components/dashboard/dashboard";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { FloatingNotepad } from "@/components/dashboard/floating-notepad";
+import { FloatingAgenda } from "@/components/meetings/floating-agenda";
 import type { ProjectData, Task, Section } from "@/lib/types";
 import { createClient } from "@/lib/supabase/server";
 import { getProjectId } from "@/lib/supabase/get-project";
@@ -98,6 +99,7 @@ export default async function Page() {
           <Dashboard data={data} />
         </div>
       </main>
+      <FloatingAgenda />
       <FloatingNotepad />
     </div>
   );

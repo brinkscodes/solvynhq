@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks } from "lucide-react";
+import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks, RotateCcw } from "lucide-react";
 import { TagBadge } from "./tag-badge";
 import { TodaySummaryModal } from "./today-summary-modal";
 import type { ProjectData, Task, TaskStatus } from "@/lib/types";
@@ -10,11 +10,13 @@ export function WorkingOnToday({
   data,
   onMarkDone,
   onToggleTodayFocus,
+  onResetToday,
   onTaskClick,
 }: {
   data: ProjectData;
   onMarkDone: (taskId: string, status: TaskStatus) => void;
   onToggleTodayFocus: (taskId: string, todayFocus: boolean) => void;
+  onResetToday: () => void;
   onTaskClick: (task: Task) => void;
 }) {
   const activeTasks = data.sections.flatMap((section) =>
@@ -68,6 +70,16 @@ export function WorkingOnToday({
                 : "No tasks set for today"}
             </p>
           </div>
+          {totalTasks > 0 && (
+            <button
+              onClick={onResetToday}
+              className="flex h-8 items-center gap-1.5 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-3 text-[11px] font-semibold text-[var(--solvyn-text-tertiary)] transition-all duration-200 hover:bg-[var(--solvyn-bg-base)] hover:text-[var(--solvyn-text-secondary)]"
+              title="Clear all tasks from today and start fresh"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset Day
+            </button>
+          )}
           {doneTasks.length > 0 && (
             <button
               onClick={() => setSummaryOpen(true)}

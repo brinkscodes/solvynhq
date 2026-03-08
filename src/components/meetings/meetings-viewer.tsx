@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Calendar,
   ChevronDown,
@@ -10,9 +10,16 @@ import {
   Circle,
   Lightbulb,
   ArrowLeft,
+  ListTodo,
+  StickyNote,
+  HelpCircle,
+  CircleCheck,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import type { Meeting } from "@/lib/meetings-types";
+import type { MeetingAgendaItem, AgendaItemType } from "@/lib/meeting-agenda-types";
+import { cn } from "@/lib/utils";
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr + "T12:00:00");
@@ -186,6 +193,128 @@ function MeetingCard({ meeting }: { meeting: Meeting }) {
   );
 }
 
+const AGENDA_TYPE_CONFIG: Record<AgendaItemType, { label: string; icon: typeof StickyNote; color: string }> = {
+  note: { label: "Notes", icon: StickyNote, color: "var(--solvyn-olive)" },
+  question: { label: "Questions", icon: HelpCircle, color: "var(--solvyn-rust)" },
+  action: { label: "Action Items", icon: CircleCheck, color: "var(--solvyn-text-secondary)" },
+};
+
+function NextMeetingAgenda() {
+  const [items, setItems] = useState<MeetingAgendaItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/meeting-agenda")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setItems(data);
+        setLoaded(true);
+      })
+      .catch(() => setLoaded(true));
+  }, []);
+
+  const handleToggle = async (id: string) => {
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
+    const newCompleted = !item.completed;
+    setItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, completed: newCompleted } : i))
+    );
+    await fetch("/api/meeting-agenda", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, completed: newCompleted }),
+    });
+  };
+
+  const handleDelete = async (id: string) => {
+    setItems((prev) => prev.filter((i) => i.id !== id));
+    await fetch(`/api/meeting-agenda?id=${id}`, { method: "DELETE" });
+  };
+
+  if (!loaded || items.length === 0) return null;
+
+  const grouped = {
+    note: items.filter((i) => i.type === "note"),
+    question: items.filter((i) => i.type === "question"),
+    action: items.filter((i) => i.type === "action"),
+  };
+
+  return (
+    <div className="mb-6 overflow-hidden rounded-2xl border-2 border-dashed border-[var(--solvyn-olive)]/30 bg-[var(--solvyn-bg-raised)] shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
+      <div className="flex items-center gap-3 px-6 py-5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--solvyn-olive)]/10">
+          <ListTodo className="h-5 w-5 text-[var(--solvyn-olive)]" />
+        </div>
+        <div>
+          <h3 className="font-[family-name:var(--font-playfair)] text-lg font-semibold text-[var(--solvyn-text-primary)]">
+            Next Meeting Agenda
+          </h3>
+          <p className="mt-0.5 text-sm text-[var(--solvyn-text-secondary)]">
+            {items.length} item{items.length !== 1 ? "s" : ""} to discuss
+          </p>
+        </div>
+      </div>
+
+      <div className="border-t border-[var(--solvyn-border-subtle)]/60 px-6 pb-6 pt-5">
+        {(["note", "question", "action"] as AgendaItemType[]).map((type) => {
+          const typeItems = grouped[type];
+          if (typeItems.length === 0) return null;
+          const cfg = AGENDA_TYPE_CONFIG[type];
+          const Icon = cfg.icon;
+          return (
+            <div key={type} className="mb-5 last:mb-0">
+              <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[var(--solvyn-text-tertiary)]">
+                {cfg.label}
+              </h4>
+              <div className="space-y-2">
+                {typeItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="group flex items-start gap-3"
+                  >
+                    {type === "action" ? (
+                      <button
+                        onClick={() => handleToggle(item.id)}
+                        className="mt-0.5 shrink-0"
+                      >
+                        {item.completed ? (
+                          <CircleCheck className="h-4 w-4 text-[var(--solvyn-olive)]" />
+                        ) : (
+                          <Circle className="h-4 w-4 text-[var(--solvyn-rust)]" />
+                        )}
+                      </button>
+                    ) : (
+                      <Icon
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        style={{ color: cfg.color }}
+                      />
+                    )}
+                    <p
+                      className={cn(
+                        "flex-1 text-sm leading-relaxed text-[var(--solvyn-text-secondary)]",
+                        type === "action" && item.completed && "line-through opacity-50"
+                      )}
+                    >
+                      {item.content}
+                    </p>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-rust)]" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function MeetingsViewer({ meetings }: { meetings: Meeting[] }) {
   return (
     <>
@@ -209,6 +338,9 @@ export function MeetingsViewer({ meetings }: { meetings: Meeting[] }) {
           </Link>
         </div>
       </div>
+
+      {/* Next meeting agenda */}
+      <NextMeetingAgenda />
 
       {/* Meeting cards */}
       <div className="space-y-4">
