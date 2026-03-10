@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Fingerprint,
   Award,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -55,9 +56,12 @@ const toolItemsAfter = [
   { href: "/changelog", label: "Patch Notes", icon: Megaphone },
 ];
 
+const ADMIN_EMAIL = "sunticodes@gmail.com";
+
 type UserProfile = {
   full_name: string | null;
   avatar_url: string | null;
+  email: string | null;
 };
 
 function NavLink({
@@ -159,7 +163,7 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
       .then((r) => r.json())
       .then((data) => {
         if (data.full_name !== undefined) {
-          setUserProfile({ full_name: data.full_name, avatar_url: data.avatar_url });
+          setUserProfile({ full_name: data.full_name, avatar_url: data.avatar_url, email: data.email ?? null });
         }
       })
       .catch(() => {});
@@ -275,6 +279,9 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
         {/* Bottom section */}
         <div className="mx-3 h-px bg-[var(--solvyn-border-subtle)]" />
         <div className="flex flex-col gap-0.5 px-3 py-3">
+          {userProfile?.email === ADMIN_EMAIL && (
+            <NavLink href="/admin" label="Admin" icon={Shield} pathname={pathname} />
+          )}
           <Link
             href="/profile"
             className={cn(

@@ -15,6 +15,7 @@ create table if not exists profiles (
   full_name text,
   email text,
   avatar_url text,
+  last_seen_at timestamptz,
   created_at timestamptz default now()
 );
 

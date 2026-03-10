@@ -13,6 +13,13 @@ export async function GET() {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // Update last_seen_at on every page load (fire-and-forget)
+    supabase
+      .from("profiles")
+      .update({ last_seen_at: new Date().toISOString() })
+      .eq("id", user.id)
+      .then(() => {});
+
     const { data, error } = await supabase
       .from("profiles")
       .select("full_name, email, avatar_url")
