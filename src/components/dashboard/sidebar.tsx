@@ -32,6 +32,7 @@ import {
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 import { FeedbackModal } from "./feedback-modal";
+import { PatchNotesModal } from "@/components/changelog/patch-notes-modal";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/components/shared/theme-provider";
 
@@ -53,7 +54,6 @@ const toolItemsAfter = [
   { href: "/seo", label: "SEO Research", icon: Search },
   { href: "/meetings", label: "Meetings", icon: Calendar },
   { href: "/team", label: "Team", icon: Users },
-  { href: "/changelog", label: "Patch Notes", icon: Megaphone },
 ];
 
 const ADMIN_EMAIL = "sunticodes@gmail.com";
@@ -151,6 +151,7 @@ function MarketingDropdown({ pathname }: { pathname: string }) {
 
 export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void }) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [patchNotesOpen, setPatchNotesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const pathname = usePathname();
@@ -273,6 +274,13 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
             {toolItemsAfter.map((item) => (
               <NavLink key={item.href} {...item} pathname={pathname} />
             ))}
+            <button
+              onClick={() => setPatchNotesOpen(true)}
+              className="group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-[var(--solvyn-text-tertiary)] transition-all duration-150 hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+            >
+              <Megaphone className="h-4 w-4 shrink-0 text-[var(--solvyn-text-tertiary)] transition-colors group-hover:text-[var(--solvyn-text-secondary)]" />
+              Patch Notes
+            </button>
           </div>
         </nav>
 
@@ -335,6 +343,10 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
       <FeedbackModal
         open={feedbackOpen}
         onClose={() => setFeedbackOpen(false)}
+      />
+      <PatchNotesModal
+        open={patchNotesOpen}
+        onClose={() => setPatchNotesOpen(false)}
       />
     </>
   );
