@@ -55,7 +55,26 @@ export async function getProjectId(): Promise<string> {
     return projects[0].id;
   }
 
-  // No project yet — auto-create one
+  // No membership and no owned project — join the main shared project
+  const { data: mainProject } = await admin
+    .from("projects")
+    .select("id")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .single();
+
+  if (mainProject) {
+    // Auto-add user as member of the shared project
+    await admin
+      .from("project_members")
+      .upsert(
+        { project_id: mainProject.id, user_id: user.id, role: "member" },
+        { onConflict: "project_id,user_id" }
+      );
+    return mainProject.id;
+  }
+
+  // No projects exist at all — create the first one (only happens once)
   const { data: newProject, error: insertError } = await admin
     .from("projects")
     .insert({
@@ -68,7 +87,6 @@ export async function getProjectId(): Promise<string> {
 
   if (insertError) throw insertError;
 
-  // Ensure membership exists (don't rely solely on DB trigger)
   await admin
     .from("project_members")
     .upsert(
