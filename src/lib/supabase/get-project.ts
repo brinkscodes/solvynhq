@@ -16,12 +16,18 @@ export async function getProjectId(): Promise<string> {
   // Check project_members first (covers both owner and invited members)
   const { data: memberships, error: memberError } = await supabase
     .from("project_members")
-    .select("project_id")
+    .select("project_id, role")
     .eq("user_id", user.id)
-    .order("joined_at", { ascending: true })
-    .limit(1);
+    .order("joined_at", { ascending: true });
 
   if (!memberError && memberships && memberships.length > 0) {
+    if (memberships.length === 1) {
+      return memberships[0].project_id;
+    }
+    // If multiple memberships, prefer the shared project (where user was invited)
+    // over an auto-created solo project (where user is owner)
+    const invited = memberships.find((m) => m.role !== "owner");
+    if (invited) return invited.project_id;
     return memberships[0].project_id;
   }
 

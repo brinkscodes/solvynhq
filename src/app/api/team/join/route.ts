@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // POST: Accept invite by code
 export async function POST(req: NextRequest) {
@@ -66,6 +67,35 @@ export async function POST(req: NextRequest) {
       .from("project_invites")
       .update({ accepted_at: new Date().toISOString() })
       .eq("id", invite.id);
+
+    // Clean up auto-created empty solo projects so the user sees the shared project
+    const admin = createAdminClient();
+    const { data: ownedProjects } = await admin
+      .from("project_members")
+      .select("project_id")
+      .eq("user_id", user.id)
+      .eq("role", "owner");
+
+    if (ownedProjects) {
+      for (const owned of ownedProjects) {
+        if (owned.project_id === invite.project_id) continue;
+        // Check if solo project (only this user is a member)
+        const { count: memberCount } = await admin
+          .from("project_members")
+          .select("id", { count: "exact", head: true })
+          .eq("project_id", owned.project_id);
+        if (memberCount !== 1) continue;
+        // Check if empty (no tasks)
+        const { count: taskCount } = await admin
+          .from("tasks")
+          .select("id", { count: "exact", head: true })
+          .eq("project_id", owned.project_id);
+        if (taskCount === 0) {
+          await admin.from("project_members").delete().eq("project_id", owned.project_id).eq("user_id", user.id);
+          await admin.from("projects").delete().eq("id", owned.project_id);
+        }
+      }
+    }
 
     return NextResponse.json({ success: true, projectId: invite.project_id });
   } catch (err) {
