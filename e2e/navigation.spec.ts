@@ -9,8 +9,10 @@ test.describe("Navigation", () => {
 
   test("navigate to Marketing page", async ({ page }) => {
     await page.goto("/");
+    // Marketing is a collapsible section — clicking expands it
     await page.locator("aside").getByText("Marketing").click();
-    await expect(page).toHaveURL("/product-context");
+    // Verify sub-items appear after expanding
+    await expect(page.locator("aside").getByText("Brand Identity")).toBeVisible({ timeout: 5_000 });
   });
 
   test("navigate to SEO Research page", async ({ page }) => {
@@ -34,12 +36,12 @@ test.describe("Navigation", () => {
   test("active nav item has correct styling", async ({ page }) => {
     await page.goto("/");
 
-    // Dashboard link should have active styling (bg-white/[0.08])
+    // Dashboard link should have active styling (text-primary)
     const dashboardLink = page.locator("aside a[href='/']");
-    await expect(dashboardLink).toHaveClass(/bg-white/);
+    await expect(dashboardLink).toHaveClass(/text-\[var\(--solvyn-text-primary\)\]/);
 
-    // Content link should not have active styling
+    // Content link should have inactive styling (text-tertiary)
     const contentLink = page.locator("aside a[href='/content']");
-    await expect(contentLink).not.toHaveClass(/bg-white\/\[0\.08\]/);
+    await expect(contentLink).toHaveClass(/text-\[var\(--solvyn-text-tertiary\)\]/);
   });
 });

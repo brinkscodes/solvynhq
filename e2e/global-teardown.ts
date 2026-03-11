@@ -27,19 +27,15 @@ export default async function globalTeardown() {
     return;
   }
 
-  // Delete owned data
-  const { data: project } = await supabase
-    .from("projects")
-    .select("id")
-    .eq("owner_id", testUser.id)
-    .single();
+  // Remove from shared project memberships (don't delete the shared project!)
+  await supabase.from("project_members").delete().eq("user_id", testUser.id);
 
-  if (project) {
-    await supabase.from("tasks").delete().eq("project_id", project.id);
-    await supabase.from("sections").delete().eq("project_id", project.id);
-    await supabase.from("projects").delete().eq("id", project.id);
-  }
+  // Delete any solo projects owned by test user
+  await supabase.from("projects").delete().eq("owner_id", testUser.id);
 
+  // Clean personal data
+  await supabase.from("user_tasks").delete().eq("user_id", testUser.id);
+  await supabase.from("user_task_sections").delete().eq("user_id", testUser.id);
   await supabase.from("notes").delete().eq("user_id", testUser.id);
 
   // Delete the user

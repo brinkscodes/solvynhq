@@ -9,8 +9,8 @@ test.describe("Dashboard", () => {
   test("shows stats cards (Completed, In Progress, To Do)", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText("Completed").first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText("In Progress")).toBeVisible();
-    await expect(page.getByText("To Do")).toBeVisible();
+    await expect(page.getByText("In Progress").first()).toBeVisible();
+    await expect(page.getByText("To Do").first()).toBeVisible();
   });
 
   test("shows Overall Progress section", async ({ page }) => {

@@ -26,15 +26,14 @@ export default async function globalSetup() {
   const { data: existingUsers } = await supabase.auth.admin.listUsers();
   const existing = existingUsers?.users?.find((u) => u.email === email);
   if (existing) {
-    // Delete owned project data first (cascade)
-    await supabase.from("tasks").delete().eq("project_id",
-      (await supabase.from("projects").select("id").eq("owner_id", existing.id).single()).data?.id
-    );
-    await supabase.from("sections").delete().eq("project_id",
-      (await supabase.from("projects").select("id").eq("owner_id", existing.id).single()).data?.id
-    );
-    await supabase.from("notes").delete().eq("user_id", existing.id);
+    // Remove from project_members (don't delete shared projects!)
+    await supabase.from("project_members").delete().eq("user_id", existing.id);
+    // Delete any solo projects owned by test user (empty ones only)
     await supabase.from("projects").delete().eq("owner_id", existing.id);
+    // Clean personal data
+    await supabase.from("user_tasks").delete().eq("user_id", existing.id);
+    await supabase.from("user_task_sections").delete().eq("user_id", existing.id);
+    await supabase.from("notes").delete().eq("user_id", existing.id);
     await supabase.auth.admin.deleteUser(existing.id);
   }
 
