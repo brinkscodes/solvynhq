@@ -116,6 +116,40 @@ function MetaInfo({ meta }: { meta: Record<string, unknown> }) {
   );
 }
 
+const fieldOrder = [
+  "form_name",
+  "full name",
+  "company name",
+  "phone number",
+  "email address",
+  "venue type",
+  "location",
+  "form_id",
+  "message",
+];
+
+function sortFields(entries: [string, unknown][]): [string, unknown][] {
+  return [...entries].sort((a, b) => {
+    const aLabel = getFieldLabel(a).toLowerCase();
+    const bLabel = getFieldLabel(b).toLowerCase();
+    const aIdx = fieldOrder.findIndex((f) => aLabel.includes(f));
+    const bIdx = fieldOrder.findIndex((f) => bLabel.includes(f));
+    // Known fields sort by their defined order, unknown fields go to the end
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    return 0;
+  });
+}
+
+function getFieldLabel(entry: [string, unknown]): string {
+  const [key, val] = entry;
+  if (typeof val === "object" && val !== null && "label" in val) {
+    return String((val as { label: unknown }).label);
+  }
+  return key;
+}
+
 function DeleteConfirmDialog({
   onConfirm,
   onCancel,
@@ -234,7 +268,7 @@ function SubmissionRow({
       {expanded && (
         <div className="border-t border-[var(--solvyn-border-subtle)] px-4 py-4">
           <div className="flex flex-col gap-3">
-            {Object.entries(submission.fields).map(([key, value]) => (
+            {sortFields(Object.entries(submission.fields)).map(([key, value]) => (
               <FieldValue key={key} label={key} value={value} />
             ))}
           </div>
