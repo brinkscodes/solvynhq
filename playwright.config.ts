@@ -33,7 +33,7 @@ export default defineConfig({
         storageState: "e2e/.auth/user.json",
       },
       dependencies: ["setup"],
-      testMatch: /\/(dashboard|navigation|notepad|shared-project)\.spec\.ts/,
+      testMatch: /\/(dashboard|navigation|notepad|shared-project|leads)\.spec\.ts/,
     },
     {
       name: "auth-tests",

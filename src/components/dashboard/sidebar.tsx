@@ -13,6 +13,7 @@ import {
   LogOut,
   Calendar,
   CheckSquare,
+  Inbox,
   Menu,
   X,
   Command,
@@ -45,6 +46,7 @@ const toolItemsBefore = [
 ];
 
 const marketingChildren = [
+  { href: "/marketing/leads", label: "Leads", icon: Inbox },
   { href: "/marketing/brand-identity", label: "Brand Identity", icon: Fingerprint },
   { href: "/marketing/social-proof", label: "Social Proof", icon: Award },
 ];
