@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Undo2, X } from "lucide-react";
 
 interface UndoToastProps {
-  taskName: string;
+  taskName?: string;
+  message?: string;
   onUndo: () => void;
   onDismiss: () => void;
 }
 
-export function UndoToast({ taskName, onUndo, onDismiss }: UndoToastProps) {
+export function UndoToast({ taskName, message, onUndo, onDismiss }: UndoToastProps) {
   const [progress, setProgress] = useState(100);
   const duration = 5000;
 
@@ -40,10 +41,16 @@ export function UndoToast({ taskName, onUndo, onDismiss }: UndoToastProps) {
 
         <div className="flex items-center gap-4">
           <p className="text-[13px] text-[var(--solvyn-text-secondary)]">
-            <span className="font-medium text-[var(--solvyn-text-primary)]">Done!</span>{" "}
-            <span className="max-w-[200px] truncate inline-block align-bottom">
-              {taskName}
-            </span>
+            {message ? (
+              <span className="font-medium text-[var(--solvyn-text-primary)]">{message}</span>
+            ) : (
+              <>
+                <span className="font-medium text-[var(--solvyn-text-primary)]">Done!</span>{" "}
+                <span className="max-w-[200px] truncate inline-block align-bottom">
+                  {taskName}
+                </span>
+              </>
+            )}
           </p>
           <button
             onClick={onUndo}

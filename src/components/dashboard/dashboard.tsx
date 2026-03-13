@@ -30,6 +30,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     previousCompletedAt?: string;
   } | null>(null);
   const undoToastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [resetUndo, setResetUndo] = useState<{ taskIds: string[] } | null>(null);
 
   const fireConfetti = useCallback(() => {
     confetti({
@@ -135,6 +136,32 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     });
   }, [undoToast]);
 
+  const handleResetUndo = useCallback(async () => {
+    if (!resetUndo) return;
+    const { taskIds } = resetUndo;
+    setResetUndo(null);
+
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section) => ({
+        ...section,
+        tasks: section.tasks.map((t) =>
+          taskIds.includes(t.id) ? { ...t, todayFocus: true } : t
+        ),
+      })),
+    }));
+
+    await Promise.all(
+      taskIds.map((id) =>
+        fetch("/api/tasks", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ taskId: id, todayFocus: true }),
+        })
+      )
+    );
+  }, [resetUndo]);
+
   const handleTaskClick = useCallback((task: Task) => {
     setSelectedTask(task);
     setDetailPanelOpen(true);
@@ -191,6 +218,15 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
   );
 
   const resetToday = useCallback(async () => {
+    const todayTaskIds = data.sections
+      .flatMap((s) => s.tasks)
+      .filter((t) => t.todayFocus)
+      .map((t) => t.id);
+
+    if (todayTaskIds.length === 0) return;
+
+    setResetUndo({ taskIds: todayTaskIds });
+
     setData((prev) => ({
       ...prev,
       sections: prev.sections.map((section) => ({
@@ -202,7 +238,7 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     }));
 
     await fetch("/api/tasks/reset-today", { method: "POST" });
-  }, []);
+  }, [data]);
 
   const toggleTodayFocus = useCallback(
     async (taskId: string, todayFocus: boolean) => {
@@ -490,6 +526,15 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
           taskName={undoToast.taskName}
           onUndo={handleUndo}
           onDismiss={() => setUndoToast(null)}
+        />
+      )}
+
+      {resetUndo && (
+        <UndoToast
+          key="reset-today"
+          message={`Day reset — ${resetUndo.taskIds.length} ${resetUndo.taskIds.length === 1 ? "task" : "tasks"} cleared`}
+          onUndo={handleResetUndo}
+          onDismiss={() => setResetUndo(null)}
         />
       )}
     </>

@@ -25,6 +25,8 @@ import {
   Fingerprint,
   Award,
   Shield,
+  Globe,
+  FolderOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -41,8 +43,9 @@ const viewItems = [
   { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
 ];
 
-const toolItemsBefore = [
+const websiteChildren = [
   { href: "/content", label: "Content", icon: FileText },
+  { href: "/seo", label: "SEO Research", icon: Search },
 ];
 
 const marketingChildren = [
@@ -52,7 +55,7 @@ const marketingChildren = [
 ];
 
 const toolItemsAfter = [
-  { href: "/seo", label: "SEO Research", icon: Search },
+  { href: "/files", label: "Files", icon: FolderOpen },
   { href: "/meetings", label: "Meetings", icon: Calendar },
   { href: "/team", label: "Team", icon: Users },
 ];
@@ -98,6 +101,54 @@ function NavLink({
       />
       {label}
     </Link>
+  );
+}
+
+function WebsiteDropdown({ pathname }: { pathname: string }) {
+  const collapsibleId = useId();
+  const isWebsiteRoute = pathname === "/content" || pathname.startsWith("/content/") || pathname === "/seo" || pathname.startsWith("/seo/");
+  const [open, setOpen] = useState(isWebsiteRoute);
+
+  useEffect(() => {
+    if (isWebsiteRoute) setOpen(true);
+  }, [isWebsiteRoute]);
+
+  return (
+    <Collapsible id={collapsibleId} open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger asChild>
+        <button
+          className={cn(
+            "group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+            isWebsiteRoute
+              ? "bg-[var(--solvyn-bg-elevated)]/50 text-[var(--solvyn-text-primary)]"
+              : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+          )}
+        >
+          <Globe
+            className={cn(
+              "h-4 w-4 shrink-0 transition-colors",
+              isWebsiteRoute
+                ? "text-[var(--solvyn-olive)]"
+                : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
+            )}
+          />
+          Website
+          <ChevronRight
+            className={cn(
+              "ml-auto h-3 w-3 transition-transform duration-200",
+              open && "rotate-90"
+            )}
+          />
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="ml-7 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--solvyn-border-subtle)] pl-3">
+          {websiteChildren.map((item) => (
+            <NavLink key={item.href} {...item} pathname={pathname} />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
@@ -264,9 +315,8 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
             Tools
           </p>
           <div className="flex flex-col gap-0.5">
-            {toolItemsBefore.map((item) => (
-              <NavLink key={item.href} {...item} pathname={pathname} />
-            ))}
+            {/* Website collapsible */}
+            <WebsiteDropdown pathname={pathname} />
 
             {/* Marketing collapsible */}
             <MarketingDropdown pathname={pathname} />

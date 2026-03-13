@@ -1,9 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks, RotateCcw } from "lucide-react";
+import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks, RotateCcw, AlertTriangle } from "lucide-react";
 import { TagBadge } from "./tag-badge";
 import { TodaySummaryModal } from "./today-summary-modal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import type { ProjectData, Task, TaskStatus } from "@/lib/types";
 
 export function WorkingOnToday({
@@ -34,6 +42,7 @@ export function WorkingOnToday({
   const totalTasks = activeTasks.length + doneTasks.length;
 
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; taskId: string; taskStatus: TaskStatus } | null>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
 
@@ -72,7 +81,7 @@ export function WorkingOnToday({
           </div>
           {totalTasks > 0 && (
             <button
-              onClick={onResetToday}
+              onClick={() => setResetConfirmOpen(true)}
               className="flex h-8 items-center gap-1.5 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-3 text-[11px] font-semibold text-[var(--solvyn-text-tertiary)] transition-all duration-200 hover:bg-[var(--solvyn-bg-base)] hover:text-[var(--solvyn-text-secondary)]"
               title="Clear all tasks from today and start fresh"
             >
@@ -189,6 +198,42 @@ export function WorkingOnToday({
         doneTasks={doneTasks}
         onTaskClick={onTaskClick}
       />
+
+      {/* Reset Day confirmation dialog */}
+      <Dialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
+        <DialogContent showCloseButton={false} className="max-w-sm border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)]">
+          <DialogHeader>
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--solvyn-rust)]/10">
+                <AlertTriangle className="h-4 w-4 text-[var(--solvyn-rust)]" />
+              </div>
+              <DialogTitle className="text-[15px] text-[var(--solvyn-text-primary)]">
+                Reset today&apos;s tasks?
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-[13px] text-[var(--solvyn-text-tertiary)]">
+              This will remove {totalTasks} {totalTasks === 1 ? "task" : "tasks"} from your &quot;Working on Today&quot; list. You can undo this after.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <button
+              onClick={() => setResetConfirmOpen(false)}
+              className="flex-1 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-base)] px-4 py-2.5 text-[13px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)]"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setResetConfirmOpen(false);
+                onResetToday();
+              }}
+              className="flex-1 rounded-xl bg-[var(--solvyn-rust)] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--solvyn-rust)]/90"
+            >
+              Reset Day
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Context menu */}
       {contextMenu && (
