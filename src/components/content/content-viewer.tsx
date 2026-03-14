@@ -250,7 +250,7 @@ function pageToHtml(page: ContentPage): string {
     margin: 0;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .pp-wrapper {
       grid-template-columns: 1fr;
       padding: 48px 24px 80px;
