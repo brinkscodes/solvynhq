@@ -102,46 +102,6 @@ function pageToHtml(page: ContentPage): string {
     --white: #FAFAF7;
   }
 
-  .pp-hero {
-    background-color: var(--sand);
-    padding: 80px 48px 60px;
-    border-bottom: 1px solid var(--sand-dark);
-  }
-
-  .pp-hero-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--olive);
-    font-weight: 500;
-    margin-bottom: 20px;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .pp-hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 5vw, 58px);
-    font-weight: 400;
-    color: var(--charcoal);
-    line-height: 1.15;
-    max-width: 640px;
-    margin: 0;
-  }
-
-  .pp-hero h1 em {
-    font-style: italic;
-    color: var(--olive);
-  }
-
-  .pp-hero-meta {
-    margin-top: 28px;
-    font-size: 13px;
-    color: #777;
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    font-family: 'DM Sans', sans-serif;
-  }
-
   .pp-wrapper {
     max-width: 1100px;
     margin: 0 auto;
@@ -319,7 +279,6 @@ function pageToHtml(page: ContentPage): string {
   }
 
   @media (max-width: 768px) {
-    .pp-hero { padding: 60px 24px 48px; }
     .pp-wrapper {
       grid-template-columns: 1fr;
       padding: 48px 24px 80px;
@@ -401,8 +360,6 @@ ${blocks}
   });
 
   return `${css}
-
-${hero}
 
 <!-- BODY -->
 <div class="pp-wrapper">
