@@ -114,7 +114,7 @@ function pageToHtml(page: ContentPage): string {
 
   .pp-toc {
     position: sticky;
-    top: 80px;
+    top: 120px;
   }
 
   .pp-toc-label {
@@ -153,6 +153,7 @@ function pageToHtml(page: ContentPage): string {
     margin-bottom: 60px;
     padding-bottom: 60px;
     border-bottom: 1px solid var(--sand-dark);
+    scroll-margin-top: 120px;
   }
 
   .pp-content section:last-child {
