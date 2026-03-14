@@ -14,6 +14,7 @@ import {
   Tag,
   CalendarCheck,
   MessageSquare,
+  Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AssigneeSelector } from "./assignee-selector";
@@ -50,6 +51,8 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
   const [description, setDescription] = useState("");
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const [newSubtask, setNewSubtask] = useState("");
+  const [editingSubtaskId, setEditingSubtaskId] = useState<string | null>(null);
+  const [editingSubtaskName, setEditingSubtaskName] = useState("");
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const [showPriorityMenu, setShowPriorityMenu] = useState(false);
   const [comments, setComments] = useState<TaskComment[]>([]);
@@ -177,6 +180,18 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
     saveField("subtasks", updated);
   };
 
+  const saveSubtaskEdit = (id: string) => {
+    const trimmed = editingSubtaskName.trim();
+    if (!trimmed) {
+      setEditingSubtaskId(null);
+      return;
+    }
+    const updated = subtasks.map((s) => (s.id === id ? { ...s, name: trimmed } : s));
+    setSubtasks(updated);
+    saveField("subtasks", updated);
+    setEditingSubtaskId(null);
+  };
+
   if (!task) return null;
 
   const completedSubtasks = subtasks.filter((s) => s.completed).length;
@@ -186,7 +201,7 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] transition-opacity duration-200"
+          className="fixed inset-0 z-[55] bg-black/50 backdrop-blur-[2px] transition-opacity duration-200"
           onClick={onClose}
         />
       )}
@@ -195,7 +210,7 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
       <div
         ref={panelRef}
         className={cn(
-          "fixed right-0 top-0 z-50 flex h-screen w-[540px] max-w-[calc(100vw-48px)] flex-col bg-[var(--solvyn-bg-raised)] shadow-2xl shadow-black/40 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          "fixed right-0 top-0 z-[60] flex h-screen w-[540px] max-w-[calc(100vw-48px)] flex-col bg-[var(--solvyn-bg-raised)] shadow-2xl shadow-black/40 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
@@ -436,16 +451,39 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
                     >
                       <Check className="h-2.5 w-2.5" strokeWidth={3} />
                     </button>
-                    <span
-                      className={cn(
-                        "flex-1 text-[13px]",
-                        sub.completed
-                          ? "line-through text-[var(--solvyn-text-tertiary)]"
-                          : "text-[var(--solvyn-text-primary)]"
-                      )}
+                    {editingSubtaskId === sub.id ? (
+                      <input
+                        value={editingSubtaskName}
+                        onChange={(e) => setEditingSubtaskName(e.target.value)}
+                        onBlur={() => saveSubtaskEdit(sub.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveSubtaskEdit(sub.id);
+                          if (e.key === "Escape") setEditingSubtaskId(null);
+                        }}
+                        autoFocus
+                        className="flex-1 rounded bg-[var(--solvyn-bg-sunken)] px-2 py-0.5 text-[13px] text-[var(--solvyn-text-primary)] outline-none ring-1 ring-[var(--solvyn-olive)]/30"
+                      />
+                    ) : (
+                      <span
+                        className={cn(
+                          "flex-1 text-[13px]",
+                          sub.completed
+                            ? "line-through text-[var(--solvyn-text-tertiary)]"
+                            : "text-[var(--solvyn-text-primary)]"
+                        )}
+                      >
+                        {sub.name}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => {
+                        setEditingSubtaskId(sub.id);
+                        setEditingSubtaskName(sub.name);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-secondary)] transition-all"
                     >
-                      {sub.name}
-                    </span>
+                      <Pencil className="h-3 w-3" />
+                    </button>
                     <button
                       onClick={() => removeSubtask(sub.id)}
                       className="opacity-0 group-hover:opacity-100 text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-rust)] transition-all"
@@ -513,7 +551,7 @@ export function TaskDetailPanel({ task, open, onClose, onUpdate, onStatusChange,
         </div>
 
         {/* Pinned comment input — Asana style */}
-        <div className="border-t border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-6 py-4">
+        <div className="shrink-0 border-t border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-raised)] px-6 py-4 pb-6">
           <MentionInput
             onSubmit={handleAddComment}
             placeholder="Write a comment..."

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getProjectId } from "@/lib/supabase/get-project";
 
 // PATCH: Update member role
@@ -10,8 +11,10 @@ export async function PATCH(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
+    const admin = createAdminClient();
+
     // Check caller is owner or admin
-    const { data: callerMembership } = await supabase
+    const { data: callerMembership } = await admin
       .from("project_members")
       .select("role")
       .eq("project_id", projectId)
@@ -26,7 +29,7 @@ export async function PATCH(req: NextRequest) {
     const { memberId, role } = body as { memberId: string; role: string };
 
     // Prevent changing owner role
-    const { data: targetMember } = await supabase
+    const { data: targetMember } = await admin
       .from("project_members")
       .select("role")
       .eq("id", memberId)
@@ -46,7 +49,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Only owners can promote to admin" }, { status: 403 });
     }
 
-    const { error } = await supabase
+    const { error } = await admin
       .from("project_members")
       .update({ role })
       .eq("id", memberId)
@@ -57,7 +60,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("PATCH /api/team/members error:", err);
-    return NextResponse.json({ error: "Failed to update member" }, { status: 500 });
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }
 
@@ -73,8 +76,10 @@ export async function DELETE(req: NextRequest) {
     const memberId = searchParams.get("memberId");
     if (!memberId) return NextResponse.json({ error: "memberId required" }, { status: 400 });
 
+    const admin = createAdminClient();
+
     // Check caller is owner or admin
-    const { data: callerMembership } = await supabase
+    const { data: callerMembership } = await admin
       .from("project_members")
       .select("role")
       .eq("project_id", projectId)
@@ -86,7 +91,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Prevent removing owner
-    const { data: targetMember } = await supabase
+    const { data: targetMember } = await admin
       .from("project_members")
       .select("role, user_id")
       .eq("id", memberId)
@@ -106,7 +111,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Only owners can remove admins" }, { status: 403 });
     }
 
-    const { error } = await supabase
+    const { error } = await admin
       .from("project_members")
       .delete()
       .eq("id", memberId)
@@ -117,6 +122,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("DELETE /api/team/members error:", err);
-    return NextResponse.json({ error: "Failed to remove member" }, { status: 500 });
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

@@ -27,6 +27,8 @@ import {
   Shield,
   Globe,
   FolderOpen,
+  KeyRound,
+  Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -54,10 +56,11 @@ const marketingChildren = [
   { href: "/marketing/social-proof", label: "Social Proof", icon: Award },
 ];
 
-const toolItemsAfter = [
-  { href: "/files", label: "Files", icon: FolderOpen },
-  { href: "/meetings", label: "Meetings", icon: Calendar },
+const companyChildren = [
   { href: "/team", label: "Team", icon: Users },
+  { href: "/meetings", label: "Meetings", icon: Calendar },
+  { href: "/files", label: "Files", icon: FolderOpen },
+  { href: "/credentials", label: "Login Credentials", icon: KeyRound },
 ];
 
 const ADMIN_EMAIL = "sunticodes@gmail.com";
@@ -144,6 +147,54 @@ function WebsiteDropdown({ pathname }: { pathname: string }) {
       <CollapsibleContent>
         <div className="ml-7 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--solvyn-border-subtle)] pl-3">
           {websiteChildren.map((item) => (
+            <NavLink key={item.href} {...item} pathname={pathname} />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+function CompanyDropdown({ pathname }: { pathname: string }) {
+  const collapsibleId = useId();
+  const isCompanyRoute = pathname === "/team" || pathname === "/meetings" || pathname === "/files" || pathname === "/credentials";
+  const [open, setOpen] = useState(isCompanyRoute);
+
+  useEffect(() => {
+    if (isCompanyRoute) setOpen(true);
+  }, [isCompanyRoute]);
+
+  return (
+    <Collapsible id={collapsibleId} open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger asChild>
+        <button
+          className={cn(
+            "group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-150",
+            isCompanyRoute
+              ? "bg-[var(--solvyn-bg-elevated)]/50 text-[var(--solvyn-text-primary)]"
+              : "text-[var(--solvyn-text-tertiary)] hover:bg-[var(--solvyn-bg-elevated)]/50 hover:text-[var(--solvyn-text-secondary)]"
+          )}
+        >
+          <Building2
+            className={cn(
+              "h-4 w-4 shrink-0 transition-colors",
+              isCompanyRoute
+                ? "text-[var(--solvyn-olive)]"
+                : "text-[var(--solvyn-text-tertiary)] group-hover:text-[var(--solvyn-text-secondary)]"
+            )}
+          />
+          Company
+          <ChevronRight
+            className={cn(
+              "ml-auto h-3 w-3 transition-transform duration-200",
+              open && "rotate-90"
+            )}
+          />
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="ml-7 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--solvyn-border-subtle)] pl-3">
+          {companyChildren.map((item) => (
             <NavLink key={item.href} {...item} pathname={pathname} />
           ))}
         </div>
@@ -321,9 +372,9 @@ export function Sidebar({ onCommandPalette }: { onCommandPalette?: () => void })
             {/* Marketing collapsible */}
             <MarketingDropdown pathname={pathname} />
 
-            {toolItemsAfter.map((item) => (
-              <NavLink key={item.href} {...item} pathname={pathname} />
-            ))}
+            {/* Company collapsible */}
+            <CompanyDropdown pathname={pathname} />
+
             <NavLink href="/changelog" label="Patch Notes" icon={Megaphone} pathname={pathname} />
           </div>
         </nav>

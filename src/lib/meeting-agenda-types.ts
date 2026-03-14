@@ -9,4 +9,5 @@ export interface MeetingAgendaItem {
   content: string;
   completed: boolean;
   createdAt: string;
+  imageUrl: string | null;
 }

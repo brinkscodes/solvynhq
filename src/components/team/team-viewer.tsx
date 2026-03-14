@@ -10,17 +10,22 @@ export function TeamViewer() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [invites, setInvites] = useState<ProjectInvite[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState("");
 
   const fetchTeam = useCallback(async () => {
     try {
       const res = await fetch("/api/team");
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to load team");
+      }
       const data = await res.json();
-      setMembers(data.members);
-      setInvites(data.invites);
-    } catch {
-      // silently fail
+      setMembers(data.members || []);
+      setInvites(data.invites || []);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load team");
     } finally {
       setLoading(false);
     }
@@ -28,7 +33,6 @@ export function TeamViewer() {
 
   useEffect(() => {
     fetchTeam();
-    // Get current user id from profile
     fetch("/api/profile")
       .then((r) => r.json())
       .then((d) => { if (d.id) setCurrentUserId(d.id); })
@@ -38,7 +42,7 @@ export function TeamViewer() {
   const currentUserRole: MemberRole =
     members.find((m) => m.userId === currentUserId)?.role || "member";
 
-  const canInvite = currentUserRole === "owner" || currentUserRole === "admin";
+  const isOwner = currentUserRole === "owner";
 
   async function handleInvite(payload: { email?: string; role: "admin" | "member" }) {
     const res = await fetch("/api/team", {
@@ -82,6 +86,20 @@ export function TeamViewer() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <p className="text-sm text-[var(--solvyn-rust)]">{error}</p>
+        <button
+          onClick={() => { setLoading(true); fetchTeam(); }}
+          className="mt-3 text-sm font-medium text-[var(--solvyn-olive)] hover:underline"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Members section */}
@@ -108,8 +126,14 @@ export function TeamViewer() {
             />
           ))}
           {members.length === 0 && (
-            <div className="flex items-center justify-center py-8 text-[13px] text-[var(--solvyn-text-tertiary)]">
-              No team members yet
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Users className="mb-3 h-8 w-8 text-[var(--solvyn-text-tertiary)]" />
+              <p className="text-[13px] font-medium text-[var(--solvyn-text-secondary)]">
+                No team members yet
+              </p>
+              <p className="mt-1 text-[12px] text-[var(--solvyn-text-tertiary)]">
+                Invite people below to get started
+              </p>
             </div>
           )}
         </div>
@@ -131,9 +155,6 @@ export function TeamViewer() {
                   <span className="text-[13px] font-medium text-[var(--solvyn-text-secondary)]">
                     {invite.email || "Open invite link"}
                   </span>
-                  <span className="ml-2 text-[11px] text-[var(--solvyn-text-tertiary)]">
-                    as {invite.role}
-                  </span>
                 </div>
                 <span className="text-[11px] text-[var(--solvyn-text-tertiary)]">
                   Expires {new Date(invite.expiresAt).toLocaleDateString()}
@@ -144,8 +165,8 @@ export function TeamViewer() {
         </div>
       )}
 
-      {/* Invite section */}
-      {canInvite && (
+      {/* Invite section — only visible to owner */}
+      {isOwner && (
         <div>
           <div className="mb-4 flex items-center gap-2">
             <UserPlus className="h-4 w-4 text-[var(--solvyn-olive)]" />

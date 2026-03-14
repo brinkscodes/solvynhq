@@ -11,7 +11,6 @@ export function InviteForm({
 }) {
   const [mode, setMode] = useState<"link" | "email">("link");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"admin" | "member">("member");
   const [loading, setLoading] = useState(false);
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -22,7 +21,7 @@ export function InviteForm({
     try {
       const result = await onInvite({
         email: mode === "email" ? email : undefined,
-        role,
+        role: "member",
       });
       if (result) {
         const link = `${window.location.origin}/join/${result.inviteCode}`;
@@ -83,25 +82,14 @@ export function InviteForm({
           />
         )}
 
-        <div className="flex items-center gap-3">
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value as "admin" | "member")}
-            className="rounded-lg border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-sunken)] px-3 py-2 text-[12px] font-medium text-[var(--solvyn-text-secondary)] outline-none"
-          >
-            <option value="member">Member</option>
-            <option value="admin">Admin</option>
-          </select>
-
-          <button
-            type="submit"
-            disabled={loading || (mode === "email" && !email)}
-            className="flex items-center gap-2 rounded-lg bg-[var(--solvyn-olive)] px-4 py-2 text-[12px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
-          >
-            {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-            {mode === "link" ? "Generate Link" : "Send Invite"}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={loading || (mode === "email" && !email)}
+          className="flex items-center gap-2 rounded-lg bg-[var(--solvyn-olive)] px-4 py-2 text-[12px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
+        >
+          {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          {mode === "link" ? "Generate Link" : "Send Invite"}
+        </button>
       </form>
 
       {/* Generated link display */}

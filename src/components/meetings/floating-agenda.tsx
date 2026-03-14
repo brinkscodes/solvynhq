@@ -9,6 +9,7 @@ import {
   CircleCheck,
   Trash2,
   Check,
+  ImagePlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MeetingAgendaItem, AgendaItemType } from "@/lib/meeting-agenda-types";
@@ -26,7 +27,9 @@ export function FloatingAgenda() {
   const [selectedType, setSelectedType] = useState<AgendaItemType>("note");
   const [input, setInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [pendingImage, setPendingImage] = useState<{ url: string; uploading: boolean } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load items
   useEffect(() => {
@@ -46,6 +49,19 @@ export function FloatingAgenda() {
     return () => window.removeEventListener("close-floating-panels", handleClose);
   }, []);
 
+  // Listen for agenda-updated events (from meetings page inline form)
+  useEffect(() => {
+    const handleUpdate = () => {
+      fetch("/api/meeting-agenda")
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data)) setItems(data);
+        });
+    };
+    window.addEventListener("agenda-updated", handleUpdate);
+    return () => window.removeEventListener("agenda-updated", handleUpdate);
+  }, []);
+
   // Focus input when panel opens
   useEffect(() => {
     if (open && inputRef.current) {
@@ -60,19 +76,52 @@ export function FloatingAgenda() {
     setOpen(!open);
   };
 
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Show preview immediately with uploading state
+    const previewUrl = URL.createObjectURL(file);
+    setPendingImage({ url: previewUrl, uploading: true });
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/meeting-agenda/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.url) {
+        URL.revokeObjectURL(previewUrl);
+        setPendingImage({ url: data.url, uploading: false });
+      } else {
+        setPendingImage(null);
+      }
+    } catch {
+      setPendingImage(null);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handleSubmit = async () => {
-    if (!input.trim() || submitting) return;
+    if ((!input.trim() && !pendingImage) || submitting) return;
     setSubmitting(true);
     try {
       const res = await fetch("/api/meeting-agenda", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: selectedType, content: input.trim() }),
+        body: JSON.stringify({
+          type: selectedType,
+          content: input.trim() || `[image]`,
+          ...(pendingImage && !pendingImage.uploading ? { imageUrl: pendingImage.url } : {}),
+        }),
       });
       const item = await res.json();
       if (item.id) {
         setItems((prev) => [...prev, item]);
         setInput("");
+        setPendingImage(null);
+        window.dispatchEvent(new CustomEvent("agenda-updated"));
       }
     } finally {
       setSubmitting(false);
@@ -83,6 +132,7 @@ export function FloatingAgenda() {
   const handleDelete = async (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
     await fetch(`/api/meeting-agenda?id=${id}`, { method: "DELETE" });
+    window.dispatchEvent(new CustomEvent("agenda-updated"));
   };
 
   const handleToggle = async (id: string) => {
@@ -165,41 +215,50 @@ export function FloatingAgenda() {
               return (
                 <div
                   key={item.id}
-                  className="group flex items-start gap-2.5 border-b border-[var(--solvyn-border-subtle)]/50 px-5 py-2.5 last:border-b-0"
+                  className="group border-b border-[var(--solvyn-border-subtle)]/50 px-5 py-2.5 last:border-b-0"
                 >
-                  {item.type === "action" ? (
-                    <button
-                      onClick={() => handleToggle(item.id)}
-                      className="mt-0.5 shrink-0"
-                    >
-                      {item.completed ? (
-                        <CircleCheck
-                          className="h-4 w-4 text-[var(--solvyn-olive)]"
-                        />
-                      ) : (
-                        <div className="h-4 w-4 rounded-full border-2 border-[var(--solvyn-border-default)]" />
+                  <div className="flex items-start gap-2.5">
+                    {item.type === "action" ? (
+                      <button
+                        onClick={() => handleToggle(item.id)}
+                        className="mt-0.5 shrink-0"
+                      >
+                        {item.completed ? (
+                          <CircleCheck
+                            className="h-4 w-4 text-[var(--solvyn-olive)]"
+                          />
+                        ) : (
+                          <div className="h-4 w-4 rounded-full border-2 border-[var(--solvyn-border-default)]" />
+                        )}
+                      </button>
+                    ) : (
+                      <Icon
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        style={{ color: cfg.color }}
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        "flex-1 text-[13px] leading-snug text-[var(--solvyn-text-secondary)]",
+                        item.type === "action" && item.completed && "line-through opacity-50"
                       )}
+                    >
+                      {item.content}
+                    </span>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-rust)]" />
                     </button>
-                  ) : (
-                    <Icon
-                      className="mt-0.5 h-4 w-4 shrink-0"
-                      style={{ color: cfg.color }}
+                  </div>
+                  {item.imageUrl && (
+                    <img
+                      src={item.imageUrl}
+                      alt=""
+                      className="mt-2 ml-6.5 max-h-28 rounded-lg border border-[var(--solvyn-border-subtle)] object-cover"
                     />
                   )}
-                  <span
-                    className={cn(
-                      "flex-1 text-[13px] leading-snug text-[var(--solvyn-text-secondary)]",
-                      item.type === "action" && item.completed && "line-through opacity-50"
-                    )}
-                  >
-                    {item.content}
-                  </span>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-rust)]" />
-                  </button>
                 </div>
               );
             })}
@@ -230,7 +289,34 @@ export function FloatingAgenda() {
               )}
             </div>
 
-            {/* Input */}
+            {/* Image preview */}
+            {pendingImage && (
+              <div className="relative mb-2.5 inline-block">
+                <img
+                  src={pendingImage.url}
+                  alt="Attachment preview"
+                  className={cn(
+                    "h-16 rounded-lg border border-[var(--solvyn-border-subtle)] object-cover",
+                    pendingImage.uploading && "opacity-50"
+                  )}
+                />
+                {pendingImage.uploading && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--solvyn-olive)] border-t-transparent" />
+                  </div>
+                )}
+                {!pendingImage.uploading && (
+                  <button
+                    onClick={() => setPendingImage(null)}
+                    className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--solvyn-bg-elevated)] border border-[var(--solvyn-border-default)] shadow-sm"
+                  >
+                    <X className="h-3 w-3 text-[var(--solvyn-text-secondary)]" />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Input + image button */}
             <div className="flex items-center gap-2">
               <input
                 ref={inputRef}
@@ -243,9 +329,23 @@ export function FloatingAgenda() {
                 placeholder={`Add a ${selectedType}...`}
                 className="min-w-0 flex-1 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-base)] px-3 py-2 text-[13px] text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none focus:border-[var(--solvyn-olive)]/40"
               />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={pendingImage?.uploading}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--solvyn-border-subtle)] text-[var(--solvyn-text-tertiary)] transition-colors hover:bg-[var(--solvyn-border-subtle)]/40 hover:text-[var(--solvyn-text-secondary)] disabled:opacity-30"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
               <button
                 onClick={handleSubmit}
-                disabled={!input.trim() || submitting}
+                disabled={(!input.trim() && !pendingImage) || submitting || pendingImage?.uploading}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--solvyn-olive)] text-white transition-opacity disabled:opacity-30"
               >
                 <Check className="h-4 w-4" />

@@ -51,6 +51,15 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
         if (previousTask) break;
       }
 
+      // Block completion if there are incomplete subtasks
+      if (status === "done" && previousTask?.subtasks?.length) {
+        const incomplete = previousTask.subtasks.filter((s) => !s.completed);
+        if (incomplete.length > 0) {
+          alert(`Cannot mark as done — ${incomplete.length} subtask${incomplete.length > 1 ? "s" : ""} still incomplete.`);
+          return;
+        }
+      }
+
       setData((prev) => ({
         ...prev,
         sections: prev.sections.map((section) => ({

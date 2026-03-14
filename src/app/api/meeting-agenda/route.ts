@@ -8,13 +8,28 @@ export async function GET() {
     const supabase = await createClient();
     const projectId = await getProjectId();
 
-    const { data: items, error } = await supabase
+    // Try with image_url first; fall back without it if column doesn't exist yet
+    let items: any[];
+    const { data, error } = await supabase
       .from("meeting_agenda_items")
-      .select("id, user_id, type, content, completed, created_at")
+      .select("id, user_id, type, content, completed, created_at, image_url")
       .eq("project_id", projectId)
       .order("created_at", { ascending: true });
 
-    if (error) throw error;
+    if (error && error.code === "42703") {
+      // image_url column doesn't exist yet — query without it
+      const fallback = await supabase
+        .from("meeting_agenda_items")
+        .select("id, user_id, type, content, completed, created_at")
+        .eq("project_id", projectId)
+        .order("created_at", { ascending: true });
+      if (fallback.error) throw fallback.error;
+      items = fallback.data;
+    } else if (error) {
+      throw error;
+    } else {
+      items = data;
+    }
 
     // Resolve profiles
     const userIds = [...new Set(items.map((i: any) => i.user_id))];
@@ -40,6 +55,7 @@ export async function GET() {
       content: i.content,
       completed: i.completed,
       createdAt: i.created_at,
+      imageUrl: i.image_url || null,
     }));
 
     return NextResponse.json(result);
@@ -58,7 +74,7 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
     const body = await req.json();
-    const { type, content } = body as { type: string; content: string };
+    const { type, content, imageUrl } = body as { type: string; content: string; imageUrl?: string };
 
     if (!content?.trim()) {
       return NextResponse.json({ error: "content required" }, { status: 400 });
@@ -67,18 +83,35 @@ export async function POST(req: NextRequest) {
     const validTypes = ["note", "question", "action"];
     const itemType = validTypes.includes(type) ? type : "note";
 
-    const { data: item, error } = await supabase
+    const insertData: Record<string, unknown> = {
+      project_id: projectId,
+      user_id: user.id,
+      type: itemType,
+      content: content.trim(),
+    };
+    if (imageUrl) insertData.image_url = imageUrl;
+
+    let item: any;
+    const { data, error } = await supabase
       .from("meeting_agenda_items")
-      .insert({
-        project_id: projectId,
-        user_id: user.id,
-        type: itemType,
-        content: content.trim(),
-      })
-      .select("id, user_id, type, content, completed, created_at")
+      .insert(insertData)
+      .select("id, user_id, type, content, completed, created_at, image_url")
       .single();
 
-    if (error) throw error;
+    if (error && error.code === "42703") {
+      // image_url column doesn't exist yet — insert without it
+      const fallback = await supabase
+        .from("meeting_agenda_items")
+        .insert({ project_id: projectId, user_id: user.id, type: itemType, content: content.trim() })
+        .select("id, user_id, type, content, completed, created_at")
+        .single();
+      if (fallback.error) throw fallback.error;
+      item = fallback.data;
+    } else if (error) {
+      throw error;
+    } else {
+      item = data;
+    }
 
     // Get profile
     const { data: profile } = await supabase
@@ -96,6 +129,7 @@ export async function POST(req: NextRequest) {
       content: item.content,
       completed: item.completed,
       createdAt: item.created_at,
+      imageUrl: item.image_url || null,
     });
   } catch (err) {
     console.error("POST /api/meeting-agenda error:", err);
