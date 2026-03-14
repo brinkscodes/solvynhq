@@ -1074,4 +1074,716 @@ export const websiteContent: ContentPage[] = [
       },
     ],
   },
+
+  // ─────────────────────────────────────────────
+  // PRIVACY POLICY
+  // ─────────────────────────────────────────────
+  {
+    id: "privacy-policy",
+    name: "Privacy Policy",
+    description: "Privacy policy page — data collection, usage, sharing, cookies, and user rights.",
+    sections: [
+      {
+        id: "privacy-intro",
+        name: "Introduction",
+        blocks: [
+          {
+            id: "privacy-intro-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Privacy Policy",
+          },
+          {
+            id: "privacy-intro-effective",
+            type: "subheading",
+            label: "Effective Date",
+            text: "Effective Date: March 13, 2026",
+          },
+          {
+            id: "privacy-intro-body",
+            type: "body",
+            label: "Introduction",
+            text: "Solvyn Skin LLC (\"Solvyn,\" \"we,\" \"us,\" or \"our\") respects your privacy and is committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website (solvynskin.com), use our services, or interact with us in any way.",
+          },
+          {
+            id: "privacy-intro-scope",
+            type: "body",
+            label: "Scope",
+            text: "This Privacy Policy applies to all information collected through our website, any related services, sales, marketing, or events (collectively, the \"Services\"). By accessing or using our Services, you acknowledge that you have read, understood, and agree to be bound by this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not access or use our Services.",
+          },
+        ],
+      },
+      {
+        id: "privacy-overview",
+        name: "Overview",
+        blocks: [
+          {
+            id: "privacy-overview-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Overview",
+          },
+          {
+            id: "privacy-overview-body",
+            type: "body",
+            label: "Body",
+            text: "Solvyn (\"we,\" \"us,\" or \"our\") is committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard information when you visit solvynskin.com, submit an inquiry, join our waitlist, or engage with us as a business partner.",
+          },
+          {
+            id: "privacy-overview-highlight",
+            type: "body",
+            label: "Highlight",
+            text: "We believe transparency is a core ingredient — in our formulas and in how we operate. This policy is written to be read, not just stored.",
+            note: "highlight-box",
+          },
+          {
+            id: "privacy-overview-consent",
+            type: "body",
+            label: "Consent",
+            text: "By using our website or providing us with your information, you agree to the practices described in this policy. If you do not agree, please discontinue use of the site.",
+          },
+        ],
+      },
+      {
+        id: "privacy-collection",
+        name: "Information We Collect",
+        blocks: [
+          {
+            id: "privacy-collection-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Information We Collect",
+          },
+          {
+            id: "privacy-collection-personal",
+            type: "step",
+            label: "Personal Information",
+            text: "Personal Information You Provide",
+            items: [
+              "Contact information: name, email address, phone number, and mailing address (when applicable)",
+              "Business information: company name, company location, type of company, job title, and industry",
+              "Inquiry details: messages, questions, and any other information you choose to provide when filling out contact forms, requesting sample kits, or submitting partnership inquiries",
+              "Any other information you voluntarily provide to us through our website or via email",
+            ],
+          },
+          {
+            id: "privacy-collection-auto",
+            type: "step",
+            label: "Automatically Collected",
+            text: "Information Collected Automatically",
+            items: [
+              "Device information: IP address, browser type and version, operating system, device type, and screen resolution",
+              "Usage data: pages visited, time and date of your visit, time spent on pages, clickstream data, referring and exit URLs",
+              "Location data: general geographic location based on your IP address (city/region level, not precise location)",
+              "Cookies and similar technologies: small data files placed on your device to track usage patterns (see Cookies & Tracking Technologies section below)",
+            ],
+          },
+          {
+            id: "privacy-collection-third",
+            type: "step",
+            label: "Third-Party Information",
+            text: "Information from Third Parties",
+            items: [
+              "Analytics data from Google Analytics, including aggregated website traffic and usage patterns",
+              "Information from business partners or hospitality industry contacts who may refer you to us",
+            ],
+          },
+        ],
+      },
+      {
+        id: "privacy-use",
+        name: "How We Use Your Information",
+        blocks: [
+          {
+            id: "privacy-use-heading",
+            type: "heading",
+            label: "Heading",
+            text: "How We Use Your Information",
+          },
+          {
+            id: "privacy-use-list",
+            type: "list",
+            label: "Usage Purposes",
+            text: "We use the information we collect to:",
+            items: [
+              "Respond to inquiries and fulfill sample kit requests",
+              "Communicate with business partners and potential hospitality partners",
+              "Improve our website, products, and services",
+              "Send marketing communications (with your consent)",
+              "Comply with legal obligations and protect our rights",
+              "Analyze website usage and optimize user experience via Google Analytics",
+            ],
+          },
+        ],
+      },
+      {
+        id: "privacy-legal-basis",
+        name: "Legal Basis for Processing",
+        blocks: [
+          {
+            id: "privacy-legal-basis-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Legal Basis for Processing",
+          },
+          {
+            id: "privacy-legal-basis-body",
+            type: "body",
+            label: "Body",
+            text: "We process your personal information based on the following legal grounds:",
+          },
+          {
+            id: "privacy-legal-basis-list",
+            type: "list",
+            label: "Legal Bases",
+            text: "Legal bases for processing:",
+            items: [
+              "Consent — when you voluntarily submit your information through our contact forms, sample kit requests, or partnership inquiries, you consent to our processing of that information for the stated purposes",
+              "Legitimate Interest — we may process your information when it is reasonably necessary to achieve our legitimate business interests, such as improving our website, understanding how our Services are used, and communicating with potential business partners",
+              "Legal Obligation — we may process your information when we are legally required to do so, such as in response to a court order, subpoena, or government request",
+              "Contractual Necessity — we may process your information as necessary to fulfill a contract or potential business relationship with you",
+            ],
+          },
+        ],
+      },
+      {
+        id: "privacy-sharing",
+        name: "Information Sharing",
+        blocks: [
+          {
+            id: "privacy-sharing-heading",
+            type: "heading",
+            label: "Heading",
+            text: "How We Share Your Information",
+          },
+          {
+            id: "privacy-sharing-body",
+            type: "body",
+            label: "Overview",
+            text: "We do not sell, rent, or trade your personal information to third parties for their marketing purposes. We have not sold personal information in the preceding 12 months. We may share your information only in the following limited circumstances:",
+          },
+          {
+            id: "privacy-sharing-list",
+            type: "list",
+            label: "Sharing Circumstances",
+            text: "Sharing circumstances:",
+            items: [
+              "Service Providers — trusted third parties who assist us in operating our website, hosting our services, and analyzing website usage. This currently includes Google LLC (analytics). These providers are contractually obligated to use your information only as necessary to provide services to us and are prohibited from using it for their own purposes",
+              "Legal Requirements — when required by law, regulation, subpoena, court order, or other governmental or legal process",
+              "Protection of Rights — when we believe disclosure is necessary to protect our rights, your safety, or the safety of others, investigate fraud, or respond to a government request",
+              "Business Transfers — in connection with a merger, acquisition, reorganization, bankruptcy, or sale of all or a portion of our assets, in which case your information may be transferred as part of that transaction. We will notify you via email and/or prominent notice on our website of any change in ownership or uses of your personal information",
+              "With Your Consent — when you have given us explicit permission to share your information for a specific purpose",
+            ],
+          },
+        ],
+      },
+      {
+        id: "privacy-cookies",
+        name: "Cookies & Tracking",
+        blocks: [
+          {
+            id: "privacy-cookies-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Cookies & Tracking Technologies",
+          },
+          {
+            id: "privacy-cookies-body",
+            type: "body",
+            label: "Body",
+            text: "We use cookies and similar tracking technologies to collect usage information and improve your experience. A cookie is a small data file stored on your device when you visit a website. Cookies help us understand how you interact with our Services so we can improve them.",
+          },
+          {
+            id: "privacy-cookies-types",
+            type: "list",
+            label: "Types of Cookies",
+            text: "We use the following types of cookies:",
+            items: [
+              "Essential Cookies — necessary for the website to function properly, such as remembering your preferences and enabling basic features like page navigation. These cookies do not collect personal information and cannot be disabled",
+              "Analytics Cookies — we use Google Analytics (provided by Google LLC) to understand how visitors interact with our website. These cookies collect information such as pages visited, time spent on pages, general geographic location, referring URLs, browser type, and device information. This data is collected anonymously and is used solely to improve our website and Services. Google Analytics data is processed in accordance with Google's Privacy Policy",
+            ],
+          },
+          {
+            id: "privacy-cookies-manage",
+            type: "body",
+            label: "Managing Cookies",
+            text: "You can control and manage cookies through your browser settings. Most browsers allow you to refuse or delete cookies. Please note that disabling cookies may affect the functionality of certain features on our website. You can also opt out of Google Analytics specifically by installing the Google Analytics Opt-out Browser Add-on, available at tools.google.com/dlpage/gaoptout.",
+          },
+          {
+            id: "privacy-cookies-dnt",
+            type: "body",
+            label: "Do Not Track",
+            text: "Some browsers include a \"Do Not Track\" (DNT) feature that signals to websites that you do not want your online activity tracked. Because there is no uniform standard for how DNT signals should be interpreted, our website does not currently respond to DNT browser signals. However, you can opt out of tracking as described above by managing your cookie preferences or using the Google Analytics Opt-out Add-on.",
+          },
+        ],
+      },
+      {
+        id: "privacy-retention",
+        name: "Data Retention",
+        blocks: [
+          {
+            id: "privacy-retention-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Data Retention",
+          },
+          {
+            id: "privacy-retention-body",
+            type: "body",
+            label: "Body",
+            text: "We retain your personal information only for as long as necessary to fulfill the purposes for which it was collected, including to satisfy any legal, accounting, or reporting requirements. The retention period may vary depending on the context of the processing and our legal obligations.",
+          },
+          {
+            id: "privacy-retention-details",
+            type: "list",
+            label: "Retention Periods",
+            text: "Specifically:",
+            items: [
+              "Contact form submissions and partnership inquiries are retained for as long as the business relationship is active, plus a reasonable period thereafter to allow for follow-up",
+              "Website analytics data collected via Google Analytics is retained according to Google's default data retention settings (currently 14 months)",
+              "If you request deletion of your personal information, we will process your request within 45 days, subject to any legal obligations that may require us to retain certain information",
+            ],
+          },
+        ],
+      },
+      {
+        id: "privacy-third-party-links",
+        name: "Third-Party Links",
+        blocks: [
+          {
+            id: "privacy-third-party-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Third-Party Links",
+          },
+          {
+            id: "privacy-third-party-body",
+            type: "body",
+            label: "Body",
+            text: "Our website may contain links to third-party websites, services, or content that are not owned or controlled by Solvyn Skin LLC. This includes links to social media platforms such as Instagram. We are not responsible for the privacy practices or the content of these third-party sites. We encourage you to review the privacy policy of every site you visit. This Privacy Policy applies only to our Services and does not apply to any third-party websites or services.",
+          },
+        ],
+      },
+      {
+        id: "privacy-rights",
+        name: "Your Rights",
+        blocks: [
+          {
+            id: "privacy-rights-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Your Rights & Choices",
+          },
+          {
+            id: "privacy-rights-list",
+            type: "list",
+            label: "Rights",
+            text: "Depending on your location, you may have the right to:",
+            items: [
+              "Access the personal information we hold about you",
+              "Request correction of inaccurate information",
+              "Request deletion of your personal information",
+              "Opt out of marketing communications at any time",
+              "Withdraw consent where processing is based on consent",
+            ],
+          },
+          {
+            id: "privacy-rights-contact",
+            type: "body",
+            label: "Contact for Rights",
+            text: "To exercise any of these rights, please contact us at info@solvynskin.com. We will respond to your request within a reasonable timeframe and in accordance with applicable law.",
+          },
+          {
+            id: "privacy-rights-communications",
+            type: "body",
+            label: "Communications Opt-Out",
+            text: "If you have provided your phone number through one of our forms, we may use it to contact you regarding your inquiry or partnership request. We will not use your phone number for unsolicited marketing calls or text messages without your express consent. You may opt out of marketing communications at any time by contacting us at info@solvynskin.com or by following the unsubscribe instructions included in any marketing email.",
+          },
+        ],
+      },
+      {
+        id: "privacy-security",
+        name: "Data Security",
+        blocks: [
+          {
+            id: "privacy-security-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Data Security",
+          },
+          {
+            id: "privacy-security-body",
+            type: "body",
+            label: "Body",
+            text: "We take the security of your personal information seriously and implement appropriate technical and organizational measures to protect it against unauthorized access, alteration, disclosure, or destruction. These measures include encrypted data transmission (SSL/TLS), secure hosting infrastructure, access controls that limit who can view personal information, and regular review of our data collection and storage practices.",
+          },
+          {
+            id: "privacy-security-disclaimer",
+            type: "body",
+            label: "Disclaimer",
+            text: "However, no method of transmission over the internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security. In the event of a data breach that affects your personal information, we will notify you and any applicable regulatory authorities as required by law.",
+          },
+        ],
+      },
+      {
+        id: "privacy-children",
+        name: "Children's Privacy",
+        blocks: [
+          {
+            id: "privacy-children-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Children's Privacy",
+          },
+          {
+            id: "privacy-children-body",
+            type: "body",
+            label: "Body",
+            text: "Our website and services are not directed to children under the age of 13. We do not knowingly collect personal information from children. If we learn that we have collected information from a child under 13, we will take steps to delete it promptly.",
+          },
+        ],
+      },
+      {
+        id: "privacy-ccpa",
+        name: "California Privacy Rights",
+        blocks: [
+          {
+            id: "privacy-ccpa-heading",
+            type: "heading",
+            label: "Heading",
+            text: "California Privacy Rights",
+          },
+          {
+            id: "privacy-ccpa-body",
+            type: "body",
+            label: "Body",
+            text: "If you are a California resident, the California Consumer Privacy Act (CCPA), as amended by the California Privacy Rights Act (CPRA), provides you with additional rights regarding your personal information.",
+          },
+          {
+            id: "privacy-ccpa-categories",
+            type: "list",
+            label: "CCPA Data Categories",
+            text: "In the preceding 12 months, we have collected the following categories of personal information:",
+            items: [
+              "Identifiers — name, email address, phone number, IP address",
+              "Commercial Information — records of services requested, sample kit requests, partnership inquiries",
+              "Internet or Network Activity — browsing history on our website, pages visited, interactions with our Services",
+              "Geolocation Data — general geographic location derived from IP address (city/region level)",
+              "Professional or Employment Information — company name, company location, type of company, job title",
+            ],
+          },
+          {
+            id: "privacy-ccpa-rights",
+            type: "list",
+            label: "CCPA Rights",
+            text: "Under the CCPA/CPRA, you have the right to:",
+            items: [
+              "Right to Know — request that we disclose what personal information we have collected, used, disclosed, and sold about you in the preceding 12 months",
+              "Right to Delete — request the deletion of your personal information, subject to certain exceptions",
+              "Right to Correct — request correction of inaccurate personal information",
+              "Right to Opt Out of Sale or Sharing — we do not sell or share your personal information for cross-context behavioral advertising. No opt-out is necessary",
+              "Right to Limit Use of Sensitive Personal Information — we do not collect sensitive personal information as defined by the CCPA",
+              "Right to Non-Discrimination — we will not discriminate against you for exercising any of your CCPA rights",
+            ],
+          },
+          {
+            id: "privacy-ccpa-contact",
+            type: "body",
+            label: "CCPA Contact",
+            text: "To submit a verifiable consumer request under the CCPA, please contact us at info@solvynskin.com. You may also designate an authorized agent to make a request on your behalf. We will verify your identity before processing your request and respond within 45 days. If we need additional time, we will inform you of the reason and the extension period (up to an additional 45 days).",
+          },
+        ],
+      },
+      {
+        id: "privacy-governing",
+        name: "Governing Law",
+        blocks: [
+          {
+            id: "privacy-governing-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Governing Law",
+          },
+          {
+            id: "privacy-governing-body",
+            type: "body",
+            label: "Body",
+            text: "This Privacy Policy is governed by and construed in accordance with the laws of the State of Florida, United States, without regard to its conflict of law principles.",
+          },
+        ],
+      },
+      {
+        id: "privacy-changes",
+        name: "Changes & Contact",
+        blocks: [
+          {
+            id: "privacy-changes-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Changes to This Policy",
+          },
+          {
+            id: "privacy-changes-body",
+            type: "body",
+            label: "Body",
+            text: "We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the updated policy on our website with a revised effective date.",
+          },
+          {
+            id: "privacy-contact-heading",
+            type: "subheading",
+            label: "Contact Heading",
+            text: "Contact Us",
+          },
+          {
+            id: "privacy-contact-body",
+            type: "body",
+            label: "Contact Info",
+            text: "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us at:",
+          },
+          {
+            id: "privacy-contact-details",
+            type: "list",
+            label: "Contact Details",
+            text: "Contact details:",
+            items: [
+              "Solvyn Skin LLC",
+              "Email: info@solvynskin.com",
+              "Website: solvynskin.com",
+              "State of Formation: Florida, United States",
+            ],
+          },
+          {
+            id: "privacy-contact-response",
+            type: "body",
+            label: "Response Time",
+            text: "We will respond to all privacy-related inquiries within 30 business days.",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // TERMS AND CONDITIONS
+  // ─────────────────────────────────────────────
+  {
+    id: "terms-and-conditions",
+    name: "Terms & Conditions",
+    description: "Terms of use — acceptance, intellectual property, limitation of liability, and governing law.",
+    sections: [
+      {
+        id: "terms-intro",
+        name: "Introduction",
+        blocks: [
+          {
+            id: "terms-intro-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Terms & Conditions",
+          },
+          {
+            id: "terms-intro-effective",
+            type: "subheading",
+            label: "Effective Date",
+            text: "Effective Date: [Insert Date]",
+            note: "Update with actual effective date before publishing",
+          },
+          {
+            id: "terms-intro-body",
+            type: "body",
+            label: "Introduction",
+            text: "Welcome to solvyn.co (the \"Website\"), operated by Solvyn Inc. (\"Solvyn,\" \"we,\" \"us,\" or \"our\"). By accessing or using our Website, you agree to be bound by these Terms & Conditions. If you do not agree, please do not use the Website.",
+          },
+        ],
+      },
+      {
+        id: "terms-use",
+        name: "Use of Website",
+        blocks: [
+          {
+            id: "terms-use-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Use of the Website",
+          },
+          {
+            id: "terms-use-body",
+            type: "body",
+            label: "Body",
+            text: "You may use our Website for lawful purposes only. You agree not to use the Website in any way that violates applicable laws or regulations, or that could harm, disable, or impair the Website or interfere with any other party's use.",
+          },
+          {
+            id: "terms-use-restrictions",
+            type: "list",
+            label: "Restrictions",
+            text: "You agree not to:",
+            items: [
+              "Reproduce, distribute, or modify any content without our prior written consent",
+              "Use automated systems (bots, scrapers) to access the Website",
+              "Attempt to gain unauthorized access to any part of the Website",
+              "Transmit any viruses, malware, or harmful code",
+              "Use the Website for any fraudulent or deceptive purpose",
+            ],
+          },
+        ],
+      },
+      {
+        id: "terms-ip",
+        name: "Intellectual Property",
+        blocks: [
+          {
+            id: "terms-ip-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Intellectual Property",
+          },
+          {
+            id: "terms-ip-body",
+            type: "body",
+            label: "Body",
+            text: "All content on this Website — including text, graphics, logos, images, trademarks, and software — is the property of Solvyn Inc. or its licensors and is protected by copyright, trademark, and other intellectual property laws. \"Solvyn,\" \"Shield by Solvyn,\" and associated logos are trademarks of Solvyn Inc.",
+          },
+        ],
+      },
+      {
+        id: "terms-products",
+        name: "Product Information",
+        blocks: [
+          {
+            id: "terms-products-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Product Information & Disclaimer",
+          },
+          {
+            id: "terms-products-body",
+            type: "body",
+            label: "Body",
+            text: "We strive to provide accurate product information on our Website. However, we do not warrant that product descriptions, pricing, or other content is accurate, complete, or error-free. Solvyn products are not intended to diagnose, treat, cure, or prevent any disease. Always follow usage instructions and consult a healthcare professional if you have concerns about sun protection or skin health.",
+          },
+        ],
+      },
+      {
+        id: "terms-liability",
+        name: "Limitation of Liability",
+        blocks: [
+          {
+            id: "terms-liability-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Limitation of Liability",
+          },
+          {
+            id: "terms-liability-body",
+            type: "body",
+            label: "Body",
+            text: "To the fullest extent permitted by law, Solvyn Inc. shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of, or inability to use, the Website or our products. Our total liability shall not exceed the amount you paid to us, if any, in the 12 months preceding the claim.",
+          },
+        ],
+      },
+      {
+        id: "terms-disclaimer",
+        name: "Disclaimer of Warranties",
+        blocks: [
+          {
+            id: "terms-disclaimer-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Disclaimer of Warranties",
+          },
+          {
+            id: "terms-disclaimer-body",
+            type: "body",
+            label: "Body",
+            text: "The Website is provided \"as is\" and \"as available\" without warranties of any kind, either express or implied. We disclaim all warranties, including but not limited to merchantability, fitness for a particular purpose, and non-infringement.",
+          },
+        ],
+      },
+      {
+        id: "terms-indemnification",
+        name: "Indemnification",
+        blocks: [
+          {
+            id: "terms-indemnification-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Indemnification",
+          },
+          {
+            id: "terms-indemnification-body",
+            type: "body",
+            label: "Body",
+            text: "You agree to indemnify and hold harmless Solvyn Inc., its officers, directors, employees, and agents from any claims, damages, losses, or expenses (including legal fees) arising from your use of the Website or violation of these Terms.",
+          },
+        ],
+      },
+      {
+        id: "terms-thirdparty",
+        name: "Third-Party Links",
+        blocks: [
+          {
+            id: "terms-thirdparty-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Third-Party Links",
+          },
+          {
+            id: "terms-thirdparty-body",
+            type: "body",
+            label: "Body",
+            text: "Our Website may contain links to third-party websites. We are not responsible for the content, privacy practices, or availability of these external sites. Accessing third-party links is at your own risk.",
+          },
+        ],
+      },
+      {
+        id: "terms-governing",
+        name: "Governing Law",
+        blocks: [
+          {
+            id: "terms-governing-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Governing Law",
+          },
+          {
+            id: "terms-governing-body",
+            type: "body",
+            label: "Body",
+            text: "These Terms & Conditions shall be governed by and construed in accordance with the laws of the State of Florida, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in Miami-Dade County, Florida.",
+          },
+        ],
+      },
+      {
+        id: "terms-changes",
+        name: "Changes & Contact",
+        blocks: [
+          {
+            id: "terms-changes-heading",
+            type: "heading",
+            label: "Heading",
+            text: "Changes to These Terms",
+          },
+          {
+            id: "terms-changes-body",
+            type: "body",
+            label: "Body",
+            text: "We reserve the right to update these Terms & Conditions at any time. Changes will be effective immediately upon posting to the Website. Your continued use of the Website after changes are posted constitutes acceptance of the revised Terms.",
+          },
+          {
+            id: "terms-contact-heading",
+            type: "subheading",
+            label: "Contact Heading",
+            text: "Contact Us",
+          },
+          {
+            id: "terms-contact-body",
+            type: "body",
+            label: "Contact Info",
+            text: "If you have any questions about these Terms & Conditions, please contact us at legal@solvyn.co.",
+            note: "Update with actual contact email and mailing address",
+          },
+        ],
+      },
+    ],
+  },
 ];
