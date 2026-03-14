@@ -250,35 +250,6 @@ function pageToHtml(page: ContentPage): string {
     margin: 0;
   }
 
-  .pp-contact-card {
-    background: var(--charcoal);
-    color: var(--white);
-    padding: 40px;
-    margin-top: 16px;
-    border-radius: 2px;
-  }
-
-  .pp-contact-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 400;
-    margin-bottom: 12px;
-    color: var(--white);
-  }
-
-  .pp-contact-card p {
-    color: #b0b0a8;
-    font-size: 14px;
-    font-weight: 300;
-    margin-bottom: 8px;
-  }
-
-  .pp-contact-card a {
-    color: var(--olive-light);
-    text-decoration: none;
-    font-weight: 400;
-  }
-
   @media (max-width: 768px) {
     .pp-wrapper {
       grid-template-columns: 1fr;
@@ -320,44 +291,11 @@ ${tocItems}
     const heading = section.blocks.find((b) => b.type === "heading")?.text ?? section.name;
     const blocks = renderSectionBlocks(section.blocks);
 
-    // Check if this is the last section and has contact info — render contact card
-    const isLast = i === bodySections.length - 1;
-    const hasContactInfo = section.blocks.some((b) =>
-      b.type === "list" && b.items?.some((item) => item.toLowerCase().includes("email:"))
-    );
-
-    if (isLast && hasContactInfo) {
-      // Extract contact details for the card
-      const contactList = section.blocks.find((b) => b.type === "list" && b.items?.some((item) => item.toLowerCase().includes("email:")));
-      const entityName = contactList?.items?.find((item) => !item.includes(":") && !item.includes("State"))?.trim() ?? "Solvyn Skin LLC";
-      const emailItem = contactList?.items?.find((item) => item.toLowerCase().startsWith("email:"));
-      const email = emailItem?.replace(/^Email:\s*/i, "").trim() ?? "info@solvynskin.com";
-      const websiteItem = contactList?.items?.find((item) => item.toLowerCase().startsWith("website:"));
-      const website = websiteItem?.replace(/^Website:\s*/i, "").trim() ?? "solvynskin.com";
-      const stateItem = contactList?.items?.find((item) => item.toLowerCase().includes("state of"));
-      const location = stateItem?.replace(/^State of Formation:\s*/i, "").trim() ?? "";
-
-      // Render the non-contact blocks normally, then add the card
-      const nonContactBlocks = section.blocks.filter((b) => b !== contactList);
-      const nonContactHtml = renderSectionBlocks(nonContactBlocks);
-
-      contentSections.push(`    <section id="${slug}">
-      <p class="pp-section-number">${num}</p>
-      <h2>${heading}</h2>
-${nonContactHtml}
-      <div class="pp-contact-card">
-        <h3>${entityName}</h3>
-        <p>Email: <a href="mailto:${email}">${email}</a></p>
-        <p>Website: <a href="https://${website}">${website}</a></p>${location ? `\n        <p style="margin-top: 16px; font-size: 13px; color: #666;">${location}</p>` : ""}
-      </div>
-    </section>`);
-    } else {
-      contentSections.push(`    <section id="${slug}">
+    contentSections.push(`    <section id="${slug}">
       <p class="pp-section-number">${num}</p>
       <h2>${heading}</h2>
 ${blocks}
     </section>`);
-    }
   });
 
   return `${css}
