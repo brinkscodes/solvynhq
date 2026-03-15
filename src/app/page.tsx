@@ -61,6 +61,7 @@ async function getTaskData(): Promise<ProjectData> {
       ...(row.completed_at ? { completedAt: row.completed_at } : {}),
       ...(row.subtasks ? { subtasks: row.subtasks } : {}),
       todayFocus: row.today_focus ?? false,
+      todayOrder: row.today_order ?? 0,
       assigneeId: row.assignee_id || null,
       assignee: assigneeProfile
         ? { userId: row.assignee_id, fullName: assigneeProfile.fullName, avatarUrl: assigneeProfile.avatarUrl }

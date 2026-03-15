@@ -1,7 +1,35 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Check, CalendarCheck, X, CheckCircle2, Zap, Circle, ListChecks, RotateCcw, AlertTriangle } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  Check,
+  CalendarCheck,
+  X,
+  CheckCircle2,
+  Zap,
+  Circle,
+  ListChecks,
+  RotateCcw,
+  AlertTriangle,
+  GripVertical,
+  Trash2,
+} from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { TagBadge } from "./tag-badge";
 import { TodaySummaryModal } from "./today-summary-modal";
 import {
@@ -14,24 +42,115 @@ import {
 } from "@/components/ui/dialog";
 import type { ProjectData, Task, TaskStatus } from "@/lib/types";
 
+type TodayTask = Task & { sectionName: string };
+
+function SortableTaskRow({
+  task,
+  onMarkDone,
+  onToggleTodayFocus,
+  onTaskClick,
+  onContextMenu,
+}: {
+  task: TodayTask;
+  onMarkDone: (taskId: string, status: TaskStatus) => void;
+  onToggleTodayFocus: (taskId: string, todayFocus: boolean) => void;
+  onTaskClick: (task: Task) => void;
+  onContextMenu: (e: React.MouseEvent, taskId: string, taskStatus: TaskStatus) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : undefined,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="group flex cursor-pointer items-center gap-2 rounded-xl bg-[var(--solvyn-bg-elevated)] px-4 py-3 transition-all duration-200 hover:bg-[var(--solvyn-bg-elevated)]/80"
+      onClick={() => onTaskClick(task)}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onContextMenu(e, task.id, task.status);
+      }}
+    >
+      {/* Drag handle */}
+      <button
+        className="flex h-6 w-5 shrink-0 cursor-grab items-center justify-center rounded text-[var(--solvyn-text-tertiary)] opacity-0 transition-all duration-200 group-hover:opacity-60 hover:!opacity-100 active:cursor-grabbing"
+        onClick={(e) => e.stopPropagation()}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </button>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onMarkDone(task.id, "done");
+        }}
+        className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--solvyn-amber)]/30 text-transparent transition-all duration-200 hover:border-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)] hover:text-white hover:scale-110"
+        title="Mark as done"
+      >
+        <Check className="h-3 w-3" strokeWidth={3} />
+      </button>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[13px] font-semibold text-[var(--solvyn-text-primary)]">
+          {task.name}
+        </p>
+        <p className="text-[11px] text-[var(--solvyn-text-tertiary)]">
+          {task.sectionName}
+        </p>
+      </div>
+      <TagBadge tag={task.tag} />
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleTodayFocus(task.id, false);
+        }}
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[var(--solvyn-text-tertiary)] opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-[var(--solvyn-bg-base)] hover:text-[var(--solvyn-rust)]"
+        title="Remove from today"
+      >
+        <X className="h-3.5 w-3.5" />
+      </button>
+    </div>
+  );
+}
+
 export function WorkingOnToday({
   data,
   onMarkDone,
   onToggleTodayFocus,
   onResetToday,
+  onResetDoneToday,
+  onReorderToday,
   onTaskClick,
 }: {
   data: ProjectData;
   onMarkDone: (taskId: string, status: TaskStatus) => void;
   onToggleTodayFocus: (taskId: string, todayFocus: boolean) => void;
   onResetToday: () => void;
+  onResetDoneToday: () => void;
+  onReorderToday: (orderedIds: string[]) => void;
   onTaskClick: (task: Task) => void;
 }) {
-  const activeTasks = data.sections.flatMap((section) =>
-    section.tasks
-      .filter((t) => t.todayFocus && t.status !== "done")
-      .map((t) => ({ ...t, sectionName: section.name }))
-  );
+  const activeTasks = data.sections
+    .flatMap((section) =>
+      section.tasks
+        .filter((t) => t.todayFocus && t.status !== "done")
+        .map((t) => ({ ...t, sectionName: section.name }))
+    )
+    .sort((a, b) => (a.todayOrder ?? 0) - (b.todayOrder ?? 0));
 
   const doneTasks = data.sections.flatMap((section) =>
     section.tasks
@@ -43,8 +162,21 @@ export function WorkingOnToday({
 
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; taskId: string; taskStatus: TaskStatus } | null>(null);
+  const [resetDoneConfirmOpen, setResetDoneConfirmOpen] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    taskId: string;
+    taskStatus: TaskStatus;
+  } | null>(null);
   const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     if (!contextMenu) return;
@@ -52,6 +184,32 @@ export function WorkingOnToday({
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
   }, [contextMenu]);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
+
+      const oldIndex = activeTasks.findIndex((t) => t.id === active.id);
+      const newIndex = activeTasks.findIndex((t) => t.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
+
+      const reordered = [...activeTasks];
+      const [moved] = reordered.splice(oldIndex, 1);
+      reordered.splice(newIndex, 0, moved);
+
+      const orderedIds = reordered.map((t) => t.id);
+      onReorderToday(orderedIds);
+    },
+    [activeTasks, onReorderToday]
+  );
+
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent, taskId: string, taskStatus: TaskStatus) => {
+      setContextMenu({ x: e.clientX, y: e.clientY, taskId, taskStatus });
+    },
+    []
+  );
 
   return (
     <div className="relative mb-8 overflow-hidden rounded-2xl border border-[var(--solvyn-amber)]/15 bg-[var(--solvyn-bg-raised)]">
@@ -79,6 +237,16 @@ export function WorkingOnToday({
                 : "No tasks set for today"}
             </p>
           </div>
+          {doneTasks.length > 0 && (
+            <button
+              onClick={() => setResetDoneConfirmOpen(true)}
+              className="flex h-8 items-center gap-1.5 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-3 text-[11px] font-semibold text-[var(--solvyn-text-tertiary)] transition-all duration-200 hover:border-[var(--solvyn-rust)]/30 hover:text-[var(--solvyn-rust)]"
+              title="Remove completed tasks from today's list"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Reset Done
+            </button>
+          )}
           {totalTasks > 0 && (
             <button
               onClick={() => setResetConfirmOpen(true)}
@@ -101,40 +269,31 @@ export function WorkingOnToday({
           )}
         </div>
 
-        {/* Active tasks */}
+        {/* Active tasks with drag-and-drop */}
         {activeTasks.length > 0 ? (
-          <div className="space-y-2">
-            {activeTasks.map((task) => (
-              <div
-                key={task.id}
-                className="group flex cursor-pointer items-center gap-3.5 rounded-xl bg-[var(--solvyn-bg-elevated)] px-4 py-3 transition-all duration-200 hover:bg-[var(--solvyn-bg-elevated)]/80"
-                onClick={() => onTaskClick(task)}
-                onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, taskId: task.id, taskStatus: task.status }); }}
-              >
-                <button
-                  onClick={(e) => { e.stopPropagation(); onMarkDone(task.id, "done"); }}
-                  className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 border-[var(--solvyn-amber)]/30 text-transparent transition-all duration-200 hover:border-[var(--solvyn-olive)] hover:bg-[var(--solvyn-olive)] hover:text-white hover:scale-110"
-                  title="Mark as done"
-                >
-                  <Check className="h-3 w-3" strokeWidth={3} />
-                </button>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-semibold text-[var(--solvyn-text-primary)]">
-                    {task.name}
-                  </p>
-                  <p className="text-[11px] text-[var(--solvyn-text-tertiary)]">{task.sectionName}</p>
-                </div>
-                <TagBadge tag={task.tag} />
-                <button
-                  onClick={(e) => { e.stopPropagation(); onToggleTodayFocus(task.id, false); }}
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[var(--solvyn-text-tertiary)] opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-[var(--solvyn-bg-base)] hover:text-[var(--solvyn-rust)]"
-                  title="Remove from today"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={activeTasks.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-2">
+                {activeTasks.map((task) => (
+                  <SortableTaskRow
+                    key={task.id}
+                    task={task}
+                    onMarkDone={onMarkDone}
+                    onToggleTodayFocus={onToggleTodayFocus}
+                    onTaskClick={onTaskClick}
+                    onContextMenu={handleContextMenu}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         ) : totalTasks === 0 ? (
           <div className="rounded-xl border border-dashed border-[var(--solvyn-border-default)] py-6 text-center">
             <p className="text-[12px] text-[var(--solvyn-text-tertiary)]">
@@ -169,10 +328,21 @@ export function WorkingOnToday({
                   key={task.id}
                   className="flex cursor-pointer items-center gap-3.5 rounded-xl bg-[var(--solvyn-olive)]/[0.04] px-4 py-2.5"
                   onClick={() => onTaskClick(task)}
-                  onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, taskId: task.id, taskStatus: task.status }); }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({
+                      x: e.clientX,
+                      y: e.clientY,
+                      taskId: task.id,
+                      taskStatus: task.status,
+                    });
+                  }}
                 >
                   <button
-                    onClick={(e) => { e.stopPropagation(); onMarkDone(task.id, "in-progress"); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onMarkDone(task.id, "in-progress");
+                    }}
                     className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[var(--solvyn-olive)] text-white transition-all duration-200 hover:bg-[var(--solvyn-olive)]/60 hover:scale-110"
                     title="Mark as not done"
                   >
@@ -182,12 +352,15 @@ export function WorkingOnToday({
                     <p className="truncate text-[13px] font-medium text-[var(--solvyn-text-tertiary)] line-through">
                       {task.name}
                     </p>
-                    <p className="text-[11px] text-[var(--solvyn-text-tertiary)]/60">{task.sectionName}</p>
+                    <p className="text-[11px] text-[var(--solvyn-text-tertiary)]/60">
+                      {task.sectionName}
+                    </p>
                   </div>
                   <TagBadge tag={task.tag} />
                 </div>
               ))}
             </div>
+
           </>
         )}
       </div>
@@ -201,7 +374,10 @@ export function WorkingOnToday({
 
       {/* Reset Day confirmation dialog */}
       <Dialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
-        <DialogContent showCloseButton={false} className="max-w-sm border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)]">
+        <DialogContent
+          showCloseButton={false}
+          className="max-w-sm border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)]"
+        >
           <DialogHeader>
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--solvyn-rust)]/10">
@@ -212,7 +388,9 @@ export function WorkingOnToday({
               </DialogTitle>
             </div>
             <DialogDescription className="text-[13px] text-[var(--solvyn-text-tertiary)]">
-              This will remove {totalTasks} {totalTasks === 1 ? "task" : "tasks"} from your &quot;Working on Today&quot; list. You can undo this after.
+              This will remove {totalTasks}{" "}
+              {totalTasks === 1 ? "task" : "tasks"} from your &quot;Working on
+              Today&quot; list. You can undo this after.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-2">
@@ -230,6 +408,50 @@ export function WorkingOnToday({
               className="flex-1 rounded-xl bg-[var(--solvyn-rust)] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--solvyn-rust)]/90"
             >
               Reset Day
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Done Today confirmation dialog */}
+      <Dialog
+        open={resetDoneConfirmOpen}
+        onOpenChange={setResetDoneConfirmOpen}
+      >
+        <DialogContent
+          showCloseButton={false}
+          className="max-w-sm border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)]"
+        >
+          <DialogHeader>
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--solvyn-rust)]/10">
+                <Trash2 className="h-4 w-4 text-[var(--solvyn-rust)]" />
+              </div>
+              <DialogTitle className="text-[15px] text-[var(--solvyn-text-primary)]">
+                Reset done tasks?
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-[13px] text-[var(--solvyn-text-tertiary)]">
+              This will remove {doneTasks.length} completed{" "}
+              {doneTasks.length === 1 ? "task" : "tasks"} from your
+              &quot;Working on Today&quot; list. Active tasks will stay.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <button
+              onClick={() => setResetDoneConfirmOpen(false)}
+              className="flex-1 rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-base)] px-4 py-2.5 text-[13px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)]"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setResetDoneConfirmOpen(false);
+                onResetDoneToday();
+              }}
+              className="flex-1 rounded-xl bg-[var(--solvyn-rust)] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--solvyn-rust)]/90"
+            >
+              Reset Done
             </button>
           </DialogFooter>
         </DialogContent>

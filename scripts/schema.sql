@@ -173,6 +173,7 @@ create table if not exists tasks (
   tag text not null default 'Config',
   completed_at timestamptz,
   today_focus boolean default false,
+  today_order int default 0,
   subtasks jsonb,
   assignee_id uuid references auth.users on delete set null,
   created_at timestamptz default now(),
@@ -331,7 +332,7 @@ create table if not exists form_submissions (
   form_name text not null default 'Unknown Form',
   fields jsonb not null default '{}',
   meta jsonb default '{}',
-  status text not null default 'new' check (status in ('new', 'read', 'archived')),
+  status text not null default 'new' check (status in ('new', 'read', 'archived', 'test')),
   created_at timestamptz default now()
 );
 

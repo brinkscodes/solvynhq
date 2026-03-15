@@ -140,7 +140,7 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json();
   const { id, status } = body as { id: string; status: string };
 
-  if (!id || !["new", "read", "archived"].includes(status)) {
+  if (!id || !["new", "read", "archived", "test"].includes(status)) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 

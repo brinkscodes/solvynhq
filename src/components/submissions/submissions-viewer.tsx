@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Inbox,
   Mail,
@@ -13,6 +13,10 @@ import {
   RefreshCw,
   Trash2,
   AlertTriangle,
+  Users,
+  TrendingUp,
+  Search,
+  FlaskConical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { FormSubmission, SubmissionStatus } from "@/lib/form-submission-types";
@@ -22,6 +26,7 @@ const statusConfig: Record<SubmissionStatus, { label: string; color: string; ico
   new: { label: "New", color: "bg-[var(--solvyn-olive)]/15 text-[var(--solvyn-olive)]", icon: Mail },
   read: { label: "Read", color: "bg-[var(--solvyn-text-tertiary)]/10 text-[var(--solvyn-text-tertiary)]", icon: MailOpen },
   archived: { label: "Archived", color: "bg-[var(--solvyn-text-tertiary)]/10 text-[var(--solvyn-text-tertiary)]", icon: Archive },
+  test: { label: "Dev Test", color: "bg-purple-500/15 text-purple-400", icon: FlaskConical },
 };
 
 function StatusBadge({ status }: { status: SubmissionStatus }) {
@@ -208,8 +213,10 @@ function SubmissionRow({
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showTestConfirm, setShowTestConfirm] = useState(false);
   const preview = extractPreview(submission.fields);
   const isNew = submission.status === "new";
+  const isTest = submission.status === "test";
 
   function handleExpand() {
     setExpanded(!expanded);
@@ -224,6 +231,8 @@ function SubmissionRow({
         "rounded-lg border transition-all",
         isNew
           ? "border-[var(--solvyn-olive)]/30 bg-[var(--solvyn-olive)]/[0.03]"
+          : isTest
+          ? "border-purple-500/20 bg-purple-500/[0.02] opacity-60"
           : "border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-base)]"
       )}
     >
@@ -301,13 +310,31 @@ function SubmissionRow({
                 Unarchive
               </button>
             )}
-            {submission.status !== "new" && (
+            {submission.status !== "new" && submission.status !== "test" && (
               <button
                 onClick={() => onStatusChange(submission.id, "new")}
                 className="flex items-center gap-1.5 rounded-md border border-[var(--solvyn-border-subtle)] px-3 py-1.5 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)]"
               >
                 <Mail className="h-3 w-3" />
                 Mark as New
+              </button>
+            )}
+            {submission.status !== "test" && (
+              <button
+                onClick={() => setShowTestConfirm(true)}
+                className="flex items-center gap-1.5 rounded-md border border-purple-500/20 px-3 py-1.5 text-[12px] font-medium text-purple-400 transition-colors hover:bg-purple-500/10"
+              >
+                <FlaskConical className="h-3 w-3" />
+                Dev Test
+              </button>
+            )}
+            {submission.status === "test" && (
+              <button
+                onClick={() => onStatusChange(submission.id, "new")}
+                className="flex items-center gap-1.5 rounded-md border border-[var(--solvyn-border-subtle)] px-3 py-1.5 text-[12px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-elevated)]"
+              >
+                <Mail className="h-3 w-3" />
+                Restore to Inbox
               </button>
             )}
             {isAdmin && (
@@ -322,6 +349,46 @@ function SubmissionRow({
               </div>
             )}
           </div>
+
+          {showTestConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowTestConfirm(false)}>
+              <div
+                className="mx-4 w-full max-w-sm rounded-xl border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-elevated)] p-6 shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-500/10">
+                    <FlaskConical className="h-4.5 w-4.5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-[15px] font-semibold text-[var(--solvyn-text-primary)]">
+                      Mark as Dev Test?
+                    </h3>
+                    <p className="mt-1 text-[13px] text-[var(--solvyn-text-tertiary)]">
+                      This lead will be flagged as a test submission and excluded from all metrics. You can restore it later.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-5 flex justify-end gap-2">
+                  <button
+                    onClick={() => setShowTestConfirm(false)}
+                    className="rounded-md border border-[var(--solvyn-border-subtle)] px-3.5 py-1.5 text-[13px] font-medium text-[var(--solvyn-text-secondary)] transition-colors hover:bg-[var(--solvyn-bg-sunken)]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowTestConfirm(false);
+                      onStatusChange(submission.id, "test");
+                    }}
+                    className="rounded-md bg-purple-500 px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-purple-600"
+                  >
+                    Mark as Dev Test
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {showDeleteConfirm && (
             <DeleteConfirmDialog
@@ -338,7 +405,7 @@ function SubmissionRow({
   );
 }
 
-type Filter = "all" | "new" | "read" | "archived";
+type Filter = "all" | "new" | "read" | "archived" | "test";
 
 export function SubmissionsViewer() {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
@@ -407,11 +474,24 @@ export function SubmissionsViewer() {
     }
   }
 
-  const filtered = filter === "all"
-    ? submissions.filter((s) => s.status !== "archived")
-    : submissions.filter((s) => s.status === filter);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const newCount = submissions.filter((s) => s.status === "new").length;
+  // Real leads exclude test submissions
+  const realLeads = submissions.filter((s) => s.status !== "test");
+  const testCount = submissions.filter((s) => s.status === "test").length;
+
+  const newCount = realLeads.filter((s) => s.status === "new").length;
+  const readCount = realLeads.filter((s) => s.status === "read").length;
+  const archivedCount = realLeads.filter((s) => s.status === "archived").length;
+
+  const newTodayCount = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return realLeads.filter((s) => {
+      const created = new Date(s.createdAt);
+      return created >= today;
+    }).length;
+  }, [realLeads]);
 
   const filters: { value: Filter; label: string }[] = [
     { value: "all", label: "Inbox" },
@@ -420,53 +500,159 @@ export function SubmissionsViewer() {
     { value: "archived", label: "Archived" },
   ];
 
+  const stats = [
+    {
+      label: "Total Leads",
+      value: realLeads.length,
+      icon: Users,
+      color: "var(--solvyn-olive)",
+    },
+    {
+      label: "New Today",
+      value: newTodayCount,
+      icon: TrendingUp,
+      color: "var(--solvyn-olive)",
+    },
+    {
+      label: "Read",
+      value: readCount,
+      icon: MailOpen,
+      color: "var(--solvyn-amber)",
+    },
+    {
+      label: "Archived",
+      value: archivedCount,
+      icon: Archive,
+      color: "var(--solvyn-rust)",
+    },
+  ];
+
+  const filtered = useMemo(() => {
+    let result = filter === "all"
+      ? submissions.filter((s) => s.status !== "archived" && s.status !== "test")
+      : submissions.filter((s) => s.status === filter);
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((s) => {
+        const preview = extractPreview(s.fields);
+        return (
+          (preview.name && preview.name.toLowerCase().includes(q)) ||
+          (preview.email && preview.email.toLowerCase().includes(q)) ||
+          (preview.message && preview.message.toLowerCase().includes(q)) ||
+          s.formName.toLowerCase().includes(q)
+        );
+      });
+    }
+
+    return result;
+  }, [submissions, filter, searchQuery]);
+
   return (
     <div>
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3">
-          <h1 className="text-[22px] font-semibold text-[var(--solvyn-text-primary)]">
-            Leads
-          </h1>
-          {newCount > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--solvyn-olive)] px-1.5 text-[11px] font-semibold text-white">
-              {newCount}
-            </span>
-          )}
-        </div>
+      <div className="mb-6">
+        <h1 className="font-[family-name:var(--font-playfair)] text-[22px] font-semibold text-[var(--solvyn-text-primary)]">
+          Inbox
+        </h1>
         <p className="mt-1 text-[13px] text-[var(--solvyn-text-tertiary)]">
-          Submissions from your website forms
+          Manage and respond to your form submissions
         </p>
       </div>
 
-      {/* Toolbar */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex gap-1 rounded-lg border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-sunken)] p-0.5">
-          {filters.map((f) => (
+      {/* Stat Cards */}
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={stat.label}
+              className="relative overflow-hidden rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] px-4 pt-4 pb-3"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] font-medium text-[var(--solvyn-text-tertiary)]">
+                    {stat.label}
+                  </p>
+                  <p className="mt-1 text-[26px] font-bold leading-none text-[var(--solvyn-text-primary)]">
+                    {stat.value}
+                  </p>
+                </div>
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: stat.color }}
+                >
+                  <Icon className="h-4.5 w-4.5 text-white" />
+                </div>
+              </div>
+              {/* Bottom accent bar */}
+              <div
+                className="absolute bottom-0 left-0 h-[3px] w-full"
+                style={{ backgroundColor: stat.color }}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Search & Filters Toolbar */}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Search */}
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--solvyn-text-tertiary)]" />
+          <input
+            type="text"
+            placeholder="Search leads by name, email, or message..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-base)] py-2.5 pl-9 pr-3 text-[13px] text-[var(--solvyn-text-primary)] placeholder-[var(--solvyn-text-tertiary)] outline-none transition-colors focus:border-[var(--solvyn-amber)]/40 focus:ring-1 focus:ring-[var(--solvyn-amber)]/20"
+          />
+        </div>
+
+        {/* Filter tabs + Refresh */}
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1 rounded-xl border border-[var(--solvyn-border-subtle)] bg-[var(--solvyn-bg-base)] p-0.5">
+            {filters.map((f) => (
+              <button
+                key={f.value}
+                onClick={() => setFilter(f.value)}
+                className={cn(
+                  "rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all",
+                  filter === f.value
+                    ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-sm"
+                    : "text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-secondary)]"
+                )}
+              >
+                {f.label}
+                {f.value === "new" && newCount > 0 && (
+                  <span className="ml-1.5 text-[var(--solvyn-olive)]">{newCount}</span>
+                )}
+              </button>
+            ))}
+          </div>
+          {testCount > 0 && (
             <button
-              key={f.value}
-              onClick={() => setFilter(f.value)}
+              onClick={() => setFilter("test")}
               className={cn(
-                "rounded-md px-3 py-1.5 text-[12px] font-medium transition-all",
-                filter === f.value
-                  ? "bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-primary)] shadow-sm"
-                  : "text-[var(--solvyn-text-tertiary)] hover:text-[var(--solvyn-text-secondary)]"
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[12px] font-medium transition-all border",
+                filter === "test"
+                  ? "border-purple-500/30 bg-purple-500/10 text-purple-400"
+                  : "border-[var(--solvyn-border-subtle)] text-[var(--solvyn-text-tertiary)] hover:text-purple-400"
               )}
             >
-              {f.label}
-              {f.value === "new" && newCount > 0 && (
-                <span className="ml-1.5 text-[var(--solvyn-olive)]">{newCount}</span>
-              )}
+              <FlaskConical className="h-3 w-3" />
+              Test
+              <span className="text-purple-400">{testCount}</span>
             </button>
-          ))}
+          )}
+          <button
+            onClick={fetchSubmissions}
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--solvyn-border-default)] bg-[var(--solvyn-bg-elevated)] text-[var(--solvyn-text-tertiary)] transition-colors hover:text-[var(--solvyn-text-secondary)]"
+            title="Refresh"
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
+          </button>
         </div>
-        <button
-          onClick={fetchSubmissions}
-          className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium text-[var(--solvyn-text-tertiary)] transition-colors hover:text-[var(--solvyn-text-secondary)]"
-        >
-          <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
-          Refresh
-        </button>
       </div>
 
       {/* List */}

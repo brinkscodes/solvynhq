@@ -1,4 +1,4 @@
-export type SubmissionStatus = "new" | "read" | "archived";
+export type SubmissionStatus = "new" | "read" | "archived" | "test";
 
 export interface FormSubmission {
   id: string;

@@ -249,6 +249,52 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     await fetch("/api/tasks/reset-today", { method: "POST" });
   }, [data]);
 
+  const resetDoneToday = useCallback(async () => {
+    const doneTaskIds = data.sections
+      .flatMap((s) => s.tasks)
+      .filter((t) => t.todayFocus && t.status === "done")
+      .map((t) => t.id);
+
+    if (doneTaskIds.length === 0) return;
+
+    setResetUndo({ taskIds: doneTaskIds });
+
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((section) => ({
+        ...section,
+        tasks: section.tasks.map((t) =>
+          doneTaskIds.includes(t.id) ? { ...t, todayFocus: false } : t
+        ),
+      })),
+    }));
+
+    await fetch("/api/tasks/reset-done-today", { method: "POST" });
+  }, [data]);
+
+  const reorderToday = useCallback(
+    async (orderedIds: string[]) => {
+      // Optimistic update — assign todayOrder based on position
+      setData((prev) => ({
+        ...prev,
+        sections: prev.sections.map((section) => ({
+          ...section,
+          tasks: section.tasks.map((t) => {
+            const idx = orderedIds.indexOf(t.id);
+            return idx !== -1 ? { ...t, todayOrder: idx } : t;
+          }),
+        })),
+      }));
+
+      await fetch("/api/tasks/reorder-today", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds }),
+      });
+    },
+    []
+  );
+
   const toggleTodayFocus = useCallback(
     async (taskId: string, todayFocus: boolean) => {
       setData((prev) => ({
@@ -337,8 +383,12 @@ export function Dashboard({ data: initialData }: { data: ProjectData }) {
     <>
       <ProjectHeader data={data} view={view} onViewChange={setView} />
 
-      <CurrentFocus data={data} onMarkDone={updateTaskStatus} onTaskClick={handleTaskClick} />
-      <WorkingOnToday data={data} onMarkDone={updateTaskStatus} onToggleTodayFocus={toggleTodayFocus} onResetToday={resetToday} onTaskClick={handleTaskClick} />
+      {view === "active" && (
+        <>
+          <CurrentFocus data={data} onMarkDone={updateTaskStatus} onTaskClick={handleTaskClick} />
+          <WorkingOnToday data={data} onMarkDone={updateTaskStatus} onToggleTodayFocus={toggleTodayFocus} onResetToday={resetToday} onResetDoneToday={resetDoneToday} onReorderToday={reorderToday} onTaskClick={handleTaskClick} />
+        </>
+      )}
 
       {view === "active" ? (
         <>

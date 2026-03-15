@@ -46,6 +46,7 @@ export interface Task {
   completedAt?: string;
   subtasks?: Subtask[];
   todayFocus?: boolean;
+  todayOrder?: number;
   assigneeId?: string | null;
   assignee?: TaskAssignee | null;
   commentCount?: number;

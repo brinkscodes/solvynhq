@@ -62,6 +62,7 @@ export async function GET() {
         ...(row.completed_at ? { completedAt: row.completed_at } : {}),
         ...(row.subtasks ? { subtasks: row.subtasks } : {}),
         todayFocus: row.today_focus ?? false,
+        todayOrder: row.today_order ?? 0,
         assigneeId: row.assignee_id || null,
         assignee: assigneeProfile
           ? { userId: row.assignee_id, fullName: assigneeProfile.fullName, avatarUrl: assigneeProfile.avatarUrl }
@@ -134,6 +135,7 @@ export async function POST(req: NextRequest) {
       priority: task.priority,
       tag: task.tag,
       todayFocus: task.today_focus ?? false,
+      todayOrder: task.today_order ?? 0,
       assigneeId: null,
       assignee: null,
       commentCount: 0,
@@ -147,7 +149,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { taskId, status, subtasks, name, description, priority, tag, todayFocus, assigneeId } = body as {
+    const { taskId, status, subtasks, name, description, priority, tag, todayFocus, todayOrder, assigneeId } = body as {
       taskId: string;
       status?: string;
       subtasks?: Array<{ id: string; name: string; completed: boolean; completedAt?: string }>;
@@ -156,6 +158,7 @@ export async function PATCH(req: NextRequest) {
       priority?: string;
       tag?: string;
       todayFocus?: boolean;
+      todayOrder?: number;
       assigneeId?: string | null;
     };
 
@@ -181,6 +184,7 @@ export async function PATCH(req: NextRequest) {
     if (priority !== undefined) updates.priority = priority;
     if (tag !== undefined) updates.tag = tag;
     if (todayFocus !== undefined) updates.today_focus = todayFocus;
+    if (todayOrder !== undefined) updates.today_order = todayOrder;
     if (assigneeId !== undefined) updates.assignee_id = assigneeId;
 
     const { error } = await supabase
